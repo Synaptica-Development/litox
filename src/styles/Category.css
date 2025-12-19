@@ -1,0 +1,104 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: auto;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'Century Gothic Paneuropean', sans-serif;
+  background: #393330;
+  min-height: 100vh;
+}
+
+#root {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.home-catalog-list {
+  margin-top: 0;
+  padding-top: 50px;
+  padding-bottom: 40px;
+  background: #393330;
+  height: 50vh;
+  position: relative;
+  /* Make sure z-index is removed or set to auto */
+  z-index: auto;
+}
+.home-catalog-list .flex-row {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.home-catalog-list .flex-row:hover .catalog-card {
+  opacity: 0.4;
+}
+
+.home-catalog-list .flex-row .catalog-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  width: 20%; /* 5 items per row */
+  transition: 0.4s ease-in-out;
+  color: #b1aca9;
+  padding: 20px;
+  cursor: pointer;
+}
+
+.home-catalog-list .flex-row .catalog-card .icon {
+  display: flex;
+  width: 81px;
+  height: 75px;
+  align-items: center;
+  justify-content: center;
+  transition: 0.4s ease-in-out;
+  filter: contrast(0.1);
+  margin-bottom: 15px;
+}
+
+.home-catalog-list .flex-row .catalog-card .icon img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.home-catalog-list .flex-row .catalog-card .catalog-name {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.home-catalog-list .flex-row .catalog-card:hover {
+  color: #fff;
+  opacity: 1;
+}
+
+.home-catalog-list .flex-row .catalog-card:hover .icon {
+  filter: contrast(1);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .home-catalog-list .flex-row .catalog-card {
+    width: 33.333%; /* 3 items per row on tablets */
+  }
+}
+
+@media (max-width: 767px) {
+  .home-catalog-list .flex-row .catalog-card {
+    width: 50%; /* 2 items per row on mobile */
+  }
+  
+  .home-catalog-list .flex-row .catalog-card .icon img {
+    width: auto;
+  }
+}

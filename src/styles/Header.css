@@ -1,0 +1,527 @@
+@import url('https://fonts.cdnfonts.com/css/century-gothic-paneuropean');
+
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none !important;
+  color: #ef6f2e;
+  font-family: 'Century Gothic Paneuropean', sans-serif;
+}
+
+header {
+  background: rgba(38, 35, 34, 0.8);
+  transition: background 0.4s ease-in-out;
+  border-bottom: 1px solid #8e8c8b;
+  position: fixed;
+  width: 100%;
+  
+  top: 0;
+  left: 0;
+  z-index: 100;
+  font-family: 'Century Gothic Paneuropean', sans-serif;
+}
+
+.flex-row {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1920px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1339px) {
+  .flex-row .col {
+    padding: 0 15px;
+  }
+}
+
+.col {
+  flex: 1;
+  display: flex;
+}
+
+.col:first-child {
+  justify-content: flex-start;
+}
+
+.col:last-child {
+  justify-content: flex-end;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 20px;
+}
+
+.open-menu {
+  cursor: pointer;
+  margin-top: 2px;
+  width: 33px;
+  text-transform: uppercase;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.burger {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 28px;
+}
+
+.burger i {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: #aba39e;
+  transition: all 0.3s ease;
+}
+
+.open-menu span {
+  font-size: 9px;
+  color: #aba39e;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.open-menu:hover .burger i {
+  background: #ef6f2e;
+}
+
+.open-menu:hover span {
+  color: #ef6f2e;
+}
+
+.left-menu {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 350px;
+  height: 100%;
+  background: rgba(38, 35, 34, 0.98);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 30px;
+  transform: translateX(-100%);
+  transition: transform 0.4s ease-in-out;
+  z-index: 200;
+}
+
+.left-menu.active {
+  transform: translateX(0);
+}
+
+.left-menu.small {
+  display: none;
+}
+
+@media (max-width: 1240px) {
+  .left-menu.large {
+    display: none;
+  }
+  
+  .left-menu.small {
+    display: block;
+  }
+}
+
+.close-menu {
+  cursor: pointer;
+  margin-bottom: 30px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.3s ease;
+}
+
+.close-menu:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.navbar-mobile__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.navbar-mobile__item {
+  margin-bottom: 10px;
+}
+
+.navbar-mobile__link {
+  color: #aba39e !important;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 12px 15px;
+  display: block;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.navbar-mobile__link:hover {
+  background: rgba(239, 111, 46, 0.2);
+  color: #ef6f2e !important;
+  transform: translateX(5px);
+}
+
+.top-panel__nav {
+  width: 100%;
+}
+
+.top-panel__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.top-panel__item {
+  margin-bottom: 10px;
+}
+
+.top-panel__link {
+  color: #ffffff !important;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 12px 15px;
+  display: block;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+  
+}
+
+.top-panel__link:hover {
+  background: rgba(239, 111, 46, 0.2);
+  color: #ef6f2e !important;
+  transform: translateX(5px);
+}
+
+.contacts {
+  display: inline-block;
+  margin: 0 14px 3px 22px;
+  transition: 0.4s ease-in-out;
+}
+
+.contacts svg path {
+  transition: fill 0.3s ease;
+}
+
+.contacts:hover svg path {
+  fill: #ef6f2e;
+}
+
+.phone {
+  display: inline-block;
+  font-size: 16px;
+  color: #ffffff !important;
+  position: relative;
+  transition: 0.4s ease-in-out;
+}
+
+.phone:hover {
+  color: #ef6f2e !important;
+}
+
+.logo {
+  display: block;
+  font-size: 0;
+  width: 174px;
+  min-width: 174px;
+}
+
+.logo img {
+  max-width: 100%;
+  height: auto;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 25px;
+    padding-right: 20px;
+}
+
+.primary-menu {
+  display: flex;
+  list-style: none;
+  gap: 30px;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.primary-menu > li {
+  line-height: 60px;
+  position: relative;
+  text-transform: uppercase;
+  
+}
+
+.primary-menu > li > a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+  padding: 5px 0;
+  display: block;
+  font-size: 0.85rem;
+}
+
+.primary-menu > li > a:hover {
+  color: #ef6f2e;
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: rgba(38, 35, 34, 0.98);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  min-width: 220px;
+  list-style: none;
+  padding: 15px 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  margin-top: 0;
+  border: 1px solid #aba39e;
+}
+
+.primary-menu > li:hover .dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown li {
+  line-height: normal;
+}
+
+.dropdown li a {
+  color: #ffffff !important;
+  text-decoration: none;
+  padding: 10px 20px;
+  display: block;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+}
+
+.dropdown li a:hover {
+  background: rgba(239, 111, 46, 0.2);
+  color: #ef6f2e !important;
+}
+
+.open-search-popup {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: background 0.3s ease;
+}
+
+.open-search-popup:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.open-search-popup svg circle,
+.open-search-popup svg path {
+  transition: stroke 0.3s ease;
+}
+
+.open-search-popup:hover svg circle,
+.open-search-popup:hover svg path {
+  stroke: #ef6f2e;
+}
+
+.lang {
+  display: flex;
+  list-style: none;
+  gap: 15px;
+  margin: 0;
+  padding: 0;
+}
+
+.lang li a {
+  color: #aba39e !important;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  transition: color 0.3s ease;
+}
+
+.lang li a:hover {
+  color: #ef6f2e !important;
+}
+
+.search-popup {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  width: 100%;
+  background: rgba(38, 35, 34, 0.98);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 20px;
+  z-index: 99;
+  border-bottom: 1px solid #8e8c8b;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.search-popup input {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  display: block;
+  padding: 15px 20px;
+  font-size: 16px;
+  border: 2px solid #8e8c8b;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+}
+
+.search-popup input::placeholder {
+  color: rgba(171, 163, 158, 0.6);
+}
+
+.search-popup input:focus {
+  outline: none;
+  border-color: #ef6f2e;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 150;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 1240px) {
+  .primary-menu {
+    display: none;
+  }
+  
+  .open-search-popup {
+    margin-left: 0;
+  }
+  
+  .lang {
+    margin-left: 25px;
+  }
+}
+
+@media (max-width: 768px) {
+  .left-menu {
+    width: 280px;
+  }
+  
+  .logo {
+    width: 140px;
+    min-width: 140px;
+  }
+  
+  .phone {
+    font-size: 14px;
+  }
+  
+  .contacts {
+    margin: 0 10px 3px 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .phone {
+    display: none;
+  }
+  
+  .contacts {
+    margin: 0 10px 3px 10px;
+  }
+  
+  .logo {
+    width: 120px;
+    min-width: 120px;
+  }
+  
+  .left-menu {
+    width: 250px;
+  }
+}
+
+
+/* Add these rules to your Header.css file */
+
+/* Hide small menu trigger on large screens */
+.small-menu-trigger {
+  display: none;
+}
+
+/* Show small menu trigger on screens <= 1240px */
+@media (max-width: 1240px) {
+  .large-menu-trigger {
+    display: none;
+  }
+  
+  .small-menu-trigger {
+    display: flex;
+  }
+}
