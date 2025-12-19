@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/litox/static/css/main.d84568c8.css",
+    "main.js": "/litox/static/js/main.6c422812.js",
+    "index.html": "/litox/index.html",
+    "main.d84568c8.css.map": "/litox/static/css/main.d84568c8.css.map",
+    "main.6c422812.js.map": "/litox/static/js/main.6c422812.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d84568c8.css",
+    "static/js/main.6c422812.js"
+  ]
+}
