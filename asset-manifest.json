@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/litox/static/css/main.ff6636ed.css",
-    "main.js": "/litox/static/js/main.29b012b4.js",
+    "main.css": "/litox/static/css/main.f0f09f8a.css",
+    "main.js": "/litox/static/js/main.99a37867.js",
     "index.html": "/litox/index.html",
-    "main.ff6636ed.css.map": "/litox/static/css/main.ff6636ed.css.map",
-    "main.29b012b4.js.map": "/litox/static/js/main.29b012b4.js.map"
+    "main.f0f09f8a.css.map": "/litox/static/css/main.f0f09f8a.css.map",
+    "main.99a37867.js.map": "/litox/static/js/main.99a37867.js.map"
   },
   "entrypoints": [
-    "static/css/main.ff6636ed.css",
-    "static/js/main.29b012b4.js"
+    "static/css/main.f0f09f8a.css",
+    "static/js/main.99a37867.js"
   ]
 }
