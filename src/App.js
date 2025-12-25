@@ -9,6 +9,7 @@ import Footer from './components/Footer';
 import CategoryPage from './components/CategoryPage';
 import AllProducts from './components/AllProducts';
 import ProductDetails from './components/ProductDetails';
+import Contacts from './components/Contacts';
 
 // Home page component
 function HomePage() {
@@ -36,6 +37,9 @@ function App() {
           <Route path="/products/:categoryId/:productId" element={<ProductDetails />} />
           {/* Dynamic category route */}
           <Route path="/products/:categoryId" element={<CategoryPage />} />
+
+          {/* Contacts route */}
+          <Route path="/contacts" element={<Contacts />} />
         </Routes>
         <Footer />
       </div>

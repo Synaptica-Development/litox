@@ -111,7 +111,7 @@ function Header() {
                     <a className="navbar-mobile__link" href="#news">News</a>
                   </li>
                   <li className="navbar-mobile__item">
-                    <a className="navbar-mobile__link" href="#contacts">Contacts</a>
+                    <Link className="navbar-mobile__link" to="/contacts" onClick={() => setIsLargeMenuOpen(false)}>Contacts</Link>
                   </li>
                 </ul>
               </div>
@@ -163,7 +163,13 @@ function Header() {
 
                     {/* Contacts */}
                     <li className="mobile-nav__item">
-                      <a className="mobile-nav__link" href="#contacts">CONTACTS</a>
+                      <Link 
+                        className="mobile-nav__link" 
+                        to="/contacts"
+                        onClick={() => setIsSmallMenuOpen(false)}
+                      >
+                        CONTACTS
+                      </Link>
                     </li>
 
                     {/* Products with categories */}
@@ -222,11 +228,11 @@ function Header() {
                 </nav>
               </div>
 
-              <a href="#contacts" className="contacts">
+              <Link to="/contacts" className="contacts">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                   <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#aba39e"/>
                 </svg>
-              </a>
+              </Link>
               <a href="tel:88002000166" className="phone">8 800 2000 166</a>
             </div>
           </div>
@@ -238,7 +244,6 @@ function Header() {
           <div className="col">
             <div className="right">
               <ul className="primary-menu">
-                
                 <li>
                   <a href="#about">About</a>
                   <ul className="dropdown">
@@ -252,7 +257,7 @@ function Header() {
                   <a href="#cooperation">Cooperation</a>
                 </li>
                 <li>
-                  <a href="#contacts">Contacts</a>
+                  <Link to="/contacts">Contacts</Link>
                 </li>
                 <li>
                   <Link to="/products">Products</Link>
