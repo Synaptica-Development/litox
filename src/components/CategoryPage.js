@@ -1,92 +1,150 @@
-import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import '../styles/CategoryPage.css';
 
-// Sample product data - you can replace this with your actual data or fetch from API
-const tileAdhesivesProducts = [
-  {
-    id: 1,
-    name: 'NK 21 Tile Adhesive (C1 TE)',
-    image: '/upload/resize_cache/iblock/5f3/uzjkx40o5x32p8asbnwy1sfzaspf4wx7/480_360_1/342.webp',
-    link: '/products/tile-adhesives/nk-21'
-  },
-  {
-    id: 2,
-    name: 'NK PRO WHITE Tile Adhesive (C2 TE S1)',
-    image: '/upload/resize_cache/iblock/db6/jnyhq57px2rpulww5aairta9rpuqrgwv/480_360_1/2345.webp',
-    link: '/products/tile-adhesives/nk-pro-white'
-  },
-  {
-    id: 3,
-    name: 'NK PRO Tile Adhesive (C2 TE S1)',
-    image: '/upload/resize_cache/iblock/68a/pdp9rc1tj9g16iuqav0vqit67kpd1slp/480_360_1/435.webp',
-    link: '/products/tile-adhesives/nk-pro'
-  },
-  {
-    id: 4,
-    name: 'Nova FIX Reinforced Tile Adhesive (C2 TE)',
-    image: '/upload/resize_cache/iblock/b87/u2a1jis8jezqj6wps9qwemv131831jr4/480_360_1/342.webp',
-    link: '/products/tile-adhesives/nova-fix'
-  },
-  {
-    id: 5,
-    name: 'TITAN flex Tile Adhesive (C1 TE)',
-    image: '/upload/resize_cache/iblock/951/viediolm2zl9lugvg023hgv3bu4l8fbi/480_360_1/4365.webp',
-    link: '/products/tile-adhesives/titan-flex'
-  },
-  {
-    id: 6,
-    name: 'Salut Tile Adhesive (C0)',
-    image: '/upload/resize_cache/iblock/32d/bq2p9oapek4a8ml0zzwp2g52q65ovu22/480_360_1/324.webp',
-    link: '/products/tile-adhesives/salut'
-  },
-  {
-    id: 7,
-    name: 'Prestige Tile Adhesive (C0T)',
-    image: '/upload/resize_cache/iblock/620/bokvcrr68p7hrzyqbxqzwwrr8e0kp5v3/480_360_1/4356.webp',
-    link: '/products/tile-adhesives/prestige'
-  },
-  {
-    id: 8,
-    name: 'Multi Fix Tile Adhesive (C1)',
-    image: '/upload/resize_cache/iblock/744/awnjtma8jxpwugyfqu5lwgfbkoczvrmj/480_360_1/568.webp',
-    link: '/products/tile-adhesives/multi-fix'
-  },
-  {
-    id: 9,
-    name: 'Triumph Tile Adhesive (C1 T)',
-    image: '/upload/resize_cache/iblock/03c/faq0qaf22hifu3dis00850m8dleib0pg/480_360_1/243543.webp',
-    link: '/products/tile-adhesives/triumph'
-  },
-  {
-    id: 10,
-    name: 'Kvadr Tile Adhesive (C1 T)',
-    image: '/upload/resize_cache/iblock/d81/a6ygq0xds8551juzmfolnezp9w3ajnsz/480_360_1/325345.webp',
-    link: '/products/tile-adhesives/kvadr'
-  },
-  {
-    id: 11,
-    name: 'Super FIX Tile Adhesive-Gel (C1 TE)',
-    image: '/upload/resize_cache/iblock/b71/rg9nxo7icv0tqsm5vv7xrgef4609jhoe/480_360_1/4444444444.webp',
-    link: '/products/tile-adhesives/super-fix'
-  },
-  {
-    id: 12,
-    name: 'White FIX White Cement Adhesive (C1)',
-    image: '/upload/resize_cache/iblock/489/rprmw2gazln9f0oj5rervlvujaxeg0mf/480_360_1/346.webp',
-    link: '/products/tile-adhesives/white-fix'
-  }
-];
+function CategoryPage() {
+  const { categoryId } = useParams(); // Get category ID from URL
+  const [products, setProducts] = useState([]);
+  const [category, setCategory] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-function CategoryPage({ 
-  categoryName = 'Tile Adhesives', 
-  backgroundImage = '/upload/iblock/d64/tsxocb9e0hfni9buftdeipbmxo1qo6nu/foto_plitochnyy_kley.webp',
-  products = tileAdhesivesProducts 
-}) {
   // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  // Fetch category details and products
+  useEffect(() => {
+    const fetchCategoryData = async () => {
+      try {
+        setLoading(true);
+        
+        console.log('Category ID from URL:', categoryId); // Debug
+        
+        // Fetch category details
+        const categoryResponse = await fetch('http://api.litox.synaptica.online/api/Category/categories', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Language': 'en',
+          },
+        });
+
+        if (!categoryResponse.ok) {
+          throw new Error('Failed to fetch category details');
+        }
+
+        const categories = await categoryResponse.json();
+        const currentCategory = categories.find(cat => cat.id === categoryId);
+        
+        console.log('Current Category:', currentCategory); // Debug
+        
+        if (currentCategory) {
+          setCategory(currentCategory);
+        }
+
+        // Fetch products for this category
+        const productsUrl = `http://api.litox.synaptica.online/api/Products/products?CategoryID=${categoryId}&PageSize=100&Page=1`;
+        console.log('Fetching products from:', productsUrl); // Debug
+        
+        const productsResponse = await fetch(productsUrl, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Language': 'en',
+          },
+        });
+
+        if (!productsResponse.ok) {
+          throw new Error('Failed to fetch products');
+        }
+
+        const productsData = await productsResponse.json();
+        console.log('Products API Response:', productsData);
+        console.log('Number of products:', productsData.length || productsData.items?.length || 0);
+
+        let fetchedProducts = [];
+        if (productsData && productsData.length > 0) {
+          fetchedProducts = productsData;
+        } else if (productsData && productsData.items) {
+          fetchedProducts = productsData.items;
+        }
+        
+        // Filter products by categoryID to be safe
+        const filteredProducts = fetchedProducts.filter(product => 
+          product.categoryID === categoryId || product.categoryId === categoryId
+        );
+        
+        console.log('Filtered products count:', filteredProducts.length);
+        setProducts(filteredProducts);
+      } catch (err) {
+        console.error('Error fetching category data:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (categoryId) {
+      fetchCategoryData();
+    }
+  }, [categoryId]);
+
+  // Get product image URL
+  const getProductImage = (product) => {
+    const imageUrl = product.imageLink || product.image || product.imageUrl || product.ImageLink || product.Image || product.ImageUrl;
+    
+    if (!imageUrl) {
+      return process.env.PUBLIC_URL + '/prod.webp'; // Fallback
+    }
+    
+    // If already a full URL, return as is
+    if (imageUrl.startsWith('http')) {
+      return imageUrl;
+    }
+    
+    // Otherwise prepend API base URL
+    return `http://api.litox.synaptica.online${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
+  };
+
+  // Get product name
+  const getProductName = (product) => {
+    return product.name || product.title || product.Name || product.Title || 'Product';
+  };
+
+  // Get product link
+  const getProductLink = (product) => {
+    const slug = product.slug || product.id || product.Id;
+    return `/products/${categoryId}/${slug}`;
+  };
+
+  // Get category name
+  const categoryName = category?.title || category?.name || 'Products';
+
+  // Get background image (you might want to add this to category API response)
+  const backgroundImage = category?.backgroundImage || category?.bannerImage || 
+                         process.env.PUBLIC_URL + '/upload/iblock/d64/tsxocb9e0hfni9buftdeipbmxo1qo6nu/foto_plitochnyy_kley.webp';
+
+  if (loading) {
+    return (
+      <div className="products-section category-rev">
+        <div className="container">
+          <div className="loading">Loading products...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="products-section category-rev">
+        <div className="container">
+          <div className="error">Error loading products: {error}</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -98,7 +156,7 @@ function CategoryPage({
         <div className="container">
           <ul className="breadcrumbs">
             <li><Link to="/">Home</Link></li>
-            <li><Link to="/products">Products</Link></li>
+            <li><Link to="/#products">Products</Link></li>
             <li><span>{categoryName}</span></li>
           </ul>
           <h1>{categoryName}</h1>
@@ -108,26 +166,33 @@ function CategoryPage({
       {/* Products Grid Section */}
       <div className="products-section category-rev">
         <div className="container">
-          <div className="products-flex-list">
-            {products.map((product) => (
-              <div key={product.id} className="item">
-                <Link to={product.link} className="video-wrapper">
-                  <div className="video-cover">
-                    <div className="img-imit"></div>
-                    <img 
-                      className="catalog-two__img" 
-                      src={product.image} 
-                      alt={product.name}
-                    />
-                    <div className="name">
-                      {product.name}
+          {products.length === 0 ? (
+            <div className="error">No products available in this category</div>
+          ) : (
+            <div className="products-flex-list">
+              {products.map((product, index) => (
+                <div key={product.id || index} className="item">
+                  <Link to={getProductLink(product)} className="video-wrapper">
+                    <div className="video-cover">
+                      <div className="img-imit"></div>
+                      <img 
+                        className="catalog-two__img" 
+                        src={getProductImage(product)} 
+                        alt={getProductName(product)}
+                        onError={(e) => {
+                          e.target.src = process.env.PUBLIC_URL + '/prod.webp';
+                        }}
+                      />
+                      <div className="name">
+                        {getProductName(product)}
+                      </div>
+                      <div className="divider"></div>
                     </div>
-                    <div className="divider"></div>
-                  </div>
-                </Link>
-              </div>
-            ))}
-          </div>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

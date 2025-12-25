@@ -1,51 +1,100 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/Landing.css';
 
-const lit1 = process.env.PUBLIC_URL + '/lit1.webp';
-const lit2 = process.env.PUBLIC_URL + '/lit2.jpg';
-const lit3 = process.env.PUBLIC_URL + '/lit3.webp';
-const lit4 = process.env.PUBLIC_URL + '/lit4.webp';
-const lit5 = process.env.PUBLIC_URL + '/lit5.webp';
-const lit6 = process.env.PUBLIC_URL + '/lit6.webp';
-const lit7 = process.env.PUBLIC_URL + '/lit7.webp';
-const lit8 = process.env.PUBLIC_URL + '/lit8.webp';
-const lit9 = process.env.PUBLIC_URL + '/lit9.webp';
-const lit10 = process.env.PUBLIC_URL + '/lit10.jpg';
-
 function Landing() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const images = [lit1, lit2, lit3, lit4, lit5, lit6, lit7, lit8, lit9, lit10];
+  const [banners, setBanners] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch banners from API
+  useEffect(() => {
+    const fetchBanners = async () => {
+      try {
+        const response = await fetch('http://api.litox.synaptica.online/api/Banners/banners', {
+          headers: {
+            'accept': '*/*',
+            'X-Language': 'ka'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch banners');
+        }
+
+        const data = await response.json();
+        
+        if (data && data.length > 0) {
+          setBanners(data);
+        }
+      } catch (err) {
+        console.error('Error fetching banners:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBanners();
+  }, []);
+
+  // Get images array from banners
+  const images = banners.map(banner => banner.imageLink).filter(url => url);
 
   // Auto-slide every 3 seconds
   useEffect(() => {
+    if (images.length === 0) return;
+    
     const interval = setInterval(() => {
       nextSlide();
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [currentSlide]);
+  }, [currentSlide, images.length]);
 
   const nextSlide = () => {
-    if (isTransitioning) return;
+    if (isTransitioning || images.length === 0) return;
     setIsTransitioning(true);
     setCurrentSlide((prev) => (prev + 1) % images.length);
     setTimeout(() => setIsTransitioning(false), 600);
   };
 
   const prevSlide = () => {
-    if (isTransitioning) return;
+    if (isTransitioning || images.length === 0) return;
     setIsTransitioning(true);
     setCurrentSlide((prev) => (prev - 1 + images.length) % images.length);
     setTimeout(() => setIsTransitioning(false), 600);
   };
 
   const goToSlide = (index) => {
-    if (isTransitioning || index === currentSlide) return;
+    if (isTransitioning || index === currentSlide || images.length === 0) return;
     setIsTransitioning(true);
     setCurrentSlide(index);
     setTimeout(() => setIsTransitioning(false), 600);
   };
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="intro-slider">
+        <div className="carousel-container">
+          <div className="loading">Loading banners...</div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error or empty state
+  if (images.length === 0) {
+    return (
+      <div className="intro-slider">
+        <div className="carousel-container">
+          <div className="error">No banners available</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="intro-slider">
@@ -68,7 +117,7 @@ function Landing() {
               }}
             />
           ))}
-          
+
           {/* Content overlay */}
           <div className="container intro-slide-text">
             <div className="subtitle"></div>

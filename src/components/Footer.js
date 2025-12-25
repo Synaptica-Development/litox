@@ -1,6 +1,10 @@
 import React from 'react';
 import '../styles/Footer.css';
 
+const img1 = `${process.env.PUBLIC_URL}/icon1.svg`;
+const img2 = `${process.env.PUBLIC_URL}/icon2.svg`;
+const img3 = `${process.env.PUBLIC_URL}/icon3.svg`;
+
 function Footer() {
   return (
     <footer>
@@ -12,19 +16,19 @@ function Footer() {
           <div className="flex-footer-cards">
             <a href="/where-to-buy">
               <span className="img-wrapper">
-                <img src="/icon1.svg" alt="Where to buy" height="37" />
+                <img src={img1} alt="Where to buy" height="37" />
               </span>
               <span>Where to Buy</span>
             </a>
             <a href="/support">
               <span className="img-wrapper">
-                <img src="/icon2.svg" alt="Support" height="33" />
+                <img src={img2} alt="Support" height="33" />
               </span>
               <span>Tech Support</span>
             </a>
             <a href="/partnership">
               <span className="img-wrapper">
-                <img src="/icon3.svg" alt="Partnership" width="62" height="40" className="bad-vector" />
+                <img src={img3} alt="Partnership" width="62" height="40" className="bad-vector" />
               </span>
               <span>Partnership</span>
             </a>
