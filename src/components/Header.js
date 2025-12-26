@@ -99,6 +99,9 @@ function Header() {
                     <Link className="navbar-mobile__link" to="/" onClick={() => setIsLargeMenuOpen(false)}>Home</Link>
                   </li>
                   <li className="navbar-mobile__item">
+                    <Link className="navbar-mobile__link" to="/about" onClick={() => setIsLargeMenuOpen(false)}>About</Link>
+                  </li>
+                  <li className="navbar-mobile__item">
                     <a className="navbar-mobile__link" href="#certificates">Certificates and declarations</a>
                   </li>
                   <li className="navbar-mobile__item">
@@ -137,23 +140,15 @@ function Header() {
                       </Link>
                     </li>
 
-                    {/* About with submenu */}
+                    {/* About */}
                     <li className="mobile-nav__item">
-                      <div className="mobile-nav__link-wrapper">
-                        <a className="mobile-nav__link" href="#about">ABOUT</a>
-                        <button 
-                          className="submenu-toggle"
-                          onClick={() => toggleSubmenu('about')}
-                        >
-                          {expandedMenu === 'about' ? '−' : '+'}
-                        </button>
-                      </div>
-                      <ul className={`mobile-submenu ${expandedMenu === 'about' ? 'active' : ''}`}>
-                        <li><a href="#history">History</a></li>
-                        <li><a href="#jobs">Jobs</a></li>
-                        <li><a href="#testing">Testing center</a></li>
-                        <li><a href="#rewards">Rewards</a></li>
-                      </ul>
+                      <Link 
+                        className="mobile-nav__link" 
+                        to="/about" 
+                        onClick={() => setIsSmallMenuOpen(false)}
+                      >
+                        ABOUT
+                      </Link>
                     </li>
 
                     {/* Cooperation */}
@@ -175,7 +170,13 @@ function Header() {
                     {/* Products with categories */}
                     <li className="mobile-nav__item">
                       <div className="mobile-nav__link-wrapper">
-                        <Link className="mobile-nav__link" to="/products">PRODUCTS</Link>
+                        <Link 
+                          className="mobile-nav__link" 
+                          to="/products"
+                          onClick={() => setIsSmallMenuOpen(false)}
+                        >
+                          PRODUCTS
+                        </Link>
                         <button 
                           className="submenu-toggle"
                           onClick={() => toggleSubmenu('products')}
@@ -245,13 +246,7 @@ function Header() {
             <div className="right">
               <ul className="primary-menu">
                 <li>
-                  <a href="#about">About</a>
-                  <ul className="dropdown">
-                    <li><a href="#history">History</a></li>
-                    <li><a href="#jobs">Jobs</a></li>
-                    <li><a href="#testing">Testing center</a></li>
-                    <li><a href="#rewards">Rewards</a></li>
-                  </ul>
+                  <Link to="/about">About</Link>
                 </li>
                 <li>
                   <a href="#cooperation">Cooperation</a>

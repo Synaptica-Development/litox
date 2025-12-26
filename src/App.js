@@ -10,6 +10,7 @@ import CategoryPage from './components/CategoryPage';
 import AllProducts from './components/AllProducts';
 import ProductDetails from './components/ProductDetails';
 import Contacts from './components/Contacts';
+import About from './components/About';
 
 // Home page component
 function HomePage() {
@@ -40,6 +41,8 @@ function App() {
 
           {/* Contacts route */}
           <Route path="/contacts" element={<Contacts />} />
+          {/* About route */}
+          <Route path="/about" element={<About />} />
         </Routes>
         <Footer />
       </div>

@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import '../styles/AllProducts.css';
 
+
+const background = process.env.PUBLIC_URL + '/products-bg.jpg';
+
 function AllProducts() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [categories, setCategories] = useState([]);
@@ -10,6 +13,11 @@ function AllProducts() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     const fetchAllData = async () => {
@@ -120,7 +128,15 @@ function AllProducts() {
   return (
     <>
       {/* Hero Section */}
-      <section className="products-hero">
+      <section 
+        className="products-hero"
+        style={{
+          backgroundImage: `url(${background})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
         <div className="container">
           <ul className="breadcrumbs">
             <li><Link to="/">Home</Link></li>
