@@ -6,7 +6,7 @@
 }
 
 /* Hero Section */
-.products-hero {
+.products-hero2 {
   min-height: 424px;
   background-color: #ef6f2e;
   margin-top: 60px;
@@ -16,7 +16,7 @@
   position: relative;
 }
 
-.products-hero::before {
+.products-hero2::before {
   content: '';
   position: absolute;
   top: 0;
@@ -26,12 +26,15 @@
   background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.6));
 }
 
-.products-hero .container {
+.products-hero2 .container2 {
   position: relative;
   z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
 }
 
-.products-hero h1 {
+.products-hero2 h1 {
   font-size: 48px;
   font-weight: 700;
   color: #fff;
@@ -227,7 +230,7 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .products-hero h1 {
+  .products-hero2 h1 {
     font-size: 36px;
   }
 }
@@ -238,12 +241,12 @@
     gap: 20px;
   }
 
-  .products-hero {
+  .products-hero2 {
     min-height: 300px;
     padding-bottom: 30px;
   }
 
-  .products-hero h1 {
+  .products-hero2 h1 {
     font-size: 28px;
   }
 
@@ -270,11 +273,11 @@
     grid-template-columns: 1fr;
   }
 
-  .products-hero {
+  .products-hero2 {
     min-height: 250px;
   }
 
-  .products-hero h1 {
+  .products-hero2 h1 {
     font-size: 24px;
   }
 

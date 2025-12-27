@@ -26,7 +26,7 @@ function HomePage() {
 
 function App() {
   return (
-    <Router basename="/litox">
+    <Router basename="/">
       <div className="App">
         <Header />
         <Routes>

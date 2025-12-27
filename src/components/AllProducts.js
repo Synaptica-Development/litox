@@ -129,7 +129,7 @@ function AllProducts() {
     <>
       {/* Hero Section */}
       <section 
-        className="products-hero"
+        className="products-hero2"
         style={{
           backgroundImage: `url(${background})`,
           backgroundSize: 'cover',
@@ -137,7 +137,7 @@ function AllProducts() {
           backgroundRepeat: 'no-repeat'
         }}
       >
-        <div className="container">
+        <div className="container2">
           <ul className="breadcrumbs">
             <li><Link to="/">Home</Link></li>
             <li><span>Products</span></li>

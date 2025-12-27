@@ -3,17 +3,13 @@ import '../styles/Landing.css';
 
 function Landing() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const [banners, setBanners] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  // Fetch banners from API
   useEffect(() => {
     const fetchBanners = async () => {
       try {
@@ -35,7 +31,6 @@ function Landing() {
         }
       } catch (err) {
         console.error('Error fetching banners:', err);
-        setError(err.message);
       } finally {
         setLoading(false);
       }
@@ -44,42 +39,33 @@ function Landing() {
     fetchBanners();
   }, []);
 
-  // Get images array from banners
   const images = banners.map(banner => banner.imageLink).filter(url => url);
 
-  // Auto-slide every 3 seconds
   useEffect(() => {
-    if (images.length === 0) return;
+    if (images.length <= 1) return;
     
     const interval = setInterval(() => {
-      nextSlide();
-    }, 3000);
+      setCurrentSlide((prev) => (prev + 1) % images.length);
+    }, 4000);
 
     return () => clearInterval(interval);
-  }, [currentSlide, images.length]);
+  }, [images.length]);
 
   const nextSlide = () => {
-    if (isTransitioning || images.length === 0) return;
-    setIsTransitioning(true);
+    if (images.length <= 1) return;
     setCurrentSlide((prev) => (prev + 1) % images.length);
-    setTimeout(() => setIsTransitioning(false), 600);
   };
 
   const prevSlide = () => {
-    if (isTransitioning || images.length === 0) return;
-    setIsTransitioning(true);
+    if (images.length <= 1) return;
     setCurrentSlide((prev) => (prev - 1 + images.length) % images.length);
-    setTimeout(() => setIsTransitioning(false), 600);
   };
 
   const goToSlide = (index) => {
-    if (isTransitioning || index === currentSlide || images.length === 0) return;
-    setIsTransitioning(true);
+    if (index === currentSlide || images.length === 0) return;
     setCurrentSlide(index);
-    setTimeout(() => setIsTransitioning(false), 600);
   };
 
-  // Show loading state
   if (loading) {
     return (
       <div className="intro-slider">
@@ -90,7 +76,6 @@ function Landing() {
     );
   }
 
-  // Show error or empty state
   if (images.length === 0) {
     return (
       <div className="intro-slider">
@@ -104,35 +89,39 @@ function Landing() {
   return (
     <div className="intro-slider">
       <div className="carousel-container">
-        <div className="item">
-          {/* Images with fade transition */}
-          {images.map((img, index) => (
-            <img 
-              key={index}
-              src={img} 
-              alt={`Slide ${index + 1}`}
-              className="carousel-image"
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                opacity: currentSlide === index ? 1 : 0,
-                zIndex: currentSlide === index ? 1 : 0,
-                transition: 'opacity 0.6s ease-in-out',
-              }}
-            />
-          ))}
+        <div className="carousel-wrapper">
+          <div className="carousel-track">
+            {images.map((img, index) => (
+              <div 
+                key={index} 
+                className="carousel-slide"
+                style={{
+                  opacity: index === currentSlide ? 1 : 0,
+                  zIndex: index === currentSlide ? 2 : 0,
+                  visibility: index === currentSlide ? 'visible' : 'hidden'
+                }}
+              >
+                <div className="image-wrapper">
+                  <img 
+                    src={img} 
+                    alt={`Slide ${index + 1}`}
+                    className="carousel-image"
+                    key={`${index}-${currentSlide}`}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
 
-          {/* Content overlay */}
-          <div className="container intro-slide-text">
-            <div className="subtitle"></div>
+          <div className="intro-slide-text">
+            {banners[currentSlide]?.text && (
+              <p className="banner-text">{banners[currentSlide].text}</p>
+            )}
             <a href="#" className="default-btn">MORE DETAILED</a>
           </div>
         </div>
 
-        {/* Controls container - aligned with numbered dots */}
         <div className="carousel-controls">
-          {/* Left Arrow */}
           <button 
             className="arrow-btn prev-btn" 
             onClick={prevSlide}
@@ -143,7 +132,6 @@ function Landing() {
             </svg>
           </button>
 
-          {/* Numbered Dots */}
           <div className="numbered-dots">
             {images.map((_, index) => (
               <button
@@ -157,7 +145,6 @@ function Landing() {
             ))}
           </div>
 
-          {/* Right Arrow */}
           <button 
             className="arrow-btn next-btn" 
             onClick={nextSlide}

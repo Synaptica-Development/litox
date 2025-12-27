@@ -136,3 +136,29 @@
     width: 100%; /* 1 item per row on small mobile */
   }
 }
+
+.products-header {
+  max-width: 1200px;
+  margin: 0 auto 40px;
+  padding: 0 15px;
+}
+
+.products-title {
+  font-size: 36px;
+  font-weight: 400;
+  color: #fff;
+  margin: 0;
+  font-family: 'Century Gothic Paneuropean', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .products-title {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .products-title {
+    font-size: 24px;
+  }
+}

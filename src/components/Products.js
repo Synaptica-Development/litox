@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import '../styles/Products.css';
 
 function Products() {
@@ -6,6 +7,13 @@ function Products() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [language, setLanguage] = useState('ka');
+
+  // Get language from localStorage
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem('language') || 'ka';
+    setLanguage(savedLanguage);
+  }, []);
 
   // Fetch products and categories from API
   useEffect(() => {
@@ -15,7 +23,7 @@ function Products() {
         const categoriesResponse = await fetch('http://api.litox.synaptica.online/api/Category/categories', {
           headers: {
             'accept': '*/*',
-            'X-Language': 'ka'
+            'X-Language': language
           }
         });
 
@@ -35,7 +43,7 @@ function Products() {
             {
               headers: {
                 'accept': '*/*',
-                'X-Language': 'ka'
+                'X-Language': language
               }
             }
           );
@@ -62,7 +70,7 @@ function Products() {
     };
 
     fetchData();
-  }, []);
+  }, [language]);
 
   // Get category name by ID
   const getCategoryName = (categoryId) => {
@@ -85,6 +93,9 @@ function Products() {
   if (loading) {
     return (
       <div className="home-cards-grid">
+        <div className="products-header">
+          <h2 className="products-title">Products პროდუქტები</h2>
+        </div>
         <div className="flex-grid">
           <div className="loading">Loading products...</div>
         </div>
@@ -96,6 +107,9 @@ function Products() {
   if (error) {
     return (
       <div className="home-cards-grid">
+        <div className="products-header">
+          <h2 className="products-title">Products პროდუქტები</h2>
+        </div>
         <div className="flex-grid">
           <div className="error">Error loading products: {error}</div>
         </div>
@@ -107,6 +121,9 @@ function Products() {
   if (products.length === 0) {
     return (
       <div className="home-cards-grid">
+        <div className="products-header">
+          <h2 className="products-title">Products პროდუქტები</h2>
+        </div>
         <div className="flex-grid">
           <div className="error">No products available</div>
         </div>
@@ -116,10 +133,15 @@ function Products() {
 
   return (
     <div className="home-cards-grid">
+      <div className="products-header">
+        <h2 className="products-title">
+          {language === 'ka' ? 'პროდუქტები' : 'Products'}
+        </h2>
+      </div>
       <div className="flex-grid">
         {products.map((product, index) => (
           <div key={product.id || index} className="item">
-            <a href="#" className="card">
+            <Link to={`/products/${product.categoryId}/${product.id}`} className="card">
               <span className="img-wrapper">
                 <img 
                   src={getProductImage(product)} 
@@ -131,7 +153,7 @@ function Products() {
               </span>
               <span className="name">{getProductName(product)}</span>
               <span className="category">{product.categoryTitle || getCategoryName(product.categoryId)}</span>
-            </a>
+            </Link>
           </div>
         ))}
       </div>
