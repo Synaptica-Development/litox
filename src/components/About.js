@@ -7,7 +7,7 @@ const background = process.env.PUBLIC_URL + '/products-bg.jpg';
 function About() {
   const [aboutData, setAboutData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [language, setLanguage] = useState('ka');
+  const [language, setLanguage] = useState('en');
 
   useEffect(() => {
     window.scrollTo(0, 0);

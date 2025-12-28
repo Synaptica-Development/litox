@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import '../styles/AllProducts.css';
 
-
 const background = process.env.PUBLIC_URL + '/products-bg.jpg';
 
 function AllProducts() {
@@ -13,20 +12,34 @@ function AllProducts() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [language, setLanguage] = useState('en');
+  
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const PRODUCTS_PER_PAGE = 16;
 
-  // Scroll to top when component mounts
+  // Load language from localStorage
   useEffect(() => {
-    window.scrollTo(0, 0);
+    const savedLanguage = localStorage.getItem('language') || 'ka';
+    setLanguage(savedLanguage);
   }, []);
 
+  // Scroll to top when component mounts or page changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentPage]);
+
+  // Fetch data when language changes
   useEffect(() => {
     const fetchAllData = async () => {
+      setLoading(true);
+      setError(null);
       try {
         // Fetch all categories
         const categoriesResponse = await fetch('http://api.litox.synaptica.online/api/Category/categories', {
           headers: {
             'accept': '*/*',
-            'X-Language': 'ka'
+            'X-Language': language
           }
         });
 
@@ -46,7 +59,7 @@ function AllProducts() {
             {
               headers: {
                 'accept': '*/*',
-                'X-Language': 'ka'
+                'X-Language': language
               }
             }
           );
@@ -74,16 +87,67 @@ function AllProducts() {
         }
       } catch (err) {
         setError(err.message);
+        setCategories([]);
+        setAllProducts([]);
+        setFilteredProducts([]);
       } finally {
         setLoading(false);
       }
     };
 
     fetchAllData();
-  }, [searchParams]);
+  }, [searchParams, language]);
+
+  // Translation function
+  const translate = (key) => {
+    const translations = {
+      home: {
+        ka: 'მთავარი',
+        en: 'Home',
+        ru: 'Главная'
+      },
+      products: {
+        ka: 'პროდუქტები',
+        en: 'Products',
+        ru: 'Продукты'
+      },
+      allProducts: {
+        ka: 'ყველა პროდუქტი',
+        en: 'All Products',
+        ru: 'Все продукты'
+      },
+      loading: {
+        ka: 'იტვირთება ყველა პროდუქტი...',
+        en: 'Loading all products...',
+        ru: 'Загрузка всех продуктов...'
+      },
+      error: {
+        ka: 'შეცდომა პროდუქტების ჩატვირთვისას',
+        en: 'Error loading products',
+        ru: 'Ошибка загрузки продуктов'
+      },
+      noProducts: {
+        ka: 'პროდუქტები არ არის ხელმისაწვდომი',
+        en: 'No products available',
+        ru: 'Продукты недоступны'
+      },
+      previous: {
+        ka: 'წინა',
+        en: 'Previous',
+        ru: 'Предыдущая'
+      },
+      next: {
+        ka: 'შემდეგი',
+        en: 'Next',
+        ru: 'Следующая'
+      }
+    };
+    return translations[key]?.[language] || translations[key]?.['en'] || key;
+  };
 
   const handleCategoryFilter = (categoryId) => {
     setSelectedCategory(categoryId);
+    setCurrentPage(1); // Reset to first page when filtering
     
     // Update URL parameter
     if (categoryId === 'all') {
@@ -105,11 +169,106 @@ function AllProducts() {
     return product.title || product.name || 'Product';
   };
 
+  // Pagination logic
+  const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
+  const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
+  const endIndex = startIndex + PRODUCTS_PER_PAGE;
+  const currentProducts = filteredProducts.slice(startIndex, endIndex);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const renderPagination = () => {
+    if (totalPages <= 1) return null;
+
+    const pages = [];
+    const maxVisiblePages = 5;
+    
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    
+    if (endPage - startPage < maxVisiblePages - 1) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    // Previous button
+    pages.push(
+      <button
+        key="prev"
+        className="pagination-btn pagination-arrow"
+        onClick={() => handlePageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+      >
+        {translate('previous')}
+      </button>
+    );
+
+    // First page
+    if (startPage > 1) {
+      pages.push(
+        <button
+          key={1}
+          className="pagination-btn"
+          onClick={() => handlePageChange(1)}
+        >
+          1
+        </button>
+      );
+      if (startPage > 2) {
+        pages.push(<span key="dots1" className="pagination-dots">...</span>);
+      }
+    }
+
+    // Page numbers
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(
+        <button
+          key={i}
+          className={`pagination-btn ${currentPage === i ? 'active' : ''}`}
+          onClick={() => handlePageChange(i)}
+        >
+          {i}
+        </button>
+      );
+    }
+
+    // Last page
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) {
+        pages.push(<span key="dots2" className="pagination-dots">...</span>);
+      }
+      pages.push(
+        <button
+          key={totalPages}
+          className="pagination-btn"
+          onClick={() => handlePageChange(totalPages)}
+        >
+          {totalPages}
+        </button>
+      );
+    }
+
+    // Next button
+    pages.push(
+      <button
+        key="next"
+        className="pagination-btn pagination-arrow"
+        onClick={() => handlePageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+      >
+        {translate('next')}
+      </button>
+    );
+
+    return <div className="pagination">{pages}</div>;
+  };
+
   if (loading) {
     return (
       <div className="all-products-container">
         <div className="container">
-          <div className="loading">Loading all products...</div>
+          <div className="loading">{translate('loading')}</div>
         </div>
       </div>
     );
@@ -119,7 +278,7 @@ function AllProducts() {
     return (
       <div className="all-products-container">
         <div className="container">
-          <div className="error">Error loading products: {error}</div>
+          <div className="error">{translate('error')}: {error}</div>
         </div>
       </div>
     );
@@ -139,10 +298,10 @@ function AllProducts() {
       >
         <div className="container2">
           <ul className="breadcrumbs">
-            <li><Link to="/">Home</Link></li>
-            <li><span>Products</span></li>
+            <li><Link to="/">{translate('home')}</Link></li>
+            <li><span>{translate('products')}</span></li>
           </ul>
-          <h1>All Products</h1>
+          <h1>{translate('allProducts')}</h1>
         </div>
       </section>
 
@@ -155,7 +314,7 @@ function AllProducts() {
               className={`filter-btn ${selectedCategory === 'all' ? 'active' : ''}`}
               onClick={() => handleCategoryFilter('all')}
             >
-              All Products ({allProducts.length})
+              {translate('allProducts')} ({allProducts.length})
             </button>
             {categories.map((category) => {
               const count = allProducts.filter(p => p.categoryId === category.id).length;
@@ -173,31 +332,36 @@ function AllProducts() {
 
           {/* Products Grid */}
           {filteredProducts.length === 0 ? (
-            <div className="error">No products available</div>
+            <div className="error">{translate('noProducts')}</div>
           ) : (
-            <div className="products-grid">
-              {filteredProducts.map((product, index) => (
-                <Link 
-                  key={product.id || index} 
-                  to={`/products/${product.categoryId}/${product.id}`} 
-                  className="product-card"
-                >
-                  <div className="product-image">
-                    <img 
-                      src={getProductImage(product)} 
-                      alt={getProductName(product)}
-                      onError={(e) => {
-                        e.target.src = process.env.PUBLIC_URL + '/prod.webp';
-                      }}
-                    />
-                  </div>
-                  <div className="product-info">
-                    <h3 className="product-name">{getProductName(product)}</h3>
-                    <p className="product-category">{product.categoryName}</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
+            <>
+              <div className="products-grid">
+                {currentProducts.map((product, index) => (
+                  <Link 
+                    key={product.id || index} 
+                    to={`/products/${product.categoryId}/${product.id}`} 
+                    className="product-card"
+                  >
+                    <div className="product-image">
+                      <img 
+                        src={getProductImage(product)} 
+                        alt={getProductName(product)}
+                        onError={(e) => {
+                          e.target.src = process.env.PUBLIC_URL + '/prod.webp';
+                        }}
+                      />
+                    </div>
+                    <div className="product-info">
+                      <h3 className="product-name">{getProductName(product)}</h3>
+                      <p className="product-category">{product.categoryName}</p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+              
+              {/* Pagination */}
+              {renderPagination()}
+            </>
           )}
         </div>
       </div>

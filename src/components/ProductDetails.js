@@ -9,25 +9,25 @@ function ProductDetails() {
   const [category, setCategory] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [language, setLanguage] = useState('ka');
+  const [language, setLanguage] = useState('en');
+
+  // Load language from localStorage
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem('language') || 'ka';
+    setLanguage(savedLanguage);
+  }, []);
 
   // Scroll to top when component mounts or productId changes
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [productId]);
 
-  useEffect(() => {
-    const savedLanguage = localStorage.getItem('language');
-    if (savedLanguage) {
-      setLanguage(savedLanguage);
-    }
-  }, []);
-
+  // Fetch product details when language or productId changes
   useEffect(() => {
     const fetchProductDetails = async () => {
+      setLoading(true);
+      setError(null);
       try {
-        setLoading(true);
-        
         // Fetch product details
         const productResponse = await fetch(
           `http://api.litox.synaptica.online/api/Products/products/details?ProductID=${productId}`,
@@ -65,6 +65,8 @@ function ProductDetails() {
 
       } catch (err) {
         setError(err.message);
+        setProduct(null);
+        setCategory(null);
       } finally {
         setLoading(false);
       }
@@ -75,11 +77,68 @@ function ProductDetails() {
     }
   }, [productId, categoryId, language]);
 
+  // Translation function
+  const translate = (key) => {
+    const translations = {
+      home: {
+        ka: 'მთავარი',
+        en: 'Home',
+        ru: 'Главная'
+      },
+      products: {
+        ka: 'პროდუქტები',
+        en: 'Products',
+        ru: 'Продукты'
+      },
+      loading: {
+        ka: 'იტვირთება პროდუქტის დეტალები...',
+        en: 'Loading product details...',
+        ru: 'Загрузка деталей продукта...'
+      },
+      error: {
+        ka: 'შეცდომა პროდუქტის ჩატვირთვისას',
+        en: 'Error loading product',
+        ru: 'Ошибка загрузки продукта'
+      },
+      productNotFound: {
+        ka: 'პროდუქტი ვერ მოიძებნა',
+        en: 'Product not found',
+        ru: 'Продукт не найден'
+      },
+      requestPricing: {
+        ka: 'ფასის მოთხოვნა',
+        en: 'REQUEST PRICING',
+        ru: 'ЗАПРОСИТЬ ЦЕНУ'
+      },
+      specifications: {
+        ka: 'სპეციფიკაციები',
+        en: 'Specifications',
+        ru: 'Спецификации'
+      },
+      calculator: {
+        ka: 'კალკულატორი',
+        en: 'CALCULATOR',
+        ru: 'КАЛЬКУЛЯТОР'
+      },
+      whereToBuy: {
+        ka: 'სად ვიყიდოთ',
+        en: 'WHERE TO BUY',
+        ru: 'ГДЕ КУПИТЬ'
+      },
+      noSpecifications: {
+        ka: 'ამ პროდუქტისთვის სპეციფიკაციები მიუწვდომელია.',
+        en: 'No specifications available for this product.',
+        ru: 'Спецификации для этого продукта недоступны.'
+      }
+    };
+    return translations[key]?.[language] || translations[key]?.['en'] || key;
+  };
+
   if (loading) {
     return (
       <div className="product-details-container">
         <div className="container">
-          <div className="loading">Loading product details...</div>
+          <div className="loading">{translate('loading')}</div>
         </div>
       </div>
     );
@@ -89,7 +148,7 @@ function ProductDetails() {
     return (
       <div className="product-details-container">
         <div className="container">
-          <div className="error">Error loading product: {error || 'Product not found'}</div>
+          <div className="error">{translate('error')}: {error || translate('productNotFound')}</div>
         </div>
       </div>
     );
@@ -109,14 +168,14 @@ function ProductDetails() {
         />
         <div className="container">
           <ul className="breadcrumbs">
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/products">Products</Link></li>
+            <li><Link to="/">{translate('home')}</Link></li>
+            <li><Link to="/products">{translate('products')}</Link></li>
             {category && <li><Link to={`/products?category=${categoryId}`}>{category.title}</Link></li>}
             <li><span>{product.title}</span></li>
           </ul>
           <h1>{product.title}</h1>
           {product.description && <div className="preview-text">{product.description}</div>}
-          <button className="request-btn">REQUEST PRICING</button>
+          <button className="request-btn">{translate('requestPricing')}</button>
         </div>
       </section>
 
@@ -126,11 +185,13 @@ function ProductDetails() {
           <div className="tabs-header">
             <ul className="tab-list">
               <li className={activeTab === 'specifications' ? 'active' : ''}>
-                <button onClick={() => setActiveTab('specifications')}>Specifications</button>
+                <button onClick={() => setActiveTab('specifications')}>
+                  {translate('specifications')}
+                </button>
               </li>
             </ul>
-            <button className="calculator-btn">CALCULATOR</button>
-            <Link to="/where-to-buy" className="where-buy-btn">WHERE TO BUY</Link>
+            <button className="calculator-btn">{translate('calculator')}</button>
+            <Link to="/where-to-buy" className="where-buy-btn">{translate('whereToBuy')}</Link>
           </div>
 
           {/* Tab Content */}
@@ -151,7 +212,7 @@ function ProductDetails() {
                       </tbody>
                     </table>
                   ) : (
-                    <p>No specifications available for this product.</p>
+                    <p>{translate('noSpecifications')}</p>
                   )}
                 </div>
               </div>

@@ -8,7 +8,7 @@ function Header() {
   const [isLargeMenuOpen, setIsLargeMenuOpen] = useState(false);
   const [isSmallMenuOpen, setIsSmallMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [language, setLanguage] = useState('ka');
+  const [language, setLanguage] = useState('en');
   const [categories, setCategories] = useState([]);
   const [expandedMenu, setExpandedMenu] = useState(null);
   const navigate = useNavigate();
@@ -61,6 +61,68 @@ function Header() {
     }
   }, []);
 
+  // Get menu text based on language
+  const getMenuText = () => {
+    switch(language) {
+      case 'ka': return 'მენიუ';
+      case 'en': return 'menu';
+      case 'ru': return 'меню';
+      default: return 'menu';
+    }
+  };
+
+  // Translation function for menu items
+  const translate = (key) => {
+    const translations = {
+      home: {
+        ka: 'მთავარი',
+        en: 'HOME',
+        ru: 'ГЛАВНАЯ'
+      },
+      about: {
+        ka: 'ჩვენს შესახებ',
+        en: 'ABOUT',
+        ru: 'О НАС'
+      },
+      cooperation: {
+        ka: 'თანამშრომლობა',
+        en: 'COOPERATION',
+        ru: 'СОТРУДНИЧЕСТВО'
+      },
+      contacts: {
+        ka: 'კონტაქტები',
+        en: 'CONTACTS',
+        ru: 'КОНТАКТЫ'
+      },
+      products: {
+        ka: 'პროდუქტები',
+        en: 'PRODUCTS',
+        ru: 'ПРОДУКТЫ'
+      },
+      certificates: {
+        ka: 'სერტიფიკატები და დეკლარაციები',
+        en: 'CERTIFICATES AND DECLARATIONS',
+        ru: 'СЕРТИФИКАТЫ И ДЕКЛАРАЦИИ'
+      },
+      helpful: {
+        ka: 'სასარგებლო ინფორმაცია',
+        en: 'HELPFUL INFORMATION',
+        ru: 'ПОЛЕЗНАЯ ИНФОРМАЦИЯ'
+      },
+      reference: {
+        ka: 'საცნობარო ობიექტები',
+        en: 'REFERENCE OBJECTS',
+        ru: 'СПРАВОЧНЫЕ ОБЪЕКТЫ'
+      },
+      news: {
+        ka: 'სიახლეები',
+        en: 'NEWS',
+        ru: 'НОВОСТИ'
+      }
+    };
+    return translations[key]?.[language] || translations[key]?.['en'] || key;
+  };
+
   return (
     <>
       <header>
@@ -74,7 +136,7 @@ function Header() {
                   <i></i>
                   <i></i>
                 </div>
-                <span>menu</span>
+                <span>{getMenuText()}</span>
               </div>
 
               {/* Small screen menu trigger */}
@@ -84,7 +146,7 @@ function Header() {
                   <i></i>
                   <i></i>
                 </div>
-                <span>menu</span>
+                <span>{getMenuText()}</span>
               </div>
 
               {/* Large screen menu */}
@@ -96,25 +158,39 @@ function Header() {
                 </div>
                 <ul className="navbar-mobile__list">
                   <li className="navbar-mobile__item">
-                    <Link className="navbar-mobile__link" to="/" onClick={() => setIsLargeMenuOpen(false)}>Home</Link>
+                    <Link className="navbar-mobile__link" to="/" onClick={() => setIsLargeMenuOpen(false)}>
+                      {translate('home')}
+                    </Link>
                   </li>
                   <li className="navbar-mobile__item">
-                    <Link className="navbar-mobile__link" to="/about" onClick={() => setIsLargeMenuOpen(false)}>About</Link>
+                    <Link className="navbar-mobile__link" to="/about" onClick={() => setIsLargeMenuOpen(false)}>
+                      {translate('about')}
+                    </Link>
                   </li>
                   <li className="navbar-mobile__item">
-                    <a className="navbar-mobile__link" href="#certificates">Certificates and declarations</a>
+                    <a className="navbar-mobile__link" href="#certificates">
+                      {translate('certificates')}
+                    </a>
                   </li>
                   <li className="navbar-mobile__item">
-                    <a className="navbar-mobile__link" href="#helpful">Helpful information</a>
+                    <a className="navbar-mobile__link" href="#helpful">
+                      {translate('helpful')}
+                    </a>
                   </li>
                   <li className="navbar-mobile__item">
-                    <a className="navbar-mobile__link" href="#reference">Reference objects</a>
+                    <a className="navbar-mobile__link" href="#reference">
+                      {translate('reference')}
+                    </a>
                   </li>
                   <li className="navbar-mobile__item">
-                    <a className="navbar-mobile__link" href="#news">News</a>
+                    <a className="navbar-mobile__link" href="#news">
+                      {translate('news')}
+                    </a>
                   </li>
                   <li className="navbar-mobile__item">
-                    <Link className="navbar-mobile__link" to="/contacts" onClick={() => setIsLargeMenuOpen(false)}>Contacts</Link>
+                    <Link className="navbar-mobile__link" to="/contacts" onClick={() => setIsLargeMenuOpen(false)}>
+                      {translate('contacts')}
+                    </Link>
                   </li>
                 </ul>
               </div>
@@ -136,7 +212,7 @@ function Header() {
                         to="/" 
                         onClick={() => setIsSmallMenuOpen(false)}
                       >
-                        HOME
+                        {translate('home')}
                       </Link>
                     </li>
 
@@ -147,13 +223,8 @@ function Header() {
                         to="/about" 
                         onClick={() => setIsSmallMenuOpen(false)}
                       >
-                        ABOUT
+                        {translate('about')}
                       </Link>
-                    </li>
-
-                    {/* Cooperation */}
-                    <li className="mobile-nav__item">
-                      <a className="mobile-nav__link" href="#cooperation">COOPERATION</a>
                     </li>
 
                     {/* Contacts */}
@@ -163,7 +234,7 @@ function Header() {
                         to="/contacts"
                         onClick={() => setIsSmallMenuOpen(false)}
                       >
-                        CONTACTS
+                        {translate('contacts')}
                       </Link>
                     </li>
 
@@ -175,7 +246,7 @@ function Header() {
                           to="/products"
                           onClick={() => setIsSmallMenuOpen(false)}
                         >
-                          PRODUCTS
+                          {translate('products')}
                         </Link>
                         <button 
                           className="submenu-toggle"
@@ -201,7 +272,7 @@ function Header() {
                       </ul>
                     </li>
 
-                    {/* Language switcher */}
+                    {/* Language switcher - THREE LANGUAGES */}
                     <li className="mobile-nav__item mobile-lang">
                       <a 
                         href="#" 
@@ -223,6 +294,17 @@ function Header() {
                         }}
                       >
                         EN
+                      </a>
+                      <span className="lang-divider">|</span>
+                      <a 
+                        href="#" 
+                        className={`mobile-nav__link ${language === 'ru' ? 'active-lang' : ''}`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleLanguageChange('ru');
+                        }}
+                      >
+                        РУ
                       </a>
                     </li>
                   </ul>
@@ -246,16 +328,13 @@ function Header() {
             <div className="right">
               <ul className="primary-menu">
                 <li>
-                  <Link to="/about">About</Link>
+                  <Link to="/about">{translate('about')}</Link>
                 </li>
                 <li>
-                  <a href="#cooperation">Cooperation</a>
+                  <Link to="/contacts">{translate('contacts')}</Link>
                 </li>
                 <li>
-                  <Link to="/contacts">Contacts</Link>
-                </li>
-                <li>
-                  <Link to="/products">Products</Link>
+                  <Link to="/products">{translate('products')}</Link>
                   <ul className="dropdown">
                     {categories.map((category) => (
                       <li key={category.id}>
@@ -282,6 +361,7 @@ function Header() {
                 </svg>
               </div>
 
+              {/* Desktop language switcher - THREE LANGUAGES */}
               <ul className="lang desktop-only">
                 <li>
                   <a 
@@ -304,7 +384,19 @@ function Header() {
                       handleLanguageChange('en');
                     }}
                   >
-                    En
+                    EN
+                  </a>
+                </li>
+                <li>
+                  <a 
+                    href="#" 
+                    className={language === 'ru' ? 'active' : ''}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleLanguageChange('ru');
+                    }}
+                  >
+                    RU
                   </a>
                 </li>
               </ul>

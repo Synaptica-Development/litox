@@ -718,3 +718,35 @@ header {
 
 
 
+/* Add these rules at the end of your Header.css file */
+
+/* Phone-specific updates */
+@media (max-width: 768px) {
+  /* Make sidebar menu wider on phones */
+  .left-menu.small {
+    width: 90%;
+    max-width: none;
+  }
+  
+  /* Center the logo on phones */
+  .logo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 480px) {
+  /* Make sidebar menu even wider on smaller phones */
+  .left-menu.small {
+    width: 95%;
+    max-width: none;
+  }
+  
+  /* Keep logo centered on smaller phones */
+  .logo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}

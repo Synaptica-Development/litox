@@ -5,18 +5,29 @@ function Landing() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [banners, setBanners] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [language, setLanguage] = useState('en');
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
+  // Load language from localStorage
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem('language');
+    if (savedLanguage) {
+      setLanguage(savedLanguage);
+    }
+  }, []);
+
+  // Fetch banners when language changes
   useEffect(() => {
     const fetchBanners = async () => {
+      setLoading(true);
       try {
         const response = await fetch('http://api.litox.synaptica.online/api/Banners/banners', {
           headers: {
             'accept': '*/*',
-            'X-Language': 'ka'
+            'X-Language': language
           }
         });
 
@@ -28,16 +39,19 @@ function Landing() {
         
         if (data && data.length > 0) {
           setBanners(data);
+        } else {
+          setBanners([]);
         }
       } catch (err) {
         console.error('Error fetching banners:', err);
+        setBanners([]);
       } finally {
         setLoading(false);
       }
     };
 
     fetchBanners();
-  }, []);
+  }, [language]);
 
   const images = banners.map(banner => banner.imageLink).filter(url => url);
 
@@ -66,11 +80,33 @@ function Landing() {
     setCurrentSlide(index);
   };
 
+  // Translation function for button text
+  const translate = (key) => {
+    const translations = {
+      moreDetailed: {
+        ka: 'დეტალურად',
+        en: 'MORE DETAILED',
+        ru: 'ПОДРОБНЕЕ'
+      },
+      loading: {
+        ka: 'იტვირთება...',
+        en: 'Loading banners...',
+        ru: 'Загрузка...'
+      },
+      noBanners: {
+        ka: 'ბანერები არ არის',
+        en: 'No banners available',
+        ru: 'Баннеры недоступны'
+      }
+    };
+    return translations[key]?.[language] || translations[key]?.['en'] || key;
+  };
+
   if (loading) {
     return (
       <div className="intro-slider">
         <div className="carousel-container">
-          <div className="loading">Loading banners...</div>
+          <div className="loading">{translate('loading')}</div>
         </div>
       </div>
     );
@@ -80,7 +116,7 @@ function Landing() {
     return (
       <div className="intro-slider">
         <div className="carousel-container">
-          <div className="error">No banners available</div>
+          <div className="error">{translate('noBanners')}</div>
         </div>
       </div>
     );
@@ -117,7 +153,7 @@ function Landing() {
             {banners[currentSlide]?.text && (
               <p className="banner-text">{banners[currentSlide].text}</p>
             )}
-            <a href="#" className="default-btn">MORE DETAILED</a>
+            <a href="#" className="default-btn">{translate('moreDetailed')}</a>
           </div>
         </div>
 
