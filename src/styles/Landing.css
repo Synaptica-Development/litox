@@ -212,12 +212,21 @@ html, body {
   font-family: 'Century Gothic Paneuropean', sans-serif;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
   line-height: 1.4;
+  width: 720px;
 }
 
 @media (max-width: 768px) {
   .banner-text {
     font-size: 20px;
     margin-bottom: 16px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .intro-slide-text {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
@@ -225,5 +234,69 @@ html, body {
   .banner-text {
     font-size: 18px;
     margin-bottom: 12px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .intro-slide-text {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.lang{
+  margin-left: 90px;
+}
+
+
+/* Show menu triggers on tablets and phones */
+@media (max-width: 1240px) and (min-width: 769px) {
+  .small-menu-trigger {
+    display: flex;
+  }
+  
+  .primary-menu {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .small-menu-trigger {
+    display: flex;
+  }
+}
+
+/* Keep primary menu visible until tablet breakpoint */
+@media (min-width: 1241px) {
+  .primary-menu {
+    display: flex;
+  }
+}
+/* iPad-specific fixes */
+@media (max-width: 1240px) and (min-width: 769px) {
+  .logo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .lang.desktop-only {
+    display: flex !important;
+  }
+  
+  .right {
+    gap: 20px;
+  }
+}
+
+/* Tablet landscape fix */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .left {
+    margin-right: 200px;
+  }
+  
+  .right {
+    padding-right: 15px;
   }
 }

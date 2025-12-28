@@ -12,7 +12,7 @@ function About() {
   useEffect(() => {
     window.scrollTo(0, 0);
     // Get language from localStorage
-    const savedLanguage = localStorage.getItem('language') || 'ka';
+    const savedLanguage = localStorage.getItem('language') || 'en';
     setLanguage(savedLanguage);
   }, []);
 

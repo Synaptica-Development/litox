@@ -4,6 +4,8 @@
   min-height: 100vh;
   padding-top: 100px;
   padding-bottom: 80px;
+  padding-left: 30px;
+  padding-right: 30px;
 }
 
 /* Breadcrumbs */

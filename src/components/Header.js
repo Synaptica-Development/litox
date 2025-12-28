@@ -90,7 +90,7 @@ function Header() {
         ru: 'СОТРУДНИЧЕСТВО'
       },
       contacts: {
-        ka: 'კონტაქტები',
+        ka: 'კონტაქტი',
         en: 'CONTACTS',
         ru: 'КОНТАКТЫ'
       },
@@ -308,13 +308,7 @@ function Header() {
                 </li>
               </ul>
 
-              {/* Hide search on mobile */}
-              <div className="open-search-popup desktop-only" onClick={() => setIsSearchOpen(!isSearchOpen)}>
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                  <circle cx="11" cy="11" r="8" stroke="#aba39e" strokeWidth="2"/>
-                  <path d="M21 21L16.65 16.65" stroke="#aba39e" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
-              </div>
+             
 
               {/* Desktop language switcher - THREE LANGUAGES */}
               <ul className="lang desktop-only">
