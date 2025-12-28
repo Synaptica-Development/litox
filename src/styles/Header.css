@@ -64,7 +64,7 @@ header {
   align-items: center;
   justify-content: flex-start;
   padding-left: 0px;
-  margin-right: 290px;
+  margin-right: 340px;
 }
 
 .open-menu {
@@ -748,5 +748,35 @@ header {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+  }
+}
+
+
+/* Hide large menu trigger on desktop */
+.large-menu-trigger {
+  display: none;
+}
+
+/* Show it only on tablet/mobile if needed, or keep it hidden everywhere */
+@media (max-width: 1240px) {
+  .large-menu-trigger {
+    display: none; /* Keep hidden */
+  }
+  
+  .small-menu-trigger {
+    display: flex; /* Show the mobile menu */
+  }
+}
+
+/* Hide ALL menu triggers by default */
+.large-menu-trigger,
+.small-menu-trigger {
+  display: none;
+}
+
+/* Show small menu trigger ONLY on phones (768px and below) */
+@media (max-width: 768px) {
+  .small-menu-trigger {
+    display: flex;
   }
 }

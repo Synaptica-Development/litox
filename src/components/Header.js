@@ -149,52 +149,7 @@ function Header() {
                 <span>{getMenuText()}</span>
               </div>
 
-              {/* Large screen menu */}
-              <div className={`left-menu large ${isLargeMenuOpen ? 'active' : ''}`}>
-                <div className="close-menu" onClick={() => setIsLargeMenuOpen(false)}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                    <path d="M15 18L9 12L15 6" stroke="#aba39e" strokeWidth="2" strokeLinecap="round"/>
-                  </svg>
-                </div>
-                <ul className="navbar-mobile__list">
-                  <li className="navbar-mobile__item">
-                    <Link className="navbar-mobile__link" to="/" onClick={() => setIsLargeMenuOpen(false)}>
-                      {translate('home')}
-                    </Link>
-                  </li>
-                  <li className="navbar-mobile__item">
-                    <Link className="navbar-mobile__link" to="/about" onClick={() => setIsLargeMenuOpen(false)}>
-                      {translate('about')}
-                    </Link>
-                  </li>
-                  <li className="navbar-mobile__item">
-                    <a className="navbar-mobile__link" href="#certificates">
-                      {translate('certificates')}
-                    </a>
-                  </li>
-                  <li className="navbar-mobile__item">
-                    <a className="navbar-mobile__link" href="#helpful">
-                      {translate('helpful')}
-                    </a>
-                  </li>
-                  <li className="navbar-mobile__item">
-                    <a className="navbar-mobile__link" href="#reference">
-                      {translate('reference')}
-                    </a>
-                  </li>
-                  <li className="navbar-mobile__item">
-                    <a className="navbar-mobile__link" href="#news">
-                      {translate('news')}
-                    </a>
-                  </li>
-                  <li className="navbar-mobile__item">
-                    <Link className="navbar-mobile__link" to="/contacts" onClick={() => setIsLargeMenuOpen(false)}>
-                      {translate('contacts')}
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-
+             
               {/* Small screen mobile menu */}
               <div className={`left-menu small ${isSmallMenuOpen ? 'active' : ''}`}>
                 <div className="close-menu" onClick={() => setIsSmallMenuOpen(false)}>
