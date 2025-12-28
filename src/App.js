@@ -32,15 +32,19 @@ function App() {
         <Routes>
           {/* Home route */}
           <Route path="/" element={<HomePage />} />
+          
           {/* All products route */}
           <Route path="/products" element={<AllProducts />} />
+          
+          {/* Category page route - ADD THIS ONE */}
+          <Route path="/category/:categoryId" element={<CategoryPage />} />
+          
           {/* Dynamic product details route */}
           <Route path="/products/:categoryId/:productId" element={<ProductDetails />} />
-          {/* Dynamic category route */}
-          <Route path="/products/:categoryId" element={<CategoryPage />} />
-
+          
           {/* Contacts route */}
           <Route path="/contacts" element={<Contacts />} />
+          
           {/* About route */}
           <Route path="/about" element={<About />} />
         </Routes>

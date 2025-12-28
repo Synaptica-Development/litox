@@ -164,7 +164,7 @@ function Category() {
                   {group.map((category, index) => (
                     <Link 
                       key={category.id || index}
-                      to={`/products?category=${category.id}`}
+                      to={`/category/${category.id}`}
                       className="catalog-card"
                     >
                       <div className="icon">
@@ -209,7 +209,7 @@ function Category() {
       <div className="flex-row">
         {categories.map((category, index) => (
           <Link 
-            to={`/products?category=${category.id}`}
+            to={`/category/${category.id}`}
             key={category.id || index} 
             className="catalog-card"
           >
