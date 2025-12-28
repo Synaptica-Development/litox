@@ -1,18 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/Video.css';
 
 function Video() {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [videoUrl, setVideoUrl] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [language, setLanguage] = useState('ka');
 
-  // Your Rutube video ID extracted from the URL
-  const rutubeVideoId = '2eb9d49ba0002feb74db25197e0900c6';
-  
-  // Rutube embed URL
-  const rutubeEmbedUrl = `https://rutube.ru/play/embed/${rutubeVideoId}`;
+  useEffect(() => {
+    // Get language from localStorage
+    const savedLanguage = localStorage.getItem('language') || 'ka';
+    setLanguage(savedLanguage);
+  }, []);
+
+  useEffect(() => {
+    const fetchVideoData = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('http://api.litox.synaptica.online/api/Hero/hero', {
+          headers: {
+            'accept': '*/*',
+            'X-Language': language
+          }
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          setVideoUrl(data.videoLink);
+        }
+      } catch (err) {
+        console.error('Error fetching video data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVideoData();
+  }, [language]);
 
   const handlePlayClick = () => {
     setIsPlaying(true);
   };
+
+  if (loading) {
+    return (
+      <div className="video-section" id="video">
+        <div className="video-section__wrapper">
+          <div style={{ textAlign: 'center', color: '#fff', padding: '40px 0' }}>
+            Loading video...
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="video-section" id="video">
@@ -33,13 +73,14 @@ function Video() {
               </div>
             ) : (
               <div className="video-player">
-                <iframe
-                  src={rutubeEmbedUrl}
-                  frameBorder="0"
-                  allow="clipboard-write; autoplay"
-                  allowFullScreen
-                  title="Litox Company Video"
-                ></iframe>
+                <video 
+                  controls 
+                  autoPlay
+                  style={{ width: '100%', height: '100%' }}
+                >
+                  <source src={videoUrl} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
               </div>
             )}
           </div>
