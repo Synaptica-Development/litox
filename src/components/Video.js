@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import '../styles/Video.css';
+
+const videoBackground = process.env.PUBLIC_URL + '/video-thumb.webp';
 
 function Video() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [videoUrl, setVideoUrl] = useState('');
   const [loading, setLoading] = useState(true);
   const [language, setLanguage] = useState('ka');
+  const videoRef = useRef(null);
 
   useEffect(() => {
     // Get language from localStorage
@@ -23,7 +26,7 @@ function Video() {
             'X-Language': language
           }
         });
-        
+
         if (response.ok) {
           const data = await response.json();
           setVideoUrl(data.videoLink);
@@ -60,7 +63,15 @@ function Video() {
         <div className="video-wrapper big">
           <div className="video-container">
             {!isPlaying ? (
-              <div className="video-cover" onClick={handlePlayClick}>
+              <div 
+                className="video-cover" 
+                onClick={handlePlayClick}
+                style={{
+                  backgroundImage: `url(${videoBackground})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center'
+                }}
+              >
                 <div className="video-cover__overlay">
                   <button className="play-button" aria-label="Play video">
                     <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
@@ -74,6 +85,7 @@ function Video() {
             ) : (
               <div className="video-player">
                 <video 
+                  ref={videoRef}
                   controls 
                   autoPlay
                   style={{ width: '100%', height: '100%' }}
