@@ -64,6 +64,12 @@ function ProductDetails() {
         }
 
         const productData = await productResponse.json();
+        console.log('Fetched product details:', productData);
+        console.log('Product ID:', productId);
+        console.log('Image links:', {
+          iconImageLink: productData.iconImageLink,
+          imageLink: productData.imageLink
+        });
         setProduct(productData);
 
         // Fetch category info
@@ -114,6 +120,16 @@ function ProductDetails() {
       fetchProductDetails();
     }
   }, [productId, categoryId, language]);
+
+  // Helper function to get the product image
+  const getProductImage = () => {
+    if (!product) return '/prod.webp';
+    
+    // Use iconImageLink to match the product list display
+    const image = product.iconImageLink || '/prod.webp';
+    console.log('Using product image:', image);
+    return image;
+  };
 
   // Translation function
   const translate = (key) => {
@@ -194,13 +210,12 @@ function ProductDetails() {
 
   return (
     <div className="product-details-container">
-      {/* Hero Section */}
+      {/* Hero Section - NO background image, only .product-small-img shows */}
       <section 
         className="product-hero"
-        style={{
-          backgroundImage: `url(${product.bannerImageLink || ''})`,
-          backgroundColor: '#121212'
-        }}
+       style={{
+  background: 'linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 40%, rgba(92, 64, 51) 100%)'
+}}
       >
         <div className="breadcrumbs-wrapper">
           <ul className="breadcrumbs">
@@ -211,8 +226,9 @@ function ProductDetails() {
           </ul>
         </div>
         
+        {/* ONLY THIS IMAGE - centered on the right */}
         <img 
-          src={product.iconImageLink || '/prod.webp'} 
+          src={getProductImage()} 
           alt={product.title} 
           className="product-small-img"
           onError={(e) => {
@@ -348,7 +364,7 @@ function ProductDetails() {
                     {product.documentLinks.map((doc, index) => (
                       <div key={index} className="document-item">
                         <a href={doc.link} target="_blank" rel="noopener noreferrer">
-                          📄 Document {index + 1}
+                          Document {index + 1}
                         </a>
                       </div>
                     ))}

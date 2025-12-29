@@ -21,13 +21,15 @@
 
 .product-small-img {
   position: absolute;
-  right: 50px;
+  right: 230px;
   top: 50%;
   transform: translateY(-50%);
-  max-width: 400px;
-  max-height: 500px;
+  width: auto;
+  height: 450px;
   object-fit: contain;
   z-index: 1;
+  filter: drop-shadow(8px -8px 20px rgba(255, 255, 255, 0.15))
+          drop-shadow(4px -4px 10px rgba(255, 255, 255, 0.1));
 }
 
 .product-hero .container {
@@ -620,7 +622,7 @@
 
   .product-hero .container {
     padding-left: 40px;
-    padding-bottom: 100px;
+    padding-bottom: 10px;
   }
 
   .product-small-img {
@@ -675,6 +677,7 @@
   .product-hero {
     min-height: auto;
     padding-bottom: 0;
+    margin-bottom: 0;
   }
 
   .product-hero .container {
@@ -713,7 +716,7 @@
     transform: none;
     margin: 30px auto;
     display: block;
-    max-width: 250px;
+    max-height: 250px;
   }
 
   .request-btn {
@@ -1273,3 +1276,4 @@
   font-size: 18px;
   font-weight: bold;
 }
+
