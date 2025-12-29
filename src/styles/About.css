@@ -3,11 +3,8 @@
   min-height: 424px;
   background-color: #ef6f2e;
   margin-top: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-bottom: 40px;
   position: relative;
+  padding: 40px 0;
 }
 
 .about-page-hero::before {
@@ -23,32 +20,36 @@
 .about-page-hero .container {
   position: relative;
   z-index: 2;
-  text-align: center !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
   width: 100%;
-  max-width: 100%;
+  height: 100%;
+  min-height: 344px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .about-page-hero h1 {
   font-size: 48px;
   font-weight: 700;
   color: #fff;
-  margin: 0 auto;
+  margin: 0;
+  text-align: center;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  text-align: center !important;
 }
 
 .about-page-hero .breadcrumbs {
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  margin: 0 auto 20px auto !important;
-  list-style: none !important;
-  padding: 0 !important;
-  text-align: center !important;
+  position: absolute;
+  top: 0;
+  left: 15px;
+  list-style: none;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 0;
+  padding: 0;
 }
 
 /* About Content */
@@ -104,14 +105,42 @@
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+  .about-page-hero .container {
+    min-height: 220px;
+  }
+
+  .about-page-hero .breadcrumbs {
+    top: 0;
+    left: 15px;
+  }
+}
+
 @media (max-width: 768px) {
   .about-page-hero {
     min-height: 300px;
-    padding-bottom: 30px;
+    padding: 30px 0;
+  }
+
+  .about-page-hero .container {
+    min-height: 240px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 20px;
   }
 
   .about-page-hero h1 {
     font-size: 36px;
+    text-align: center;
+    margin-top: 15px;
+  }
+
+  .about-page-hero .breadcrumbs {
+    position: relative;
+    top: auto;
+    left: auto;
+    margin-bottom: 0;
   }
 
   .about-page-content {

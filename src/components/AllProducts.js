@@ -20,7 +20,7 @@ function AllProducts() {
 
   // Load language from localStorage
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('language') || 'ka';
+    const savedLanguage = localStorage.getItem('language') || 'en';
     setLanguage(savedLanguage);
   }, []);
 
@@ -147,9 +147,8 @@ function AllProducts() {
 
   const handleCategoryFilter = (categoryId) => {
     setSelectedCategory(categoryId);
-    setCurrentPage(1); // Reset to first page when filtering
+    setCurrentPage(1);
     
-    // Update URL parameter
     if (categoryId === 'all') {
       setSearchParams({});
       setFilteredProducts(allProducts);
@@ -168,6 +167,19 @@ function AllProducts() {
   const getProductName = (product) => {
     return product.title || product.name || 'Product';
   };
+
+  // Skeleton loader component
+  const SkeletonCard = () => (
+    <div className="product-card skeleton">
+      <div className="product-image skeleton-image">
+        <div className="skeleton-shimmer"></div>
+      </div>
+      <div className="product-info">
+        <div className="skeleton-text skeleton-title"></div>
+        <div className="skeleton-text skeleton-category"></div>
+      </div>
+    </div>
+  );
 
   // Pagination logic
   const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
@@ -192,7 +204,6 @@ function AllProducts() {
       startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
 
-    // Previous button
     pages.push(
       <button
         key="prev"
@@ -204,7 +215,6 @@ function AllProducts() {
       </button>
     );
 
-    // First page
     if (startPage > 1) {
       pages.push(
         <button
@@ -220,7 +230,6 @@ function AllProducts() {
       }
     }
 
-    // Page numbers
     for (let i = startPage; i <= endPage; i++) {
       pages.push(
         <button
@@ -233,7 +242,6 @@ function AllProducts() {
       );
     }
 
-    // Last page
     if (endPage < totalPages) {
       if (endPage < totalPages - 1) {
         pages.push(<span key="dots2" className="pagination-dots">...</span>);
@@ -249,7 +257,6 @@ function AllProducts() {
       );
     }
 
-    // Next button
     pages.push(
       <button
         key="next"
@@ -263,16 +270,6 @@ function AllProducts() {
 
     return <div className="pagination">{pages}</div>;
   };
-
-  if (loading) {
-    return (
-      <div className="all-products-container">
-        <div className="container">
-          <div className="loading">{translate('loading')}</div>
-        </div>
-      </div>
-    );
-  }
 
   if (error) {
     return (
@@ -309,29 +306,44 @@ function AllProducts() {
       <div className="products-section">
         <div className="container">
           {/* Category Filter */}
-          <div className="filter-wrapper">
-            <button
-              className={`filter-btn ${selectedCategory === 'all' ? 'active' : ''}`}
-              onClick={() => handleCategoryFilter('all')}
-            >
-              {translate('allProducts')} ({allProducts.length})
-            </button>
-            {categories.map((category) => {
-              const count = allProducts.filter(p => p.categoryId === category.id).length;
-              return (
-                <button
-                  key={category.id}
-                  className={`filter-btn ${selectedCategory === category.id ? 'active' : ''}`}
-                  onClick={() => handleCategoryFilter(category.id)}
-                >
-                  {category.title} ({count})
-                </button>
-              );
-            })}
-          </div>
+          {loading ? (
+            <div className="filter-wrapper">
+              <div className="filter-btn skeleton skeleton-filter"></div>
+              <div className="filter-btn skeleton skeleton-filter"></div>
+              <div className="filter-btn skeleton skeleton-filter"></div>
+              <div className="filter-btn skeleton skeleton-filter"></div>
+            </div>
+          ) : (
+            <div className="filter-wrapper">
+              <button
+                className={`filter-btn ${selectedCategory === 'all' ? 'active' : ''}`}
+                onClick={() => handleCategoryFilter('all')}
+              >
+                {translate('allProducts')} ({allProducts.length})
+              </button>
+              {categories.map((category) => {
+                const count = allProducts.filter(p => p.categoryId === category.id).length;
+                return (
+                  <button
+                    key={category.id}
+                    className={`filter-btn ${selectedCategory === category.id ? 'active' : ''}`}
+                    onClick={() => handleCategoryFilter(category.id)}
+                  >
+                    {category.title} ({count})
+                  </button>
+                );
+              })}
+            </div>
+          )}
 
           {/* Products Grid */}
-          {filteredProducts.length === 0 ? (
+          {loading ? (
+            <div className="products-grid">
+              {[...Array(12)].map((_, index) => (
+                <SkeletonCard key={index} />
+              ))}
+            </div>
+          ) : filteredProducts.length === 0 ? (
             <div className="error">{translate('noProducts')}</div>
           ) : (
             <>
@@ -359,7 +371,6 @@ function AllProducts() {
                 ))}
               </div>
               
-              {/* Pagination */}
               {renderPagination()}
             </>
           )}

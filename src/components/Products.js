@@ -141,10 +141,68 @@ function Products() {
     return product.title || product.name || 'Product';
   };
 
+  // Skeleton component
+  const SkeletonProductCard = () => (
+    <div className="home-product-item skeleton-product">
+      <div className="home-product-card">
+        <span className="home-product-img-wrapper skeleton-img">
+          <div className="skeleton-shimmer"></div>
+        </span>
+        <span className="skeleton-text skeleton-name"></span>
+        <span className="skeleton-text skeleton-category"></span>
+      </div>
+    </div>
+  );
+
   if (loading) {
     return (
       <div className="home-page-products">
-        <div className="home-products-loading">{translate('loading')}</div>
+        {[...Array(2)].map((_, categoryIndex) => (
+          <div key={`skeleton-category-${categoryIndex}`} className="category-slider-section">
+            <div className="home-products-header">
+              <div className="skeleton-text skeleton-title"></div>
+            </div>
+            
+            <div className="home-products-carousel-container">
+              <Swiper
+                modules={[Navigation, Pagination]}
+                spaceBetween={20}
+                slidesPerView={4}
+                slidesPerGroup={4}
+                speed={500}
+                allowTouchMove={false}
+                breakpoints={{
+                  320: {
+                    slidesPerView: 1,
+                    slidesPerGroup: 1,
+                    spaceBetween: 15
+                  },
+                  768: {
+                    slidesPerView: 2,
+                    slidesPerGroup: 2,
+                    spaceBetween: 20
+                  },
+                  1024: {
+                    slidesPerView: 3,
+                    slidesPerGroup: 3,
+                    spaceBetween: 20
+                  },
+                  1200: {
+                    slidesPerView: 4,
+                    slidesPerGroup: 4,
+                    spaceBetween: 20
+                  }
+                }}
+              >
+                {[...Array(8)].map((_, index) => (
+                  <SwiperSlide key={`skeleton-${index}`}>
+                    <SkeletonProductCard />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
+          </div>
+        ))}
       </div>
     );
   }

@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/Contacts.css';
 
 const loc = process.env.PUBLIC_URL + '/loc.svg';
 
 function Contacts() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="contact-page">
       <div className="container">
@@ -14,7 +18,6 @@ function Contacts() {
         </ul>
         <h1>Contacts</h1>
       </div>
-
       <div className="contacts__company-info">
         <div className="container">
           <h2 className="contact-heading">LLC CHERKESSKSTROM</h2>
@@ -25,7 +28,6 @@ function Contacts() {
             </span>
           </div>
         </div>
-
         <div className="flex-contact-cards-wrapper">
           <div className="container">
             <div className="flex-contact-cards">

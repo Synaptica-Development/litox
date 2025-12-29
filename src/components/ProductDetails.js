@@ -33,7 +33,7 @@ function ProductDetails() {
 
   // Load language from localStorage
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('language') || 'ka';
+    const savedLanguage = localStorage.getItem('language') || 'en';
     setLanguage(savedLanguage);
   }, []);
 
