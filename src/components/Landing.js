@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/Landing.css';
 
 function Landing() {
+  const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [banners, setBanners] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -80,6 +82,12 @@ function Landing() {
     setCurrentSlide(index);
   };
 
+  // Navigate to products page
+  const handleMoreDetails = (e) => {
+    e.preventDefault();
+    navigate('/products');
+  };
+
   // Translation function for button text
   const translate = (key) => {
     const translations = {
@@ -153,7 +161,9 @@ function Landing() {
             {banners[currentSlide]?.text && (
               <p className="banner-text">{banners[currentSlide].text}</p>
             )}
-            <a href="#" className="default-btn">{translate('moreDetailed')}</a>
+            <a href="/products" className="default-btn" onClick={handleMoreDetails}>
+              {translate('moreDetailed')}
+            </a>
           </div>
         </div>
 
