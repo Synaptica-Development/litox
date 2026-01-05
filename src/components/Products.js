@@ -7,6 +7,8 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import '../styles/Products.css';
 
+
+
 function Products() {
   const [categoriesWithProducts, setCategoriesWithProducts] = useState([]);
   const [loading, setLoading] = useState(true);

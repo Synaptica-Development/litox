@@ -64,12 +64,6 @@ function ProductDetails() {
         }
 
         const productData = await productResponse.json();
-        console.log('Fetched product details:', productData);
-        console.log('Product ID:', productId);
-        console.log('Image links:', {
-          iconImageLink: productData.iconImageLink,
-          imageLink: productData.imageLink
-        });
         setProduct(productData);
 
         // Fetch category info
@@ -124,10 +118,7 @@ function ProductDetails() {
   // Helper function to get the product image
   const getProductImage = () => {
     if (!product) return '/prod.webp';
-    
-    // Use iconImageLink to match the product list display
     const image = product.iconImageLink || '/prod.webp';
-    console.log('Using product image:', image);
     return image;
   };
 
@@ -188,14 +179,100 @@ function ProductDetails() {
     return translations[key]?.[language] || translations[key]?.['en'] || key;
   };
 
-  if (loading) {
-    return (
-      <div className="product-details-container">
+  // Skeleton Loading Component
+  const SkeletonLoader = () => (
+    <div className="product-details-container">
+      {/* Skeleton Hero Section */}
+      <section 
+        className="product-hero skeleton-hero"
+        style={{
+          background: 'linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 40%, rgba(92, 64, 51) 100%)'
+        }}
+      >
+        <div className="breadcrumbs-wrapper">
+          <div className="skeleton-breadcrumbs">
+            <div className="skeleton-breadcrumb"></div>
+            <div className="skeleton-breadcrumb"></div>
+            <div className="skeleton-breadcrumb"></div>
+          </div>
+        </div>
+        
+        <div className="skeleton-product-image"></div>
+        
         <div className="container">
-          <div className="loading">{translate('loading')}</div>
+          <div className="skeleton-title"></div>
+          <div className="skeleton-description"></div>
+        </div>
+
+        {/* Skeleton Features Overlay */}
+        <div className="features-overlay">
+          <div className="container">
+            <div className="skeleton-features">
+              <div className="skeleton-feature"></div>
+              <div className="skeleton-feature"></div>
+              <div className="skeleton-feature"></div>
+              <div className="skeleton-feature"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Skeleton Tabs Section */}
+      <section className="product-tabs-section">
+        <div className="container">
+          <div className="tabs-header">
+            <div className="skeleton-tabs">
+              <div className="skeleton-tab"></div>
+              <div className="skeleton-tab"></div>
+              <div className="skeleton-tab"></div>
+            </div>
+          </div>
+
+          {/* Skeleton Tab Content */}
+          <div className="tab-content">
+            <div className="tab-pane active">
+              {[1, 2, 3].map((item) => (
+                <div key={item} className="skeleton-content-row">
+                  <div className="skeleton-content-text">
+                    <div className="skeleton-content-title"></div>
+                    <div className="skeleton-content-paragraph"></div>
+                    <div className="skeleton-content-paragraph"></div>
+                    <div className="skeleton-content-paragraph"></div>
+                  </div>
+                  <div className="skeleton-content-image"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Skeleton Related Products */}
+      <div className="category-page-products">
+        <div className="category-slider-section">
+          <div className="category-products-header">
+            <div className="skeleton-title" style={{ width: '200px', height: '36px' }}></div>
+          </div>
+          
+          <div className="category-products-carousel-container">
+            <div style={{ display: 'flex', gap: '20px', padding: '0 100px' }}>
+              {[1, 2, 3, 4].map((item) => (
+                <div key={item} style={{ flex: '0 0 calc(25% - 15px)' }}>
+                  <div className="skeleton-related-product">
+                    <div className="skeleton-related-image"></div>
+                  </div>
+                  <div className="skeleton-related-name"></div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
-    );
+    </div>
+  );
+
+  if (loading) {
+    return <SkeletonLoader />;
   }
 
   if (error || !product) {
@@ -210,12 +287,12 @@ function ProductDetails() {
 
   return (
     <div className="product-details-container">
-      {/* Hero Section - NO background image, only .product-small-img shows */}
+      {/* Hero Section */}
       <section 
         className="product-hero"
-       style={{
-  background: 'linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 40%, rgba(92, 64, 51) 100%)'
-}}
+        style={{
+          background: 'linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 40%, rgba(92, 64, 51) 100%)'
+        }}
       >
         <div className="breadcrumbs-wrapper">
           <ul className="breadcrumbs">
@@ -226,7 +303,6 @@ function ProductDetails() {
           </ul>
         </div>
         
-        {/* ONLY THIS IMAGE - centered on the right */}
         <img 
           src={getProductImage()} 
           alt={product.title} 
@@ -302,7 +378,6 @@ function ProductDetails() {
                       </div>
                       {app.image && (
                         isMobile ? (
-                          // Regular image on mobile - no parallax
                           <div className="content-image">
                             <img 
                               src={app.image} 
@@ -313,7 +388,6 @@ function ProductDetails() {
                             />
                           </div>
                         ) : (
-                          // Parallax on desktop
                           <Parallax
                             bgImage={app.image}
                             strength={100}

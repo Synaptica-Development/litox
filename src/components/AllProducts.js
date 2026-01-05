@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import '../styles/AllProducts.css';
 
 const background = process.env.PUBLIC_URL + '/products-bg.jpg';
+const arrow = `${process.env.PUBLIC_URL}/right-arrow2.svg`;
 
 function AllProducts() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -366,6 +367,11 @@ function AllProducts() {
                     <div className="product-info">
                       <h3 className="product-name">{getProductName(product)}</h3>
                       <p className="product-category">{product.categoryName}</p>
+                      <img 
+                        src={arrow} 
+                        alt="" 
+                        className="product-arrow"
+                      />
                     </div>
                   </Link>
                 ))}
