@@ -24,10 +24,8 @@ function ProductDetails() {
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768);
     };
-    
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
@@ -47,6 +45,7 @@ function ProductDetails() {
     const fetchProductDetails = async () => {
       setLoading(true);
       setError(null);
+
       try {
         // Fetch product details
         const productResponse = await fetch(
@@ -176,6 +175,7 @@ function ProductDetails() {
         ru: 'Смотрите також'
       }
     };
+
     return translations[key]?.[language] || translations[key]?.['en'] || key;
   };
 
@@ -196,9 +196,9 @@ function ProductDetails() {
             <div className="skeleton-breadcrumb"></div>
           </div>
         </div>
-        
+
         <div className="skeleton-product-image"></div>
-        
+
         <div className="container">
           <div className="skeleton-title"></div>
           <div className="skeleton-description"></div>
@@ -253,7 +253,6 @@ function ProductDetails() {
           <div className="category-products-header">
             <div className="skeleton-title" style={{ width: '200px', height: '36px' }}></div>
           </div>
-          
           <div className="category-products-carousel-container">
             <div style={{ display: 'flex', gap: '20px', padding: '0 100px' }}>
               {[1, 2, 3, 4].map((item) => (
@@ -287,11 +286,16 @@ function ProductDetails() {
 
   return (
     <div className="product-details-container">
-      {/* Hero Section */}
+      {/* Hero Section with Banner Background */}
       <section 
         className="product-hero"
         style={{
-          background: 'linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 40%, rgba(92, 64, 51) 100%)'
+          backgroundImage: product.bannerImageLink 
+            ? `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${product.bannerImageLink})`
+            : 'linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 40%, rgba(92, 64, 51) 100%)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
         }}
       >
         <div className="breadcrumbs-wrapper">
@@ -302,7 +306,7 @@ function ProductDetails() {
             <li><span>{product.title}</span></li>
           </ul>
         </div>
-        
+
         <img 
           src={getProductImage()} 
           alt={product.title} 
@@ -311,7 +315,7 @@ function ProductDetails() {
             e.target.src = '/prod.webp';
           }}
         />
-        
+
         <div className="container">
           <h1>{product.title}</h1>
           {product.description && <div className="preview-text">{product.description}</div>}
@@ -461,7 +465,7 @@ function ProductDetails() {
                 {translate('seeAlso')}
               </h2>
             </div>
-            
+
             <div className="category-products-carousel-container">
               <Swiper
                 modules={[Navigation, Pagination]}

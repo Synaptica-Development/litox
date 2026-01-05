@@ -7,7 +7,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import '../styles/Products.css';
 
-
+const arrow = `${process.env.PUBLIC_URL}/next.png`;
 
 function Products() {
   const [categoriesWithProducts, setCategoriesWithProducts] = useState([]);
@@ -26,6 +26,7 @@ function Products() {
     const fetchAllData = async () => {
       setLoading(true);
       setError(null);
+
       try {
         const categoriesResponse = await fetch('http://api.litox.synaptica.online/api/Category/categories', {
           headers: {
@@ -96,6 +97,7 @@ function Products() {
         // Limit to first 4 categories with products
         setCategoriesWithProducts(categoriesWithProductsData.slice(0, 4));
         console.log('Categories with products:', categoriesWithProductsData.map(c => `${c.category.title}: ${c.products.length} products`));
+
       } catch (err) {
         console.error('Error fetching data:', err);
         setError(err.message);
@@ -131,6 +133,7 @@ function Products() {
         ru: 'Продукты недоступны'
       }
     };
+
     return translations[key]?.[language] || translations[key]?.['en'] || key;
   };
 
@@ -164,7 +167,6 @@ function Products() {
             <div className="home-products-header">
               <div className="skeleton-text skeleton-title"></div>
             </div>
-            
             <div className="home-products-carousel-container">
               <Swiper
                 modules={[Navigation, Pagination]}
@@ -234,7 +236,7 @@ function Products() {
               {categoryData.category.title}
             </h2>
           </div>
-          
+
           <div className="home-products-carousel-container">
             <Swiper
               modules={[Navigation, Pagination]}
@@ -285,6 +287,34 @@ function Products() {
                             e.target.src = process.env.PUBLIC_URL + '/prod.webp';
                           }}
                         />
+                        {/* Arrow circle with coin flip effect */}
+                        <span 
+                          className="product-arrow-circle"
+                          style={{
+                            position: 'absolute',
+                            right: '17px',
+                            top: '17px',
+                            width: '37px',
+                            height: '37px',
+                            backgroundColor: '#ef6f2e',
+                            borderRadius: '50%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            pointerEvents: 'none',
+                            zIndex: 3
+                          }}
+                        >
+                          <img 
+                            src={arrow} 
+                            alt=""
+                            className='arrow-img' 
+                            style={{
+                              height: '19px',
+                              filter: 'brightness(0) invert(1)'
+                            }}
+                          />
+                        </span>
                       </span>
                       <span className="home-product-name">{getProductName(product)}</span>
                       <span className="home-product-category">{product.categoryTitle}</span>

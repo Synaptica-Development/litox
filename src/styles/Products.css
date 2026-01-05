@@ -44,7 +44,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 12px;
-  overflow: hidden;
+  overflow: visible;
   margin-bottom: 20px;
   position: relative;
   padding: 30px;
@@ -57,43 +57,6 @@
   width: auto;
   height: auto;
   object-fit: contain;
-}
-
-.home-product-img-wrapper:before {
-  content: "";
-  transition: all 0.4s ease-in-out;
-  width: 37px;
-  height: 37px;
-  background-color: #ef6f2e;
-  position: absolute;
-  right: -40px;
-  top: 17px;
-  opacity: 0;
-  visibility: hidden;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform: rotate(0deg);
-}
-
-.home-product-img-wrapper:after {
-  content: "→";
-  position: absolute;
-  right: -40px;
-  top: 17px;
-  width: 37px;
-  height: 37px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 18px;
-  font-weight: bold;
-  transition: all 0.4s ease-in-out;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
 }
 
 .home-product-name {
@@ -115,20 +78,48 @@
   text-overflow: ellipsis;
 }
 
-.home-product-card:hover .home-product-img-wrapper:before {
-  transform: rotate(360deg);
-  right: 17px;
-  opacity: 1;
-  visibility: visible;
+/* Coin flip animation for arrow circle */
+.product-arrow-circle {
+  animation: coinFlipOut 0.6s ease forwards;
 }
 
-.home-product-card:hover .home-product-img-wrapper:after {
-  right: 17px;
-  opacity: 1;
-  visibility: visible;
+.home-product-card:hover .product-arrow-circle {
+  animation: coinFlipIn 0.6s ease forwards !important;
 }
 
-.home-product-card:hover .home-product-img-wrapper img {
+.home-product-card:not(:hover) .product-arrow-circle {
+  animation: coinFlipOut 0.6s ease forwards;
+}
+
+@keyframes coinFlipIn {
+  0% {
+    opacity: 0;
+    transform: perspective(400px) translateX(30px) rotateY(-180deg);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(400px) translateX(0) rotateY(0deg);
+  }
+}
+
+@keyframes coinFlipOut {
+  0% {
+    opacity: 1;
+    transform: perspective(400px) translateX(0) rotateY(0deg);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: perspective(400px) translateX(30px) rotateY(180deg);
+  }
+}
+
+.home-product-card:hover .home-product-img-wrapper > img:first-child {
   transform: scale(1.1);
 }
 
@@ -350,9 +341,4 @@
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-}
-
-.home-product-img-wrapper img {
-  margin: 0 auto;
-  display: block;
 }
