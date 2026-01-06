@@ -439,13 +439,20 @@ function ProductDetails() {
               <div className="tab-pane active">
                 {product.documentLinks && product.documentLinks.length > 0 ? (
                   <div className="documents-list">
-                    {product.documentLinks.map((doc, index) => (
-                      <div key={index} className="document-item">
-                        <a href={doc.link} target="_blank" rel="noopener noreferrer">
-                          Document {index + 1}
-                        </a>
-                      </div>
-                    ))}
+                    {product.documentLinks.map((doc, index) => {
+                      // Extract filename from URL
+                      const filename = doc.link.split('/').pop();
+                      // Decode URL encoding and remove extension for display
+                      const displayName = decodeURIComponent(filename).replace(/\.[^/.]+$/, '');
+                      
+                      return (
+                        <div key={index} className="document-item">
+                          <a href={doc.link} target="_blank" rel="noopener noreferrer">
+                            {product.title} - {displayName}
+                          </a>
+                        </div>
+                      );
+                    })}
                   </div>
                 ) : (
                   <p>No documents available.</p>
