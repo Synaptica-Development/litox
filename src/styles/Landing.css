@@ -193,6 +193,10 @@ html, body {
   .primary-menu {
     display: none;
   }
+
+  .category-slider-section{
+    margin-top: 140px;
+  }
 }
 
 @media (max-width: 768px) {
