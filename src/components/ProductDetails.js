@@ -203,18 +203,6 @@ function ProductDetails() {
           <div className="skeleton-title"></div>
           <div className="skeleton-description"></div>
         </div>
-
-        {/* Skeleton Features Overlay */}
-        <div className="features-overlay">
-          <div className="container">
-            <div className="skeleton-features">
-              <div className="skeleton-feature"></div>
-              <div className="skeleton-feature"></div>
-              <div className="skeleton-feature"></div>
-              <div className="skeleton-feature"></div>
-            </div>
-          </div>
-        </div>
       </section>
 
       {/* Skeleton Tabs Section */}
@@ -321,28 +309,23 @@ function ProductDetails() {
           {product.description && <div className="preview-text">{product.description}</div>}
         </div>
 
-        {/* Features Overlay */}
-        <div className="features-overlay">
-          <div className="container">
-            <div className="flex">
-              <div className="col">
-                <span>High Quality</span>
-              </div>
-              <div className="razd"></div>
-              <div className="col">
-                <span>Fast Application</span>
-              </div>
-              <div className="razd"></div>
-              <div className="col">
-                <span>Durable</span>
-              </div>
-              <div className="razd"></div>
-              <div className="col">
-                <span>Eco-Friendly</span>
+        {/* Features Overlay - Only show if keywords exist from API */}
+        {product.keywrods && product.keywrods.length > 0 && (
+          <div className="features-overlay">
+            <div className="container">
+              <div className="flex">
+                {product.keywrods.map((keyword, index) => (
+                  <React.Fragment key={index}>
+                    <div className="col">
+                      <span>{keyword}</span>
+                    </div>
+                    {index < product.keywrods.length - 1 && <div className="razd"></div>}
+                  </React.Fragment>
+                ))}
               </div>
             </div>
           </div>
-        </div>
+        )}
       </section>
 
       {/* Tabs Section */}
