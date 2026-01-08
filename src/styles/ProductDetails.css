@@ -1586,3 +1586,68 @@
 
 
 
+/* Features Overlay - Icons on the left side in a row */
+.features-overlay .col {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+  flex-direction: row;
+  flex: 0 0 auto;
+  height: 100%;
+  gap: 12px;
+}
+
+.features-overlay .col img {
+  width: 32px !important;
+  height: 32px !important;
+  margin-right: 0 !important;
+  flex-shrink: 0;
+  object-fit: contain;
+  order: -1; /* Ensures image stays on the left */
+}
+
+.features-overlay .col span {
+  color: #fff;
+  font-size: 14px;
+  font-family: 'Century Gothic Paneuropean', sans-serif;
+  font-weight: 500;
+  white-space: nowrap;
+  line-height: 1;
+  text-align: left;
+  order: 1; /* Ensures text stays on the right */
+}
+
+@media (max-width: 1199px) {
+  .features-overlay .col img {
+    width: 28px !important;
+    height: 28px !important;
+  }
+}
+
+@media (max-width: 991px) {
+  .features-overlay .col img {
+    width: 26px !important;
+    height: 26px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .features-overlay .col {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 10px;
+  }
+  
+  .features-overlay .col img {
+    width: 24px !important;
+    height: 24px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .features-overlay .col img {
+    width: 22px !important;
+    height: 22px !important;
+  }
+}
