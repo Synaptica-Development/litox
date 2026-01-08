@@ -309,24 +309,24 @@ function ProductDetails() {
           {product.description && <div className="preview-text">{product.description}</div>}
         </div>
 
-        {/* Features Overlay - Only show if keywords exist from API */}
-        {product.keywrods && product.keywrods.length > 0 && (
-          <div className="features-overlay">
-            <div className="container">
-              <div className="flex">
-                {product.keywrods.map((keyword, index) => (
-                  <React.Fragment key={index}>
-                    <div className="col">
-                      <span>{keyword}</span>
-                    </div>
-                    {index < product.keywrods.length - 1 && <div className="razd"></div>}
-                  </React.Fragment>
-                ))}
-              </div>
+       {/* Features Overlay - Only show if keywords exist from API */}
+{product.keywrods && product.keywrods.length > 0 && (
+  <div className="features-overlay">
+    <div className="container">
+      <div className="flex">
+        {product.keywrods.map((keyword, index) => (
+          <React.Fragment key={keyword.id}>
+            <div className="col">
+              <span>{keyword.name}</span>
             </div>
-          </div>
-        )}
-      </section>
+            {index < product.keywrods.length - 1 && <div className="razd"></div>}
+          </React.Fragment>
+        ))}
+      </div>
+    </div>
+  </div>
+)}
+</section>
 
       {/* Tabs Section */}
       <section className="product-tabs-section">
