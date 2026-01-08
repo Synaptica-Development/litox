@@ -23,10 +23,11 @@ body {
   padding-top: 50px;
   padding-bottom: 40px;
   background: #393330;
-  height: 50vh;
+  height: 70vh;
   position: relative;
   /* Make sure z-index is removed or set to auto */
   z-index: auto;
+  padding-bottom: 50px;
 }
 .home-catalog-list .flex-row {
   display: flex;
