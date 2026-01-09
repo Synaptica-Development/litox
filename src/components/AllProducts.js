@@ -16,11 +16,12 @@ function AllProducts() {
   const [language, setLanguage] = useState('en');
   const [loadingBackground, setLoadingBackground] = useState(false);
   const isLoadingRest = useRef(false);
+  const abortControllerRef = useRef(null);
   
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const PRODUCTS_PER_PAGE = 16;
-  const INITIAL_CATEGORIES_TO_LOAD = 4;
+  const INITIAL_CATEGORIES_TO_LOAD = 3; // Reduced to 3 for even faster initial load
 
   // Load language from localStorage
   useEffect(() => {
@@ -33,18 +34,36 @@ function AllProducts() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentPage]);
 
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []);
+
   // Fetch data when language changes
   useEffect(() => {
     const fetchInitialData = async () => {
+      // Cancel any ongoing requests
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+      abortControllerRef.current = new AbortController();
+
       setLoading(true);
       setError(null);
+      isLoadingRest.current = false;
+
       try {
         // Fetch all categories
         const categoriesResponse = await fetch('http://api.litox.synaptica.online/api/Category/categories', {
           headers: {
             'accept': '*/*',
             'X-Language': language
-          }
+          },
+          signal: abortControllerRef.current.signal
         });
 
         if (!categoriesResponse.ok) {
@@ -54,31 +73,39 @@ function AllProducts() {
         const categoriesData = await categoriesResponse.json();
         setCategories(categoriesData);
 
-        // Fetch products for ONLY the first 4 categories initially
-        const allProductsArray = [];
+        // Fetch products for ONLY the first 3 categories in PARALLEL
         const initialCategories = categoriesData.slice(0, INITIAL_CATEGORIES_TO_LOAD);
         
-        for (const category of initialCategories) {
-          const productsResponse = await fetch(
+        const productPromises = initialCategories.map(category =>
+          fetch(
             `http://api.litox.synaptica.online/api/Products/products?CategoryID=${category.id}&PageSize=100&Page=1`,
             {
               headers: {
                 'accept': '*/*',
                 'X-Language': language
-              }
+              },
+              signal: abortControllerRef.current.signal
             }
-          );
-
-          if (productsResponse.ok) {
-            const categoryProducts = await productsResponse.json();
-            const productsWithCategory = categoryProducts.map(product => ({
+          )
+          .then(res => res.ok ? res.json() : [])
+          .then(categoryProducts => ({
+            categoryId: category.id,
+            categoryName: category.title,
+            products: categoryProducts.map(product => ({
               ...product,
               categoryId: category.id,
               categoryName: category.title
-            }));
-            allProductsArray.push(...productsWithCategory);
-          }
-        }
+            }))
+          }))
+          .catch(err => {
+            console.error(`Error loading category ${category.id}:`, err);
+            return { categoryId: category.id, categoryName: category.title, products: [] };
+          })
+        );
+
+        // Wait for all initial category requests to complete IN PARALLEL
+        const results = await Promise.all(productPromises);
+        const allProductsArray = results.flatMap(result => result.products);
 
         setAllProducts(allProductsArray);
         setFilteredProducts(allProductsArray);
@@ -99,6 +126,10 @@ function AllProducts() {
         }
         
       } catch (err) {
+        if (err.name === 'AbortError') {
+          console.log('Fetch aborted');
+          return;
+        }
         setError(err.message);
         setCategories([]);
         setAllProducts([]);
@@ -110,7 +141,7 @@ function AllProducts() {
     fetchInitialData();
   }, [language]);
 
-  // Function to load remaining categories in the background
+  // Function to load remaining categories in the background (PARALLEL)
   const loadRemainingCategories = async (categoriesData, initialProducts) => {
     if (isLoadingRest.current) return;
     isLoadingRest.current = true;
@@ -118,12 +149,16 @@ function AllProducts() {
 
     try {
       const remainingCategories = categoriesData.slice(INITIAL_CATEGORIES_TO_LOAD);
+      
+      // Process in batches of 3 categories at a time to avoid overwhelming the server
+      const BATCH_SIZE = 3;
       const allProductsArray = [...initialProducts];
       
-      // Load categories one by one to avoid overwhelming the server
-      for (const category of remainingCategories) {
-        try {
-          const productsResponse = await fetch(
+      for (let i = 0; i < remainingCategories.length; i += BATCH_SIZE) {
+        const batch = remainingCategories.slice(i, i + BATCH_SIZE);
+        
+        const batchPromises = batch.map(category =>
+          fetch(
             `http://api.litox.synaptica.online/api/Products/products?CategoryID=${category.id}&PageSize=100&Page=1`,
             {
               headers: {
@@ -131,31 +166,43 @@ function AllProducts() {
                 'X-Language': language
               }
             }
-          );
-
-          if (productsResponse.ok) {
-            const categoryProducts = await productsResponse.json();
-            const productsWithCategory = categoryProducts.map(product => ({
+          )
+          .then(res => res.ok ? res.json() : [])
+          .then(categoryProducts => ({
+            categoryId: category.id,
+            categoryName: category.title,
+            products: categoryProducts.map(product => ({
               ...product,
               categoryId: category.id,
               categoryName: category.title
-            }));
-            
-            allProductsArray.push(...productsWithCategory);
-            
-            // Update state after each category is loaded
-            setAllProducts([...allProductsArray]);
-            
-            // If "All Products" is selected, update filtered products too
-            if (selectedCategory === 'all') {
-              setFilteredProducts([...allProductsArray]);
-            }
+            }))
+          }))
+          .catch(err => {
+            console.error(`Error loading category ${category.id}:`, err);
+            return { categoryId: category.id, categoryName: category.title, products: [] };
+          })
+        );
+
+        // Wait for batch to complete
+        const batchResults = await Promise.all(batchPromises);
+        const batchProducts = batchResults.flatMap(result => result.products);
+        
+        allProductsArray.push(...batchProducts);
+        
+        // Update state after each batch
+        setAllProducts([...allProductsArray]);
+        
+        // If "All Products" is selected, update filtered products too
+        setFilteredProducts(prevFiltered => {
+          if (selectedCategory === 'all') {
+            return [...allProductsArray];
           }
-          
-          // Small delay to prevent overwhelming the server
-          await new Promise(resolve => setTimeout(resolve, 100));
-        } catch (err) {
-          console.error(`Error loading category ${category.id}:`, err);
+          return prevFiltered;
+        });
+        
+        // Small delay between batches (optional, can remove if server can handle it)
+        if (i + BATCH_SIZE < remainingCategories.length) {
+          await new Promise(resolve => setTimeout(resolve, 50));
         }
       }
     } catch (err) {
@@ -208,11 +255,6 @@ function AllProducts() {
         ka: 'შემდეგი',
         en: 'Next',
         ru: 'Следующая'
-      },
-      loadingMore: {
-        ka: 'იტვირთება მეტი...',
-        en: 'Loading more...',
-        ru: 'Загрузка...'
       }
     };
     return translations[key]?.[language] || translations[key]?.['en'] || key;

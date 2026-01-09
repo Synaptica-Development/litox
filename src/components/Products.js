@@ -21,7 +21,7 @@ function Products() {
     setLanguage(savedLanguage);
   }, []);
 
-  // Fetch ALL products grouped by category
+  // Fetch products with optimized requests
   useEffect(() => {
     const fetchAllData = async () => {
       setLoading(true);
@@ -40,17 +40,13 @@ function Products() {
         }
 
         const categoriesData = await categoriesResponse.json();
-        const categoriesWithProductsData = [];
-
-        for (const category of categoriesData) {
-          // Fetch 8 products per API page
-          let allProducts = [];
-          let currentPage = 1;
-          let hasMorePages = true;
-
-          while (hasMorePages) {
+        
+        // Fetch products for all categories in parallel with larger page size
+        const categoryPromises = categoriesData.slice(0, 4).map(async (category) => {
+          try {
+            // Request 100 products at once instead of paginating
             const productsResponse = await fetch(
-              `http://api.litox.synaptica.online/api/Products/products?CategoryID=${category.id}&PageSize=8&Page=${currentPage}`,
+              `http://api.litox.synaptica.online/api/Products/products?CategoryID=${category.id}&PageSize=100&Page=1`,
               {
                 headers: {
                   'accept': '*/*',
@@ -60,42 +56,35 @@ function Products() {
             );
 
             if (productsResponse.ok) {
-              const pageProducts = await productsResponse.json();
+              const products = await productsResponse.json();
               
-              if (pageProducts.length > 0) {
-                const productsWithCategory = pageProducts.map(product => ({
+              if (products.length > 0) {
+                const productsWithCategory = products.map(product => ({
                   ...product,
                   categoryId: category.id,
                   categoryTitle: category.title
                 }));
                 
-                allProducts = [...allProducts, ...productsWithCategory];
-                
-                // If we got less than 8 products, we've reached the last page
-                if (pageProducts.length < 8) {
-                  hasMorePages = false;
-                } else {
-                  currentPage++;
-                }
-              } else {
-                hasMorePages = false;
+                return {
+                  category: category,
+                  products: productsWithCategory
+                };
               }
-            } else {
-              hasMorePages = false;
             }
+          } catch (err) {
+            console.error(`Error fetching products for category ${category.id}:`, err);
           }
+          
+          return null;
+        });
 
-          // Only add categories that have products
-          if (allProducts.length > 0) {
-            categoriesWithProductsData.push({
-              category: category,
-              products: allProducts
-            });
-          }
-        }
+        // Wait for all category fetches to complete
+        const results = await Promise.all(categoryPromises);
+        
+        // Filter out null results (categories with no products or errors)
+        const categoriesWithProductsData = results.filter(result => result !== null);
 
-        // Limit to first 4 categories with products
-        setCategoriesWithProducts(categoriesWithProductsData.slice(0, 4));
+        setCategoriesWithProducts(categoriesWithProductsData);
         console.log('Categories with products:', categoriesWithProductsData.map(c => `${c.category.title}: ${c.products.length} products`));
 
       } catch (err) {
