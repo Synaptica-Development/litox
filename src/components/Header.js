@@ -8,7 +8,9 @@ function Header() {
   const [isLargeMenuOpen, setIsLargeMenuOpen] = useState(false);
   const [isSmallMenuOpen, setIsSmallMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem('language') || 'ka';
+  });
   const [categories, setCategories] = useState([]);
   const [expandedMenu, setExpandedMenu] = useState(null);
   const navigate = useNavigate();
@@ -36,7 +38,6 @@ function Header() {
 
   // Handle language change
   const handleLanguageChange = (lang) => {
-    setLanguage(lang);
     localStorage.setItem('language', lang);
     window.location.reload();
   };
@@ -52,14 +53,6 @@ function Header() {
   const toggleSubmenu = (menuName) => {
     setExpandedMenu(expandedMenu === menuName ? null : menuName);
   };
-
-  // Load language from localStorage
-  useEffect(() => {
-    const savedLanguage = localStorage.getItem('language');
-    if (savedLanguage) {
-      setLanguage(savedLanguage);
-    }
-  }, []);
 
   // Get menu text based on language
   const getMenuText = () => {
@@ -232,34 +225,46 @@ function Header() {
                       <a 
                         href="#" 
                         className={`mobile-nav__link ${language === 'ka' ? 'active-lang' : ''}`}
+                        style={{ 
+                          color: language === 'ka' ? '#ff6b00' : '#aba39e',
+                          fontWeight: language === 'ka' ? 'bold' : 'normal'
+                        }}
                         onClick={(e) => {
                           e.preventDefault();
                           handleLanguageChange('ka');
                         }}
                       >
-                        ქარ
+                        {language === 'ka' && '✓ '}ge
                       </a>
                       <span className="lang-divider">|</span>
                       <a 
                         href="#" 
                         className={`mobile-nav__link ${language === 'en' ? 'active-lang' : ''}`}
+                        style={{ 
+                          color: language === 'en' ? '#ff6b00' : '#aba39e',
+                          fontWeight: language === 'en' ? 'bold' : 'normal'
+                        }}
                         onClick={(e) => {
                           e.preventDefault();
                           handleLanguageChange('en');
                         }}
                       >
-                        EN
+                        {language === 'en' && '✓ '}EN
                       </a>
                       <span className="lang-divider">|</span>
                       <a 
                         href="#" 
                         className={`mobile-nav__link ${language === 'ru' ? 'active-lang' : ''}`}
+                        style={{ 
+                          color: language === 'ru' ? '#ff6b00' : '#aba39e',
+                          fontWeight: language === 'ru' ? 'bold' : 'normal'
+                        }}
                         onClick={(e) => {
                           e.preventDefault();
                           handleLanguageChange('ru');
                         }}
                       >
-                        РУ
+                        {language === 'ru' && '✓ '}РУ
                       </a>
                     </li>
                   </ul>
@@ -308,44 +313,54 @@ function Header() {
                 </li>
               </ul>
 
-             
-
               {/* Desktop language switcher - THREE LANGUAGES */}
               <ul className="lang desktop-only">
                 <li>
                   <a 
                     href="#" 
                     className={language === 'ka' ? 'active' : ''}
+                    style={{ 
+                      color: language === 'ka' ? '#ff6b00' : '#aba39e',
+                      fontWeight: language === 'ka' ? 'bold' : 'normal'
+                    }}
                     onClick={(e) => {
                       e.preventDefault();
                       handleLanguageChange('ka');
                     }}
                   >
-                    ქარ
+                    {language === 'ka' && '✓ '}ge
                   </a>
                 </li>
                 <li>
                   <a 
                     href="#" 
                     className={language === 'en' ? 'active' : ''}
+                    style={{ 
+                      color: language === 'en' ? '#ff6b00' : '#aba39e',
+                      fontWeight: language === 'en' ? 'bold' : 'normal'
+                    }}
                     onClick={(e) => {
                       e.preventDefault();
                       handleLanguageChange('en');
                     }}
                   >
-                    EN
+                    {language === 'en' && '✓ '}EN
                   </a>
                 </li>
                 <li>
                   <a 
                     href="#" 
                     className={language === 'ru' ? 'active' : ''}
+                    style={{ 
+                      color: language === 'ru' ? '#ff6b00' : '#aba39e',
+                      fontWeight: language === 'ru' ? 'bold' : 'normal'
+                    }}
                     onClick={(e) => {
                       e.preventDefault();
                       handleLanguageChange('ru');
                     }}
                   >
-                    RU
+                    {language === 'ru' && '✓ '}RU
                   </a>
                 </li>
               </ul>
