@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import '../styles/AllProducts.css';
 
@@ -14,10 +14,13 @@ function AllProducts() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [language, setLanguage] = useState('en');
+  const [loadingBackground, setLoadingBackground] = useState(false);
+  const isLoadingRest = useRef(false);
   
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const PRODUCTS_PER_PAGE = 16;
+  const INITIAL_CATEGORIES_TO_LOAD = 4;
 
   // Load language from localStorage
   useEffect(() => {
@@ -32,7 +35,7 @@ function AllProducts() {
 
   // Fetch data when language changes
   useEffect(() => {
-    const fetchAllData = async () => {
+    const fetchInitialData = async () => {
       setLoading(true);
       setError(null);
       try {
@@ -51,10 +54,11 @@ function AllProducts() {
         const categoriesData = await categoriesResponse.json();
         setCategories(categoriesData);
 
-        // Fetch products for each category
+        // Fetch products for ONLY the first 4 categories initially
         const allProductsArray = [];
+        const initialCategories = categoriesData.slice(0, INITIAL_CATEGORIES_TO_LOAD);
         
-        for (const category of categoriesData) {
+        for (const category of initialCategories) {
           const productsResponse = await fetch(
             `http://api.litox.synaptica.online/api/Products/products?CategoryID=${category.id}&PageSize=100&Page=1`,
             {
@@ -86,18 +90,81 @@ function AllProducts() {
           const filtered = allProductsArray.filter(product => product.categoryId === categoryParam);
           setFilteredProducts(filtered);
         }
+
+        setLoading(false);
+
+        // Now load the rest of the categories in the background
+        if (categoriesData.length > INITIAL_CATEGORIES_TO_LOAD) {
+          loadRemainingCategories(categoriesData, allProductsArray);
+        }
+        
       } catch (err) {
         setError(err.message);
         setCategories([]);
         setAllProducts([]);
         setFilteredProducts([]);
-      } finally {
         setLoading(false);
       }
     };
 
-    fetchAllData();
-  }, [searchParams, language]);
+    fetchInitialData();
+  }, [language]);
+
+  // Function to load remaining categories in the background
+  const loadRemainingCategories = async (categoriesData, initialProducts) => {
+    if (isLoadingRest.current) return;
+    isLoadingRest.current = true;
+    setLoadingBackground(true);
+
+    try {
+      const remainingCategories = categoriesData.slice(INITIAL_CATEGORIES_TO_LOAD);
+      const allProductsArray = [...initialProducts];
+      
+      // Load categories one by one to avoid overwhelming the server
+      for (const category of remainingCategories) {
+        try {
+          const productsResponse = await fetch(
+            `http://api.litox.synaptica.online/api/Products/products?CategoryID=${category.id}&PageSize=100&Page=1`,
+            {
+              headers: {
+                'accept': '*/*',
+                'X-Language': language
+              }
+            }
+          );
+
+          if (productsResponse.ok) {
+            const categoryProducts = await productsResponse.json();
+            const productsWithCategory = categoryProducts.map(product => ({
+              ...product,
+              categoryId: category.id,
+              categoryName: category.title
+            }));
+            
+            allProductsArray.push(...productsWithCategory);
+            
+            // Update state after each category is loaded
+            setAllProducts([...allProductsArray]);
+            
+            // If "All Products" is selected, update filtered products too
+            if (selectedCategory === 'all') {
+              setFilteredProducts([...allProductsArray]);
+            }
+          }
+          
+          // Small delay to prevent overwhelming the server
+          await new Promise(resolve => setTimeout(resolve, 100));
+        } catch (err) {
+          console.error(`Error loading category ${category.id}:`, err);
+        }
+      }
+    } catch (err) {
+      console.error('Error loading remaining categories:', err);
+    } finally {
+      setLoadingBackground(false);
+      isLoadingRest.current = false;
+    }
+  };
 
   // Translation function
   const translate = (key) => {
@@ -141,6 +208,11 @@ function AllProducts() {
         ka: 'შემდეგი',
         en: 'Next',
         ru: 'Следующая'
+      },
+      loadingMore: {
+        ka: 'იტვირთება მეტი...',
+        en: 'Loading more...',
+        ru: 'Загрузка...'
       }
     };
     return translations[key]?.[language] || translations[key]?.['en'] || key;
@@ -321,6 +393,7 @@ function AllProducts() {
                 onClick={() => handleCategoryFilter('all')}
               >
                 {translate('allProducts')} ({allProducts.length})
+                {loadingBackground && ' ⟳'}
               </button>
               {categories.map((category) => {
                 const count = allProducts.filter(p => p.categoryId === category.id).length;
@@ -330,7 +403,7 @@ function AllProducts() {
                     className={`filter-btn ${selectedCategory === category.id ? 'active' : ''}`}
                     onClick={() => handleCategoryFilter(category.id)}
                   >
-                    {category.title} ({count})
+                    {category.title} {count > 0 ? `(${count})` : ''}
                   </button>
                 );
               })}
