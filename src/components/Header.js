@@ -15,6 +15,13 @@ function Header() {
   const [expandedMenu, setExpandedMenu] = useState(null);
   const navigate = useNavigate();
 
+  // Set default language to Georgian if not already set
+useEffect(() => {
+  if (!localStorage.getItem('language')) {
+    localStorage.setItem('language', 'ka');
+  }
+}, []);
+
   // Fetch categories
   useEffect(() => {
     const fetchCategories = async () => {
@@ -42,7 +49,7 @@ function Header() {
     window.location.reload();
   };
 
-  // Handle category click
+  // Handle category click - goes to AllProducts with filter
   const handleCategoryClick = (categoryId) => {
     setIsSmallMenuOpen(false);
     setIsLargeMenuOpen(false);
@@ -191,7 +198,7 @@ function Header() {
                       <div className="mobile-nav__link-wrapper">
                         <Link 
                           className="mobile-nav__link" 
-                          to="/products"
+                          to="/products2"
                           onClick={() => setIsSmallMenuOpen(false)}
                         >
                           {translate('products')}
@@ -294,7 +301,7 @@ function Header() {
                   <Link to="/contacts">{translate('contacts')}</Link>
                 </li>
                 <li>
-                  <Link to="/products">{translate('products')}</Link>
+                  <Link to="/products2">{translate('products')}</Link>
                   <ul className="dropdown">
                     {categories.map((category) => (
                       <li key={category.id}>

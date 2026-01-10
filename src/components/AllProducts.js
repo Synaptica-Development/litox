@@ -13,7 +13,9 @@ function AllProducts() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem('language') || 'ka';
+  });
   const [loadingBackground, setLoadingBackground] = useState(false);
   const isLoadingRest = useRef(false);
   const abortControllerRef = useRef(null);
@@ -21,13 +23,7 @@ function AllProducts() {
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const PRODUCTS_PER_PAGE = 16;
-  const INITIAL_CATEGORIES_TO_LOAD = 3; // Reduced to 3 for even faster initial load
-
-  // Load language from localStorage
-  useEffect(() => {
-    const savedLanguage = localStorage.getItem('language') || 'en';
-    setLanguage(savedLanguage);
-  }, []);
+  const INITIAL_CATEGORIES_TO_LOAD = 3;
 
   // Scroll to top when component mounts or page changes
   useEffect(() => {
@@ -46,7 +42,6 @@ function AllProducts() {
   // Fetch data when language changes
   useEffect(() => {
     const fetchInitialData = async () => {
-      // Cancel any ongoing requests
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }
@@ -57,7 +52,6 @@ function AllProducts() {
       isLoadingRest.current = false;
 
       try {
-        // Fetch all categories
         const categoriesResponse = await fetch('http://api.litox.synaptica.online/api/Category/categories', {
           headers: {
             'accept': '*/*',
@@ -73,7 +67,6 @@ function AllProducts() {
         const categoriesData = await categoriesResponse.json();
         setCategories(categoriesData);
 
-        // Fetch products for ONLY the first 3 categories in PARALLEL
         const initialCategories = categoriesData.slice(0, INITIAL_CATEGORIES_TO_LOAD);
         
         const productPromises = initialCategories.map(category =>
@@ -103,14 +96,12 @@ function AllProducts() {
           })
         );
 
-        // Wait for all initial category requests to complete IN PARALLEL
         const results = await Promise.all(productPromises);
         const allProductsArray = results.flatMap(result => result.products);
 
         setAllProducts(allProductsArray);
         setFilteredProducts(allProductsArray);
         
-        // Check if there's a category parameter in URL
         const categoryParam = searchParams.get('category');
         if (categoryParam && categoryParam !== 'all') {
           setSelectedCategory(categoryParam);
@@ -120,7 +111,6 @@ function AllProducts() {
 
         setLoading(false);
 
-        // Now load the rest of the categories in the background
         if (categoriesData.length > INITIAL_CATEGORIES_TO_LOAD) {
           loadRemainingCategories(categoriesData, allProductsArray);
         }
@@ -141,7 +131,6 @@ function AllProducts() {
     fetchInitialData();
   }, [language]);
 
-  // Function to load remaining categories in the background (PARALLEL)
   const loadRemainingCategories = async (categoriesData, initialProducts) => {
     if (isLoadingRest.current) return;
     isLoadingRest.current = true;
@@ -149,8 +138,6 @@ function AllProducts() {
 
     try {
       const remainingCategories = categoriesData.slice(INITIAL_CATEGORIES_TO_LOAD);
-      
-      // Process in batches of 3 categories at a time to avoid overwhelming the server
       const BATCH_SIZE = 3;
       const allProductsArray = [...initialProducts];
       
@@ -183,16 +170,13 @@ function AllProducts() {
           })
         );
 
-        // Wait for batch to complete
         const batchResults = await Promise.all(batchPromises);
         const batchProducts = batchResults.flatMap(result => result.products);
         
         allProductsArray.push(...batchProducts);
         
-        // Update state after each batch
         setAllProducts([...allProductsArray]);
         
-        // If "All Products" is selected, update filtered products too
         setFilteredProducts(prevFiltered => {
           if (selectedCategory === 'all') {
             return [...allProductsArray];
@@ -200,7 +184,6 @@ function AllProducts() {
           return prevFiltered;
         });
         
-        // Small delay between batches (optional, can remove if server can handle it)
         if (i + BATCH_SIZE < remainingCategories.length) {
           await new Promise(resolve => setTimeout(resolve, 50));
         }
@@ -213,7 +196,6 @@ function AllProducts() {
     }
   };
 
-  // Translation function
   const translate = (key) => {
     const translations = {
       home: {
@@ -283,20 +265,18 @@ function AllProducts() {
     return product.title || product.name || 'Product';
   };
 
-  // Skeleton loader component
   const SkeletonCard = () => (
-    <div className="product-card skeleton">
-      <div className="product-image skeleton-image">
-        <div className="skeleton-shimmer"></div>
+    <div className="all-products-card all-products-skeleton">
+      <div className="all-products-image all-products-skeleton-image">
+        <div className="all-products-skeleton-shimmer"></div>
       </div>
-      <div className="product-info">
-        <div className="skeleton-text skeleton-title"></div>
-        <div className="skeleton-text skeleton-category"></div>
+      <div className="all-products-info">
+        <div className="all-products-skeleton-text all-products-skeleton-title"></div>
+        <div className="all-products-skeleton-text all-products-skeleton-category"></div>
       </div>
     </div>
   );
 
-  // Pagination logic
   const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
   const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
   const endIndex = startIndex + PRODUCTS_PER_PAGE;
@@ -398,7 +378,6 @@ function AllProducts() {
 
   return (
     <>
-      {/* Hero Section */}
       <section 
         className="products-hero2"
         style={{
@@ -417,10 +396,8 @@ function AllProducts() {
         </div>
       </section>
 
-      {/* Products Section */}
       <div className="products-section">
         <div className="container">
-          {/* Category Filter */}
           {loading ? (
             <div className="filter-wrapper">
               <div className="filter-btn skeleton skeleton-filter"></div>
@@ -452,7 +429,6 @@ function AllProducts() {
             </div>
           )}
 
-          {/* Products Grid */}
           {loading ? (
             <div className="products-grid">
               {[...Array(12)].map((_, index) => (
@@ -468,9 +444,9 @@ function AllProducts() {
                   <Link 
                     key={product.id || index} 
                     to={`/products/${product.categoryId}/${product.id}`} 
-                    className="product-card"
+                    className="all-products-card"
                   >
-                    <div className="product-image">
+                    <div className="all-products-image">
                       <img 
                         src={getProductImage(product)} 
                         alt={getProductName(product)}
@@ -479,13 +455,13 @@ function AllProducts() {
                         }}
                       />
                     </div>
-                    <div className="product-info">
-                      <h3 className="product-name">{getProductName(product)}</h3>
-                      <p className="product-category">{product.categoryName}</p>
+                    <div className="all-products-info">
+                      <h3 className="all-products-name">{getProductName(product)}</h3>
+                      <p className="all-products-category">{product.categoryName}</p>
                       <img 
                         src={arrow} 
                         alt="" 
-                        className="product-arrow"
+                        className="all-products-arrow"
                       />
                     </div>
                   </Link>

@@ -287,7 +287,7 @@ function ProductDetails() {
         }}
       >
         <div className="breadcrumbs-wrapper">
-          <ul className="breadcrumbs">
+          <ul className="product-detail-breadcrumbs">
             <li><Link to="/">{translate('home')}</Link></li>
             <li><Link to="/products">{translate('products')}</Link></li>
             {category && <li><Link to={`/category/${categoryId}`}>{category.title}</Link></li>}

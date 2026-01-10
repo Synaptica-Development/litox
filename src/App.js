@@ -11,6 +11,8 @@ import AllProducts from './components/AllProducts';
 import ProductDetails from './components/ProductDetails';
 import Contacts from './components/Contacts';
 import About from './components/About';
+import Products2 from './components/Products2';
+import Products2CategoryPage from './components/Products2CategoryPage';
 
 // Home page component
 function HomePage() {
@@ -36,8 +38,14 @@ function App() {
           {/* All products route */}
           <Route path="/products" element={<AllProducts />} />
           
-          {/* Category page route - ADD THIS ONE */}
+          {/* Category page route */}
           <Route path="/category/:categoryId" element={<CategoryPage />} />
+          
+          {/* Products2 route */}
+          <Route path="/products2" element={<Products2 />} />
+          
+          {/* Products2 Category page route - NEW */}
+          <Route path="/products2/category/:categoryId" element={<Products2CategoryPage />} />
           
           {/* Dynamic product details route */}
           <Route path="/products/:categoryId/:productId" element={<ProductDetails />} />

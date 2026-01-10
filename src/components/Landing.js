@@ -7,19 +7,18 @@ function Landing() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [banners, setBanners] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState('ka');
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   // Load language from localStorage
-  useEffect(() => {
-    const savedLanguage = localStorage.getItem('language');
-    if (savedLanguage) {
-      setLanguage(savedLanguage);
-    }
-  }, []);
+ // Load language from localStorage
+useEffect(() => {
+  const savedLanguage = localStorage.getItem('language') || 'ka';
+  setLanguage(savedLanguage);
+}, []);
 
   // Fetch banners when language changes
   useEffect(() => {
