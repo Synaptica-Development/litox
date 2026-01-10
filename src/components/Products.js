@@ -1,19 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
 import '../styles/Products.css';
 
 const arrow = `${process.env.PUBLIC_URL}/next.png`;
 
 function Products() {
-  const [categoriesWithProducts, setCategoriesWithProducts] = useState([]);
+  const [highlightedProducts, setHighlightedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState(null);
   const [language, setLanguage] = useState('en');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [slidesPerView, setSlidesPerView] = useState(4);
+  const sliderRef = useRef(null);
+  const PAGE_SIZE = 10;
 
   // Get language from localStorage
   useEffect(() => {
@@ -21,83 +23,109 @@ function Products() {
     setLanguage(savedLanguage);
   }, []);
 
-  // Fetch products with optimized requests
+  // Handle responsive slides per view
   useEffect(() => {
-    const fetchAllData = async () => {
-      setLoading(true);
-      setError(null);
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width < 768) {
+        setSlidesPerView(1);
+      } else if (width < 1024) {
+        setSlidesPerView(2);
+      } else if (width < 1200) {
+        setSlidesPerView(3);
+      } else {
+        setSlidesPerView(4);
+      }
+    };
 
-      try {
-        const categoriesResponse = await fetch('http://api.litox.synaptica.online/api/Category/categories', {
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Fetch highlighted products with pagination
+  const fetchProducts = async (page, isInitial = false) => {
+    if (isInitial) {
+      setLoading(true);
+    } else {
+      setLoadingMore(true);
+    }
+    setError(null);
+
+    try {
+      const response = await fetch(
+        `http://api.litox.synaptica.online/api/Products/products?ProductFilter=HighLight&PageSize=${PAGE_SIZE}&Page=${page}`,
+        {
           headers: {
             'accept': '*/*',
             'X-Language': language
           }
-        });
-
-        if (!categoriesResponse.ok) {
-          throw new Error('Failed to fetch categories');
         }
+      );
 
-        const categoriesData = await categoriesResponse.json();
-        
-        // Fetch products for all categories in parallel with larger page size
-        const categoryPromises = categoriesData.slice(0, 4).map(async (category) => {
-          try {
-            // Request 100 products at once instead of paginating
-            const productsResponse = await fetch(
-              `http://api.litox.synaptica.online/api/Products/products?CategoryID=${category.id}&PageSize=100&Page=1`,
-              {
-                headers: {
-                  'accept': '*/*',
-                  'X-Language': language
-                }
-              }
-            );
-
-            if (productsResponse.ok) {
-              const products = await productsResponse.json();
-              
-              if (products.length > 0) {
-                const productsWithCategory = products.map(product => ({
-                  ...product,
-                  categoryId: category.id,
-                  categoryTitle: category.title
-                }));
-                
-                return {
-                  category: category,
-                  products: productsWithCategory
-                };
-              }
-            }
-          } catch (err) {
-            console.error(`Error fetching products for category ${category.id}:`, err);
-          }
-          
-          return null;
-        });
-
-        // Wait for all category fetches to complete
-        const results = await Promise.all(categoryPromises);
-        
-        // Filter out null results (categories with no products or errors)
-        const categoriesWithProductsData = results.filter(result => result !== null);
-
-        setCategoriesWithProducts(categoriesWithProductsData);
-        console.log('Categories with products:', categoriesWithProductsData.map(c => `${c.category.title}: ${c.products.length} products`));
-
-      } catch (err) {
-        console.error('Error fetching data:', err);
-        setError(err.message);
-        setCategoriesWithProducts([]);
-      } finally {
-        setLoading(false);
+      if (!response.ok) {
+        throw new Error('Failed to fetch highlighted products');
       }
-    };
 
-    fetchAllData();
+      const products = await response.json();
+      
+      if (isInitial) {
+        setHighlightedProducts(products);
+      } else {
+        setHighlightedProducts(prev => [...prev, ...products]);
+      }
+
+      if (products.length < PAGE_SIZE) {
+        setHasMore(false);
+      }
+
+      console.log(`Loaded ${products.length} products for page ${page}`);
+
+    } catch (err) {
+      console.error('Error fetching highlighted products:', err);
+      setError(err.message);
+      if (isInitial) {
+        setHighlightedProducts([]);
+      }
+    } finally {
+      if (isInitial) {
+        setLoading(false);
+      } else {
+        setLoadingMore(false);
+      }
+    }
+  };
+
+  // Initial load
+  useEffect(() => {
+    setCurrentPage(1);
+    setHasMore(true);
+    fetchProducts(1, true);
   }, [language]);
+
+  // Check if we need to load more products
+  useEffect(() => {
+    const totalSlides = highlightedProducts.length;
+    const maxIndex = Math.max(0, totalSlides - slidesPerView);
+    
+    if (currentIndex >= maxIndex - 2 && hasMore && !loadingMore && highlightedProducts.length > 0) {
+      const nextPage = currentPage + 1;
+      setCurrentPage(nextPage);
+      fetchProducts(nextPage, false);
+    }
+  }, [currentIndex, highlightedProducts.length, slidesPerView]);
+
+  const handlePrev = () => {
+    setCurrentIndex(prev => Math.max(0, prev - 1));
+  };
+
+  const handleNext = () => {
+    const maxIndex = Math.max(0, highlightedProducts.length - slidesPerView);
+    setCurrentIndex(prev => Math.min(maxIndex, prev + 1));
+  };
+
+  const canGoPrev = currentIndex > 0;
+  const canGoNext = currentIndex < highlightedProducts.length - slidesPerView;
 
   const translate = (key) => {
     const translations = {
@@ -151,51 +179,22 @@ function Products() {
   if (loading) {
     return (
       <div className="home-page-products">
-        {[...Array(2)].map((_, categoryIndex) => (
-          <div key={`skeleton-category-${categoryIndex}`} className="category-slider-section">
-            <div className="home-products-header">
-              <div className="skeleton-text skeleton-title"></div>
-            </div>
-            <div className="home-products-carousel-container">
-              <Swiper
-                modules={[Navigation, Pagination]}
-                spaceBetween={20}
-                slidesPerView={4}
-                slidesPerGroup={4}
-                speed={500}
-                allowTouchMove={false}
-                breakpoints={{
-                  320: {
-                    slidesPerView: 1,
-                    slidesPerGroup: 1,
-                    spaceBetween: 15
-                  },
-                  768: {
-                    slidesPerView: 2,
-                    slidesPerGroup: 2,
-                    spaceBetween: 20
-                  },
-                  1024: {
-                    slidesPerView: 3,
-                    slidesPerGroup: 3,
-                    spaceBetween: 20
-                  },
-                  1200: {
-                    slidesPerView: 4,
-                    slidesPerGroup: 4,
-                    spaceBetween: 20
-                  }
-                }}
-              >
+        <div className="category-slider-section">
+          <div className="home-products-header">
+            <div className="skeleton-text skeleton-title"></div>
+          </div>
+          <div className="home-products-carousel-container">
+            <div className="custom-slider">
+              <div className="custom-slider-track">
                 {[...Array(8)].map((_, index) => (
-                  <SwiperSlide key={`skeleton-${index}`}>
+                  <div key={`skeleton-${index}`} className="custom-slide">
                     <SkeletonProductCard />
-                  </SwiperSlide>
+                  </div>
                 ))}
-              </Swiper>
+              </div>
             </div>
           </div>
-        ))}
+        </div>
       </div>
     );
   }
@@ -208,7 +207,7 @@ function Products() {
     );
   }
 
-  if (categoriesWithProducts.length === 0) {
+  if (highlightedProducts.length === 0) {
     return (
       <div className="home-page-products">
         <div className="home-products-error">{translate('noProducts')}</div>
@@ -216,56 +215,33 @@ function Products() {
     );
   }
 
+  const slideWidth = 100 / slidesPerView;
+  const translateX = -(currentIndex * slideWidth);
+
   return (
     <div className="home-page-products">
-      {categoriesWithProducts.map((categoryData, categoryIndex) => (
-        <div key={`category-section-${categoryData.category.id}`} className="category-slider-section">
-          <div className="home-products-header">
-            <h2 className="home-products-title">
-              {categoryData.category.title}
-            </h2>
-          </div>
+      <div className="category-slider-section">
+        <div className="home-products-header">
+          <h2 className="home-products-title">
+            {translate('products')}
+          </h2>
+        </div>
 
-          <div className="home-products-carousel-container">
-            <Swiper
-              modules={[Navigation, Pagination]}
-              spaceBetween={20}
-              slidesPerView={4}
-              slidesPerGroup={4}
-              speed={500}
-              pagination={{
-                clickable: true,
-                dynamicBullets: true,
-              }}
-              navigation={{
-                prevEl: `.swiper-button-prev-custom-${categoryIndex}`,
-                nextEl: `.swiper-button-next-custom-${categoryIndex}`,
-              }}
-              breakpoints={{
-                320: {
-                  slidesPerView: 1,
-                  slidesPerGroup: 1,
-                  spaceBetween: 15
-                },
-                768: {
-                  slidesPerView: 2,
-                  slidesPerGroup: 2,
-                  spaceBetween: 20
-                },
-                1024: {
-                  slidesPerView: 3,
-                  slidesPerGroup: 3,
-                  spaceBetween: 20
-                },
-                1200: {
-                  slidesPerView: 4,
-                  slidesPerGroup: 4,
-                  spaceBetween: 20
-                }
+        <div className="home-products-carousel-container">
+          <div className="custom-slider" ref={sliderRef}>
+            <div 
+              className="custom-slider-track"
+              style={{
+                transform: `translateX(${translateX}%)`,
+                transition: 'transform 0.5s ease'
               }}
             >
-              {categoryData.products.map((product, index) => (
-                <SwiperSlide key={`${product.id}-${index}`}>
+              {highlightedProducts.map((product, index) => (
+                <div 
+                  key={`${product.id}-${index}`} 
+                  className="custom-slide"
+                  style={{ width: `${slideWidth}%` }}
+                >
                   <div className="home-product-item">
                     <Link to={`/products/${product.categoryId}/${product.id}`} className="home-product-card">
                       <span className="home-product-img-wrapper">
@@ -276,7 +252,6 @@ function Products() {
                             e.target.src = process.env.PUBLIC_URL + '/prod.webp';
                           }}
                         />
-                        {/* Arrow circle with coin flip effect */}
                         <span 
                           className="product-arrow-circle"
                           style={{
@@ -306,33 +281,45 @@ function Products() {
                         </span>
                       </span>
                       <span className="home-product-name">{getProductName(product)}</span>
-                      <span className="home-product-category">{product.categoryTitle}</span>
+                      <span className="home-product-category">{product.categoryTitle || ''}</span>
                     </Link>
                   </div>
-                </SwiperSlide>
+                </div>
               ))}
-            </Swiper>
-
-            {/* Custom Navigation Buttons */}
-            <button 
-              className={`swiper-button-prev-custom swiper-button-prev-custom-${categoryIndex} home-products-nav`}
-              aria-label="Previous"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <polyline points="15 18 9 12 15 6"></polyline>
-              </svg>
-            </button>
-            <button 
-              className={`swiper-button-next-custom swiper-button-next-custom-${categoryIndex} home-products-nav home-products-nav-next`}
-              aria-label="Next"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <polyline points="9 18 15 12 9 6"></polyline>
-              </svg>
-            </button>
+              
+              {loadingMore && (
+                <div className="custom-slide" style={{ width: `${slideWidth}%` }}>
+                  <SkeletonProductCard />
+                </div>
+              )}
+            </div>
           </div>
+
+          {/* Custom Navigation Buttons */}
+          <button 
+            onClick={handlePrev}
+            className={`swiper-button-prev-custom swiper-button-prev-custom-0 home-products-nav ${!canGoPrev ? 'swiper-button-disabled' : ''}`}
+            aria-label="Previous"
+            type="button"
+            disabled={!canGoPrev}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+          <button 
+            onClick={handleNext}
+            className={`swiper-button-next-custom swiper-button-next-custom-0 home-products-nav home-products-nav-next ${!canGoNext ? 'swiper-button-disabled' : ''}`}
+            aria-label="Next"
+            type="button"
+            disabled={!canGoNext}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
         </div>
-      ))}
+      </div>
     </div>
   );
 }

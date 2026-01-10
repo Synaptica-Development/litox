@@ -782,3 +782,369 @@ header {
     display: flex;
   }
 }
+
+
+
+
+/* Search Popup Styles - Beautiful & Compact */
+.search-popup {
+  position: fixed;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 650px;
+  background: linear-gradient(135deg, rgba(38, 33, 30, 0.98) 0%, rgba(26, 23, 21, 0.98) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 150;
+  border-radius: 0 0 16px 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(239, 111, 46, 0.2);
+  animation: searchSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-top: 0;
+}
+
+@keyframes searchSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.search-container {
+  padding: 20px;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1.5px solid rgba(171, 163, 158, 0.15);
+  border-radius: 12px;
+  padding: 0 18px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-input-wrapper:focus-within {
+  border-color: #ef6f2e;
+  background: rgba(239, 111, 46, 0.08);
+  box-shadow: 0 0 0 3px rgba(239, 111, 46, 0.1);
+}
+
+.search-icon {
+  flex-shrink: 0;
+  margin-right: 12px;
+  transition: all 0.3s ease;
+}
+
+.search-input-wrapper:focus-within .search-icon {
+  stroke: #ef6f2e;
+}
+
+.search-popup input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 14px 0;
+  font-size: 15px;
+  color: #ffffff;
+  outline: none;
+  font-family: 'Century Gothic Paneuropean', sans-serif;
+}
+
+.search-popup input::placeholder {
+  color: rgba(171, 163, 158, 0.5);
+}
+
+.search-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.search-close:hover {
+  background: rgba(239, 111, 46, 0.15);
+  opacity: 1;
+}
+
+.search-close svg path {
+  transition: stroke 0.3s ease;
+}
+
+.search-close:hover svg path {
+  stroke: #ef6f2e;
+}
+
+/* Search Results - Compact & Beautiful */
+.search-results {
+  margin-top: 15px;
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar */
+.search-results::-webkit-scrollbar {
+  width: 6px;
+}
+
+.search-results::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 10px;
+}
+
+.search-results::-webkit-scrollbar-thumb {
+  background: rgba(239, 111, 46, 0.3);
+  border-radius: 10px;
+}
+
+.search-results::-webkit-scrollbar-thumb:hover {
+  background: rgba(239, 111, 46, 0.5);
+}
+
+.search-loading,
+.search-no-results {
+  text-align: center;
+  color: #aba39e;
+  padding: 30px 20px;
+  font-size: 14px;
+  font-family: 'Century Gothic Paneuropean', sans-serif;
+}
+
+.search-results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.search-result-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
+}
+
+.search-result-item:hover {
+  background: rgba(239, 111, 46, 0.12);
+  border-color: rgba(239, 111, 46, 0.3);
+  transform: translateX(3px);
+  box-shadow: 0 4px 12px rgba(239, 111, 46, 0.1);
+}
+
+.search-result-image {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+  background: rgba(38, 33, 30, 0.6);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(171, 163, 158, 0.1);
+}
+
+.search-result-image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.search-result-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.search-result-name {
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  font-family: 'Century Gothic Paneuropean', sans-serif;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.search-result-category {
+  color: #aba39e;
+  font-size: 13px;
+  font-family: 'Century Gothic Paneuropean', sans-serif;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Remove dark overlay */
+.search-overlay {
+  display: none;
+}
+
+/* Mobile Search Button in Menu */
+.mobile-search-item {
+  border-top: 2px solid rgba(171, 163, 158, 0.3);
+  margin-top: 10px;
+  padding-top: 10px;
+}
+
+.mobile-search-btn {
+  display: flex !important;
+  align-items: center;
+  gap: 12px;
+  color: #ef6f2e !important;
+}
+
+.mobile-search-btn svg {
+  stroke: #ef6f2e;
+}
+
+/* Desktop search button styling */
+.open-search-popup {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.open-search-popup:hover {
+  background: rgba(239, 111, 46, 0.15);
+}
+
+.open-search-popup:hover svg {
+  stroke: #ef6f2e;
+}
+
+.open-search-popup svg {
+  transition: stroke 0.3s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .search-popup {
+    width: 95%;
+    margin-top: 0;
+  }
+
+  .search-container {
+    padding: 16px;
+  }
+
+  .search-result-image {
+    width: 50px;
+    height: 50px;
+  }
+
+  .search-result-name {
+    font-size: 14px;
+  }
+
+  .search-result-category {
+    font-size: 12px;
+  }
+
+  .search-popup input {
+    font-size: 14px;
+    padding: 12px 0;
+  }
+
+  .search-results {
+    max-height: 350px;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-popup {
+    margin-top: 0;
+  }
+
+  .search-result-item {
+    gap: 12px;
+    padding: 10px;
+  }
+
+  .search-result-image {
+    width: 45px;
+    height: 45px;
+    padding: 6px;
+  }
+
+  .search-results {
+    max-height: 300px;
+  }
+}
+
+/* Click outside to close - subtle hint */
+@media (min-width: 769px) {
+  .search-popup::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    background: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(2px);
+  }
+}
+
+/* Fix white button background in sidebar */
+.left-menu button,
+.left-menu.small button {
+  background: transparent !important;
+}
+
+/* Specifically target the submenu toggle button */
+.left-menu .submenu-toggle,
+.left-menu.small .submenu-toggle {
+  background: transparent !important;
+}
+
+.left-menu .submenu-toggle:hover,
+.left-menu.small .submenu-toggle:hover {
+  background: rgba(239, 111, 46, 0.2) !important;
+}
+
+/* Mobile search button */
+.left-menu .mobile-search-btn,
+.left-menu.small .mobile-search-btn {
+  background: transparent !important;
+}
+
+/* Any other buttons in the sidebar */
+.left-menu.small button,
+.mobile-nav button {
+  background: transparent !important;
+  border: none !important;
+}
+
+.left-menu.small button:hover,
+.mobile-nav button:hover {
+  background: rgba(239, 111, 46, 0.2) !important;
+}

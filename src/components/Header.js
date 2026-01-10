@@ -1,18 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/Header.css';
 
+const search = process.env.PUBLIC_URL + '/search.svg';
 const logo = process.env.PUBLIC_URL + '/logoru.svg';
 
 function Header() {
   const [isLargeMenuOpen, setIsLargeMenuOpen] = useState(false);
   const [isSmallMenuOpen, setIsSmallMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
   const [language, setLanguage] = useState(() => {
     return localStorage.getItem('language') || 'ka';
   });
   const [categories, setCategories] = useState([]);
   const [expandedMenu, setExpandedMenu] = useState(null);
+  const searchTimeoutRef = useRef(null);
   const navigate = useNavigate();
 
   // Set default language to Georgian if not already set
@@ -43,17 +48,77 @@ function Header() {
     fetchCategories();
   }, [language]);
 
+  // Search function with debouncing
+  useEffect(() => {
+    if (searchQuery.trim().length < 2) {
+      setSearchResults([]);
+      return;
+    }
+
+    // Clear previous timeout
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    // Set new timeout for search
+    searchTimeoutRef.current = setTimeout(async () => {
+      setIsSearching(true);
+      try {
+        const response = await fetch(
+          `http://api.litox.synaptica.online/api/Products/products?SearchText=${encodeURIComponent(searchQuery)}`,
+          {
+            headers: {
+              'accept': '*/*',
+              'X-Language': language
+            }
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Search results:', data);
+          setSearchResults(data);
+        }
+      } catch (err) {
+        console.error('Error searching products:', err);
+        setSearchResults([]);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 300);
+
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, [searchQuery, language]);
+
   // Handle language change
   const handleLanguageChange = (lang) => {
     localStorage.setItem('language', lang);
     window.location.reload();
   };
 
-  // Handle category click - goes to AllProducts with filter
+  // Handle category click
   const handleCategoryClick = (categoryId) => {
     setIsSmallMenuOpen(false);
     setIsLargeMenuOpen(false);
     navigate(`/products?category=${categoryId}`);
+  };
+
+  // Handle search result click
+  const handleSearchResultClick = (product) => {
+    setIsSearchOpen(false);
+    setSearchQuery('');
+    setSearchResults([]);
+    // Navigate to product page - adjust this based on your routing structure
+    if (product.categoryId) {
+      navigate(`/products/${product.categoryId}/${product.id}`);
+    } else {
+      // If categoryId is not available, just navigate with product id
+      navigate(`/product/${product.id}`);
+    }
   };
 
   // Toggle submenu
@@ -99,28 +164,37 @@ function Header() {
         en: 'PRODUCTS',
         ru: 'ПРОДУКТЫ'
       },
-      certificates: {
-        ka: 'სერტიფიკატები და დეკლარაციები',
-        en: 'CERTIFICATES AND DECLARATIONS',
-        ru: 'СЕРТИФИКАТЫ И ДЕКЛАРАЦИИ'
+      search: {
+        ka: 'ძებნა',
+        en: 'Search',
+        ru: 'Поиск'
       },
-      helpful: {
-        ka: 'სასარგებლო ინფორმაცია',
-        en: 'HELPFUL INFORMATION',
-        ru: 'ПОЛЕЗНАЯ ИНФОРМАЦИЯ'
+      searchPlaceholder: {
+        ka: 'მოძებნეთ პროდუქტები...',
+        en: 'Search products...',
+        ru: 'Поиск продуктов...'
       },
-      reference: {
-        ka: 'საცნობარო ობიექტები',
-        en: 'REFERENCE OBJECTS',
-        ru: 'СПРАВОЧНЫЕ ОБЪЕКТЫ'
+      noResults: {
+        ka: 'შედეგები არ მოიძებნა',
+        en: 'No results found',
+        ru: 'Результаты не найдены'
       },
-      news: {
-        ka: 'სიახლეები',
-        en: 'NEWS',
-        ru: 'НОВОСТИ'
+      searching: {
+        ka: 'ძებნა...',
+        en: 'Searching...',
+        ru: 'Поиск...'
       }
     };
     return translations[key]?.[language] || translations[key]?.['en'] || key;
+  };
+
+  const getProductImage = (product) => {
+    const imageUrl = product.iconImageLink || product.imageLink || product.image;
+    return imageUrl || process.env.PUBLIC_URL + '/prod.webp';
+  };
+
+  const getProductName = (product) => {
+    return product.title || product.name || 'Product';
   };
 
   return (
@@ -129,16 +203,6 @@ function Header() {
         <div className="flex-row">
           <div className="col">
             <div className="left">
-              {/* Large screen menu trigger */}
-              <div className="open-menu large-menu-trigger" onClick={() => setIsLargeMenuOpen(true)}>
-                <div className="burger">
-                  <i></i>
-                  <i></i>
-                  <i></i>
-                </div>
-                <span>{getMenuText()}</span>
-              </div>
-
               {/* Small screen menu trigger */}
               <div className="open-menu small-menu-trigger" onClick={() => setIsSmallMenuOpen(true)}>
                 <div className="burger">
@@ -149,7 +213,6 @@ function Header() {
                 <span>{getMenuText()}</span>
               </div>
 
-             
               {/* Small screen mobile menu */}
               <div className={`left-menu small ${isSmallMenuOpen ? 'active' : ''}`}>
                 <div className="close-menu" onClick={() => setIsSmallMenuOpen(false)}>
@@ -227,7 +290,24 @@ function Header() {
                       </Link>
                     </li>
 
-                    {/* Language switcher - THREE LANGUAGES */}
+                    {/* Search in mobile menu */}
+                    <li className="mobile-nav__item mobile-search-item">
+                      <button 
+                        className="mobile-nav__link mobile-search-btn"
+                        onClick={() => {
+                          setIsSmallMenuOpen(false);
+                          setIsSearchOpen(true);
+                        }}
+                      >
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <circle cx="11" cy="11" r="8"></circle>
+                          <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        {translate('search')}
+                      </button>
+                    </li>
+
+                    {/* Language switcher */}
                     <li className="mobile-nav__item mobile-lang">
                       <a 
                         href="#" 
@@ -241,7 +321,7 @@ function Header() {
                           handleLanguageChange('ka');
                         }}
                       >
-                        {language === 'ka' && '✓ '}ge
+                        {language === 'ka' && '✓ '}GE
                       </a>
                       <span className="lang-divider">|</span>
                       <a 
@@ -319,7 +399,19 @@ function Header() {
                   <Link to="/contacts">{translate('contacts')}</Link>
                 </li>
               </ul>
-              {/* Desktop language switcher - THREE LANGUAGES */}
+
+              {/* Desktop search button */}
+              <button 
+                className="open-search-popup desktop-only"
+                onClick={() => setIsSearchOpen(!isSearchOpen)}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#aba39e" strokeWidth="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+              </button>
+
+              {/* Desktop language switcher */}
               <ul className="lang desktop-only">
                 <li>
                   <a 
@@ -334,7 +426,7 @@ function Header() {
                       handleLanguageChange('ka');
                     }}
                   >
-                    {language === 'ka' && '✓ '}ge
+                    {language === 'ka' && '✓ '}GE
                   </a>
                 </li>
                 <li>
@@ -375,9 +467,73 @@ function Header() {
         </div>
       </header>
 
+      {/* Search Popup */}
       {isSearchOpen && (
         <div className="search-popup">
-          <input type="text" placeholder="Search..." autoFocus />
+          <div className="search-container">
+            <div className="search-input-wrapper">
+              <svg className="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#aba39e" strokeWidth="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+              </svg>
+              <input 
+                type="text" 
+                placeholder={translate('searchPlaceholder')}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                autoFocus 
+              />
+              <button 
+                className="search-close"
+                onClick={() => {
+                  setIsSearchOpen(false);
+                  setSearchQuery('');
+                  setSearchResults([]);
+                }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M18 6L6 18M6 6L18 18" stroke="#aba39e" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+              </button>
+            </div>
+
+            {/* Search Results */}
+            {searchQuery.trim().length >= 2 && (
+              <div className="search-results">
+                {isSearching ? (
+                  <div className="search-loading">{translate('searching')}</div>
+                ) : searchResults.length > 0 ? (
+                  <div className="search-results-list">
+                    {searchResults.map((product) => (
+                      <div 
+                        key={product.id} 
+                        className="search-result-item"
+                        onClick={() => handleSearchResultClick(product)}
+                      >
+                        <div className="search-result-image">
+                          <img 
+                            src={getProductImage(product)} 
+                            alt={getProductName(product)}
+                            onError={(e) => {
+                              e.target.src = process.env.PUBLIC_URL + '/prod.webp';
+                            }}
+                          />
+                        </div>
+                        <div className="search-result-info">
+                          <div className="search-result-name">{getProductName(product)}</div>
+                          {product.categoryTitle && (
+                            <div className="search-result-category">{product.categoryTitle}</div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="search-no-results">{translate('noResults')}</div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       )}
 
@@ -388,6 +544,18 @@ function Header() {
           onClick={() => {
             setIsSmallMenuOpen(false);
             setIsLargeMenuOpen(false);
+          }}
+        />
+      )}
+
+      {/* Overlay for search */}
+      {isSearchOpen && (
+        <div 
+          className="search-overlay"
+          onClick={() => {
+            setIsSearchOpen(false);
+            setSearchQuery('');
+            setSearchResults([]);
           }}
         />
       )}

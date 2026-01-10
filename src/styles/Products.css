@@ -342,3 +342,28 @@
   align-items: center !important;
   justify-content: center !important;
 }
+
+/* Custom Slider Styles */
+.custom-slider {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.custom-slider-track {
+  display: flex;
+  will-change: transform;
+}
+
+.custom-slide {
+  flex-shrink: 0;
+  padding: 0 10px;
+}
+
+.custom-slide:first-child {
+  padding-left: 0;
+}
+
+.custom-slide:last-child {
+  padding-right: 0;
+}
