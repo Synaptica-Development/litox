@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import '../styles/AllProducts.css';
 
-const background = process.env.PUBLIC_URL + '/products-bg.jpg';
+const background = `${process.env.PUBLIC_URL}/products-bg.jpg`;
 const arrow = `${process.env.PUBLIC_URL}/right-arrow2.svg`;
 
 function AllProducts() {
@@ -25,7 +25,7 @@ function AllProducts() {
   const PRODUCTS_PER_PAGE = 16;
   const INITIAL_CATEGORIES_TO_LOAD = 3;
 
-  // Scroll to top when component mounts or page changes
+  // Scroll to top when page changes
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentPage]);
@@ -91,7 +91,9 @@ function AllProducts() {
             }))
           }))
           .catch(err => {
-            console.error(`Error loading category ${category.id}:`, err);
+            if (err.name !== 'AbortError') {
+              console.error(`Error loading category ${category.id}:`, err);
+            }
             return { categoryId: category.id, categoryName: category.title, products: [] };
           })
         );
@@ -100,17 +102,20 @@ function AllProducts() {
         const allProductsArray = results.flatMap(result => result.products);
 
         setAllProducts(allProductsArray);
-        setFilteredProducts(allProductsArray);
         
+        // Check for category parameter in URL
         const categoryParam = searchParams.get('category');
         if (categoryParam && categoryParam !== 'all') {
           setSelectedCategory(categoryParam);
           const filtered = allProductsArray.filter(product => product.categoryId === categoryParam);
           setFilteredProducts(filtered);
+        } else {
+          setFilteredProducts(allProductsArray);
         }
 
         setLoading(false);
 
+        // Load remaining categories in background
         if (categoriesData.length > INITIAL_CATEGORIES_TO_LOAD) {
           loadRemainingCategories(categoriesData, allProductsArray);
         }
@@ -120,6 +125,7 @@ function AllProducts() {
           console.log('Fetch aborted');
           return;
         }
+        console.error('Error fetching initial data:', err);
         setError(err.message);
         setCategories([]);
         setAllProducts([]);
@@ -129,6 +135,7 @@ function AllProducts() {
     };
 
     fetchInitialData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language]);
 
   const loadRemainingCategories = async (categoriesData, initialProducts) => {
@@ -177,6 +184,7 @@ function AllProducts() {
         
         setAllProducts([...allProductsArray]);
         
+        // Update filtered products if showing all
         setFilteredProducts(prevFiltered => {
           if (selectedCategory === 'all') {
             return [...allProductsArray];
@@ -184,6 +192,7 @@ function AllProducts() {
           return prevFiltered;
         });
         
+        // Small delay between batches to prevent overwhelming the server
         if (i + BATCH_SIZE < remainingCategories.length) {
           await new Promise(resolve => setTimeout(resolve, 50));
         }
@@ -258,7 +267,7 @@ function AllProducts() {
 
   const getProductImage = (product) => {
     const imageUrl = product.iconImageLink || product.imageLink || product.image;
-    return imageUrl || process.env.PUBLIC_URL + '/prod.webp';
+    return imageUrl || `${process.env.PUBLIC_URL}/prod.webp`;
   };
 
   const getProductName = (product) => {
@@ -305,6 +314,7 @@ function AllProducts() {
         className="pagination-btn pagination-arrow"
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
+        aria-label={translate('previous')}
       >
         {translate('previous')}
       </button>
@@ -316,6 +326,7 @@ function AllProducts() {
           key={1}
           className="pagination-btn"
           onClick={() => handlePageChange(1)}
+          aria-label="Page 1"
         >
           1
         </button>
@@ -331,6 +342,8 @@ function AllProducts() {
           key={i}
           className={`pagination-btn ${currentPage === i ? 'active' : ''}`}
           onClick={() => handlePageChange(i)}
+          aria-label={`Page ${i}`}
+          aria-current={currentPage === i ? 'page' : undefined}
         >
           {i}
         </button>
@@ -346,6 +359,7 @@ function AllProducts() {
           key={totalPages}
           className="pagination-btn"
           onClick={() => handlePageChange(totalPages)}
+          aria-label={`Page ${totalPages}`}
         >
           {totalPages}
         </button>
@@ -358,6 +372,7 @@ function AllProducts() {
         className="pagination-btn pagination-arrow"
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
+        aria-label={translate('next')}
       >
         {translate('next')}
       </button>
@@ -371,6 +386,9 @@ function AllProducts() {
       <div className="all-products-container">
         <div className="container">
           <div className="error">{translate('error')}: {error}</div>
+          <Link to="/" className="back-link">
+            ← {translate('home')}
+          </Link>
         </div>
       </div>
     );
@@ -410,6 +428,7 @@ function AllProducts() {
               <button
                 className={`filter-btn ${selectedCategory === 'all' ? 'active' : ''}`}
                 onClick={() => handleCategoryFilter('all')}
+                aria-label={translate('allProducts')}
               >
                 {translate('allProducts')} ({allProducts.length})
                 {loadingBackground && ' ⟳'}
@@ -421,6 +440,7 @@ function AllProducts() {
                     key={category.id}
                     className={`filter-btn ${selectedCategory === category.id ? 'active' : ''}`}
                     onClick={() => handleCategoryFilter(category.id)}
+                    aria-label={`${category.title} category`}
                   >
                     {category.title} {count > 0 ? `(${count})` : ''}
                   </button>
@@ -450,8 +470,9 @@ function AllProducts() {
                       <img 
                         src={getProductImage(product)} 
                         alt={getProductName(product)}
+                        loading="lazy"
                         onError={(e) => {
-                          e.target.src = process.env.PUBLIC_URL + '/prod.webp';
+                          e.target.src = `${process.env.PUBLIC_URL}/prod.webp`;
                         }}
                       />
                     </div>

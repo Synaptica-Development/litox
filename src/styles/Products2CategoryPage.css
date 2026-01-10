@@ -54,6 +54,7 @@
 .breadcrumbs li {
   display: flex;
   align-items: center;
+  margin-top: 25px;
   gap: 8px;
   font-size: 14px;
   color: #aba39e;

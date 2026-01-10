@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import '../styles/Products2CategoryPage.css';
 
 const arrow = `${process.env.PUBLIC_URL}/right-arrow2.svg`;
 
 function Products2CategoryPage() {
   const { categoryId } = useParams();
+  const navigate = useNavigate();
   const [category, setCategory] = useState(null);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -44,7 +45,9 @@ function Products2CategoryPage() {
         const currentCategory = categoriesData.find(cat => cat.id === categoryId);
         
         if (!currentCategory) {
-          throw new Error('Category not found');
+          // Redirect to products page if category not found
+          navigate('/products2', { replace: true });
+          return;
         }
 
         setCategory(currentCategory);
@@ -68,6 +71,7 @@ function Products2CategoryPage() {
         setProducts(productsData);
 
       } catch (err) {
+        console.error('Error fetching data:', err);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -76,8 +80,11 @@ function Products2CategoryPage() {
 
     if (categoryId) {
       fetchCategoryAndProducts();
+    } else {
+      // Redirect if no categoryId
+      navigate('/products2', { replace: true });
     }
-  }, [categoryId, language]);
+  }, [categoryId, language, navigate]);
 
   // Translation function
   const translate = (key) => {
@@ -106,6 +113,11 @@ function Products2CategoryPage() {
         ka: 'შემდეგი',
         en: 'Next',
         ru: 'Следующая'
+      },
+      loadingError: {
+        ka: 'შეცდომა დატვირთვისას',
+        en: 'Error loading',
+        ru: 'Ошибка загрузки'
       }
     };
     return translations[key]?.[language] || translations[key]?.['ka'] || key;
@@ -113,7 +125,7 @@ function Products2CategoryPage() {
 
   const getProductImage = (product) => {
     const imageUrl = product.iconImageLink || product.imageLink || product.image;
-    return imageUrl || process.env.PUBLIC_URL + '/prod.webp';
+    return imageUrl || `${process.env.PUBLIC_URL}/prod.webp`;
   };
 
   const getProductName = (product) => {
@@ -163,6 +175,7 @@ function Products2CategoryPage() {
         className="pagination-btn pagination-arrow"
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
+        aria-label={translate('previous')}
       >
         {translate('previous')}
       </button>
@@ -174,6 +187,7 @@ function Products2CategoryPage() {
           key={1}
           className="pagination-btn"
           onClick={() => handlePageChange(1)}
+          aria-label="Page 1"
         >
           1
         </button>
@@ -189,6 +203,8 @@ function Products2CategoryPage() {
           key={i}
           className={`pagination-btn ${currentPage === i ? 'active' : ''}`}
           onClick={() => handlePageChange(i)}
+          aria-label={`Page ${i}`}
+          aria-current={currentPage === i ? 'page' : undefined}
         >
           {i}
         </button>
@@ -204,6 +220,7 @@ function Products2CategoryPage() {
           key={totalPages}
           className="pagination-btn"
           onClick={() => handlePageChange(totalPages)}
+          aria-label={`Page ${totalPages}`}
         >
           {totalPages}
         </button>
@@ -216,6 +233,7 @@ function Products2CategoryPage() {
         className="pagination-btn pagination-arrow"
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
+        aria-label={translate('next')}
       >
         {translate('next')}
       </button>
@@ -228,7 +246,12 @@ function Products2CategoryPage() {
     return (
       <div className="category-page-container">
         <div className="container">
-          <div className="error-message">Error: {error}</div>
+          <div className="error-message">
+            {translate('loadingError')}: {error}
+          </div>
+          <Link to="/products2" className="back-link">
+            ← {translate('categories')}
+          </Link>
         </div>
       </div>
     );
@@ -287,8 +310,9 @@ function Products2CategoryPage() {
                         <img
                           src={getProductImage(product)}
                           alt={getProductName(product)}
+                          loading="lazy"
                           onError={(e) => {
-                            e.target.src = process.env.PUBLIC_URL + '/prod.webp';
+                            e.target.src = `${process.env.PUBLIC_URL}/prod.webp`;
                           }}
                         />
                       </div>
