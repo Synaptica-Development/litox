@@ -16,11 +16,11 @@ function Header() {
   const navigate = useNavigate();
 
   // Set default language to Georgian if not already set
-useEffect(() => {
-  if (!localStorage.getItem('language')) {
-    localStorage.setItem('language', 'ka');
-  }
-}, []);
+  useEffect(() => {
+    if (!localStorage.getItem('language')) {
+      localStorage.setItem('language', 'ka');
+    }
+  }, []);
 
   // Fetch categories
   useEffect(() => {
@@ -182,17 +182,6 @@ useEffect(() => {
                       </Link>
                     </li>
 
-                    {/* Contacts */}
-                    <li className="mobile-nav__item">
-                      <Link 
-                        className="mobile-nav__link" 
-                        to="/contacts"
-                        onClick={() => setIsSmallMenuOpen(false)}
-                      >
-                        {translate('contacts')}
-                      </Link>
-                    </li>
-
                     {/* Products with categories */}
                     <li className="mobile-nav__item">
                       <div className="mobile-nav__link-wrapper">
@@ -225,6 +214,17 @@ useEffect(() => {
                           </li>
                         ))}
                       </ul>
+                    </li>
+
+                    {/* Contacts */}
+                    <li className="mobile-nav__item">
+                      <Link 
+                        className="mobile-nav__link" 
+                        to="/contacts"
+                        onClick={() => setIsSmallMenuOpen(false)}
+                      >
+                        {translate('contacts')}
+                      </Link>
                     </li>
 
                     {/* Language switcher - THREE LANGUAGES */}
@@ -298,9 +298,6 @@ useEffect(() => {
                   <Link to="/about">{translate('about')}</Link>
                 </li>
                 <li>
-                  <Link to="/contacts">{translate('contacts')}</Link>
-                </li>
-                <li>
                   <Link to="/products2">{translate('products')}</Link>
                   <ul className="dropdown">
                     {categories.map((category) => (
@@ -318,8 +315,10 @@ useEffect(() => {
                     ))}
                   </ul>
                 </li>
+                <li>
+                  <Link to="/contacts">{translate('contacts')}</Link>
+                </li>
               </ul>
-
               {/* Desktop language switcher - THREE LANGUAGES */}
               <ul className="lang desktop-only">
                 <li>
