@@ -266,3 +266,171 @@ body {
     height: 35px;
   }
 }
+
+
+
+
+
+
+
+/* Add this to your Category.css - Replace the mobile swiper section */
+
+@media (max-width: 767px) {
+  .category-swiper-container {
+    position: relative;
+    padding: 0 50px 40px;
+    max-width: 100%;
+    margin: 0 auto;
+    overflow: hidden; /* Hide overflow from container */
+  }
+
+  .category-swiper-container .swiper {
+    overflow: hidden !important; /* Changed from visible to hidden */
+  }
+
+  /* 2x2 Grid Layout */
+  .category-grid-2x2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 15px;
+    padding: 10px;
+  }
+
+  .category-swiper-container .catalog-card {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 15px 10px;
+    color: #b1aca9;
+    transition: 0.4s ease-in-out;
+  }
+
+  .category-swiper-container .catalog-card .icon {
+    display: flex;
+    width: 70px;
+    height: 65px;
+    align-items: center;
+    justify-content: center;
+    transition: 0.4s ease-in-out;
+    filter: contrast(0.1);
+    margin-bottom: 12px;
+  }
+
+  .category-swiper-container .catalog-card .icon img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  .category-swiper-container .catalog-card .catalog-name {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+
+  .category-swiper-container .catalog-card:hover .icon,
+  .category-swiper-container .catalog-card:active .icon {
+    filter: contrast(1);
+  }
+
+  .category-swiper-container .catalog-card:hover,
+  .category-swiper-container .catalog-card:active {
+    color: #fff;
+  }
+
+  /* Custom Navigation Buttons */
+  .category-nav {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: transparent;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    z-index: 10;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .category-nav:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .category-button-prev {
+    left: 5px;
+  }
+
+  .category-button-next {
+    right: 5px;
+  }
+
+  .category-nav.swiper-button-disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  /* Pagination dots */
+  .category-swiper-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  .category-swiper-pagination .swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.3);
+    opacity: 1;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+  }
+
+  .category-swiper-pagination .swiper-pagination-bullet-active {
+    background: #ef6f2e;
+    width: 20px;
+    border-radius: 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .category-swiper-container {
+    padding: 0 45px 35px;
+  }
+
+  .category-grid-2x2 {
+    gap: 10px;
+    padding: 5px;
+  }
+
+  .category-swiper-container .catalog-card {
+    padding: 12px 8px;
+  }
+
+  .category-swiper-container .catalog-card .icon {
+    width: 60px;
+    height: 55px;
+    margin-bottom: 10px;
+  }
+
+  .category-swiper-container .catalog-card .catalog-name {
+    font-size: 12px;
+  }
+
+  .category-nav {
+    width: 35px;
+    height: 35px;
+  }
+}

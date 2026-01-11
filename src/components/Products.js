@@ -156,23 +156,19 @@ function Products() {
 
   const getProductImage = (product) => {
     const imageUrl = product.iconImageLink || product.imageLink || product.image;
-    return imageUrl || process.env.PUBLIC_URL + '/prod.webp';
+    return imageUrl || `${process.env.PUBLIC_URL}/prod.webp`;
   };
 
   const getProductName = (product) => {
     return product.title || product.name || 'Product';
   };
 
-  // Skeleton component
+  // Skeleton component with unique class names
   const SkeletonProductCard = () => (
-    <div className="home-product-item skeleton-product">
-      <div className="home-product-card">
-        <span className="home-product-img-wrapper skeleton-img">
-          <div className="skeleton-shimmer"></div>
-        </span>
-        <span className="skeleton-text skeleton-name"></span>
-        <span className="skeleton-text skeleton-category"></span>
-      </div>
+    <div className="products-home-skeleton-card">
+      <div className="products-home-skeleton-image"></div>
+      <div className="products-home-skeleton-name"></div>
+      <div className="products-home-skeleton-category"></div>
     </div>
   );
 
@@ -181,13 +177,17 @@ function Products() {
       <div className="home-page-products">
         <div className="category-slider-section">
           <div className="home-products-header">
-            <div className="skeleton-text skeleton-title"></div>
+            <div className="products-home-skeleton-title"></div>
           </div>
           <div className="home-products-carousel-container">
             <div className="custom-slider">
-              <div className="custom-slider-track">
-                {[...Array(8)].map((_, index) => (
-                  <div key={`skeleton-${index}`} className="custom-slide">
+              <div className="custom-slider-track" style={{ display: 'flex' }}>
+                {[...Array(4)].map((_, index) => (
+                  <div 
+                    key={`skeleton-${index}`} 
+                    className="custom-slide" 
+                    style={{ width: '25%', flexShrink: 0 }}
+                  >
                     <SkeletonProductCard />
                   </div>
                 ))}
@@ -248,8 +248,9 @@ function Products() {
                         <img 
                           src={getProductImage(product)} 
                           alt={getProductName(product)}
+                          loading="lazy"
                           onError={(e) => {
-                            e.target.src = process.env.PUBLIC_URL + '/prod.webp';
+                            e.target.src = `${process.env.PUBLIC_URL}/prod.webp`;
                           }}
                         />
                         <span 

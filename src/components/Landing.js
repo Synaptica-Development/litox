@@ -14,11 +14,10 @@ function Landing() {
   }, []);
 
   // Load language from localStorage
- // Load language from localStorage
-useEffect(() => {
-  const savedLanguage = localStorage.getItem('language') || 'ka';
-  setLanguage(savedLanguage);
-}, []);
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem('language') || 'ka';
+    setLanguage(savedLanguage);
+  }, []);
 
   // Fetch banners when language changes
   useEffect(() => {
@@ -113,7 +112,24 @@ useEffect(() => {
     return (
       <div className="intro-slider">
         <div className="carousel-container">
-          <div className="loading">{translate('loading')}</div>
+          <div className="landing-skeleton-container">
+            <div className="landing-skeleton-image"></div>
+            
+            <div className="landing-skeleton-text-wrapper">
+              <div className="landing-skeleton-text"></div>
+              <div className="landing-skeleton-button"></div>
+            </div>
+
+            <div className="landing-skeleton-controls">
+              <div className="landing-skeleton-arrow"></div>
+              <div className="landing-skeleton-dots">
+                <div className="landing-skeleton-dot"></div>
+                <div className="landing-skeleton-dot"></div>
+                <div className="landing-skeleton-dot"></div>
+              </div>
+              <div className="landing-skeleton-arrow"></div>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -149,6 +165,7 @@ useEffect(() => {
                     src={img} 
                     alt={`Slide ${index + 1}`}
                     className="carousel-image"
+                    loading={index === 0 ? 'eager' : 'lazy'}
                     key={`${index}-${currentSlide}`}
                   />
                 </div>

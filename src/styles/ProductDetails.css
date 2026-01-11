@@ -1707,3 +1707,86 @@
     margin-top: 20px;
   }
 }
+
+
+
+
+/* Mobile-specific fixes - Add these to your ProductDetails.css */
+
+@media (max-width: 768px) {
+  /* Force center alignment for container and its children */
+  .product-hero .container {
+    align-items: center !important;
+    text-align: center !important;
+    width: 100%;
+  }
+
+  .product-hero h1 {
+    text-align: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    align-self: center !important;
+    width: 100% !important;
+  }
+
+  .product-hero .preview-text {
+    text-align: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    align-self: center !important;
+    width: 100% !important;
+  }
+
+  .request-btn {
+    align-self: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  /* Make tabs horizontal in a row and smaller on mobile */
+  .tab-list {
+    flex-direction: row !important;
+    gap: 15px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-wrap: wrap;
+  }
+
+  .tab-list li {
+    width: auto !important;
+    flex: 0 0 auto;
+  }
+
+  .tab-list button {
+    width: auto !important;
+    display: inline-block !important;
+    font-size: 12px !important;
+    padding: 0 0 3px 0 !important;
+    white-space: nowrap;
+  }
+
+  .tab-list button::after {
+    width: 0 !important;
+    height: 2px !important;
+  }
+
+  .tab-list li.active button::after {
+    width: 100% !important;
+  }
+
+  /* Center tabs header */
+  .tabs-header {
+    align-items: center !important;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .tab-list button {
+    font-size: 11px !important;
+  }
+
+  .tab-list {
+    gap: 12px !important;
+  }
+}
