@@ -80,10 +80,18 @@ function Landing() {
     setCurrentSlide(index);
   };
 
-  // Navigate to products page
+  // Navigate based on whether banner has productID
   const handleMoreDetails = (e) => {
     e.preventDefault();
-    navigate('/products');
+    const currentBanner = banners[currentSlide];
+    
+    if (currentBanner?.productID) {
+      // Navigate directly to product details using just productID
+      navigate(`/product/${currentBanner.productID}`);
+    } else {
+      // If no productID, go to general products page
+      navigate('/products');
+    }
   };
 
   // Translation function for button text
@@ -177,9 +185,12 @@ function Landing() {
             {banners[currentSlide]?.text && (
               <p className="banner-text">{banners[currentSlide].text}</p>
             )}
-            <a href="/products" className="default-btn" onClick={handleMoreDetails}>
-              {translate('moreDetailed')}
-            </a>
+            {/* Only show button if banner has productID */}
+            {banners[currentSlide]?.productID && (
+              <a href="#" className="default-btn" onClick={handleMoreDetails}>
+                {translate('moreDetailed')}
+              </a>
+            )}
           </div>
         </div>
 

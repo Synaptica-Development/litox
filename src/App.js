@@ -44,10 +44,13 @@ function App() {
           {/* Products2 route */}
           <Route path="/products2" element={<Products2 />} />
           
-          {/* Products2 Category page route - NEW */}
+          {/* Products2 Category page route */}
           <Route path="/products2/category/:categoryId" element={<Products2CategoryPage />} />
           
-          {/* Dynamic product details route */}
+          {/* Product details with just productId - NEW ROUTE */}
+          <Route path="/product/:productId" element={<ProductDetails />} />
+          
+          {/* Dynamic product details route with categoryId */}
           <Route path="/products/:categoryId/:productId" element={<ProductDetails />} />
           
           {/* Contacts route */}
