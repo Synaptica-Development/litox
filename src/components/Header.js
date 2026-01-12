@@ -4,6 +4,7 @@ import '../styles/Header.css';
 
 const search = process.env.PUBLIC_URL + '/search.svg';
 const logo = process.env.PUBLIC_URL + '/logoru.svg';
+const API_BASE_URL = 'https://api.litox.ge';
 
 function Header() {
   const [isLargeMenuOpen, setIsLargeMenuOpen] = useState(false);
@@ -31,7 +32,7 @@ function Header() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('http://api.litox.synaptica.online/api/Category/categories', {
+        const response = await fetch(`${API_BASE_URL}/api/Category/categories`, {
           headers: {
             'accept': '*/*',
             'X-Language': language

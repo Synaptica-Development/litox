@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import '../styles/CategoryPage.css';
 
 const background = process.env.PUBLIC_URL + '/products-bg.jpg';
+const API_BASE_URL = 'https://api.litox.ge';
 
 function CategoryPage() {
   const { categoryId } = useParams();
@@ -34,7 +35,7 @@ function CategoryPage() {
       setError(null);
       try {
         // Fetch category details
-        const categoryResponse = await fetch('http://api.litox.synaptica.online/api/Category/categories', {
+        const categoryResponse = await fetch(`${API_BASE_URL}/api/Category/categories`, {
           headers: {
             'accept': '*/*',
             'X-Language': language

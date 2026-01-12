@@ -4,6 +4,7 @@ import '../styles/AllProducts.css';
 
 const background = `${process.env.PUBLIC_URL}/products-bg.jpg`;
 const arrow = `${process.env.PUBLIC_URL}/right-arrow2.svg`;
+const API_BASE_URL = 'https://api.litox.ge';
 
 function AllProducts() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -52,7 +53,7 @@ function AllProducts() {
       isLoadingRest.current = false;
 
       try {
-        const categoriesResponse = await fetch('http://api.litox.synaptica.online/api/Category/categories', {
+        const categoriesResponse = await fetch(`${API_BASE_URL}/api/Category/categories`, {
           headers: {
             'accept': '*/*',
             'X-Language': language

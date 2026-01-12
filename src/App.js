@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Landing from './components/Landing';
 import Category from './components/Category';
@@ -28,7 +28,7 @@ function HomePage() {
 
 function App() {
   return (
-    <Router basename="/">
+    <Router>
       <div className="App">
         <Header />
         <Routes>
@@ -47,7 +47,7 @@ function App() {
           {/* Products2 Category page route */}
           <Route path="/products2/category/:categoryId" element={<Products2CategoryPage />} />
           
-          {/* Product details with just productId - NEW ROUTE */}
+          {/* Product details with just productId */}
           <Route path="/product/:productId" element={<ProductDetails />} />
           
           {/* Dynamic product details route with categoryId */}

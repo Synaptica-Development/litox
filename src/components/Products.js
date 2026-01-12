@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import '../styles/Products.css';
 
 const arrow = `${process.env.PUBLIC_URL}/next.png`;
+const API_BASE_URL = 'https://api.litox.ge';
 
 function Products() {
   const [highlightedProducts, setHighlightedProducts] = useState([]);
@@ -54,7 +55,7 @@ function Products() {
 
     try {
       const response = await fetch(
-        `http://api.litox.synaptica.online/api/Products/products?ProductFilter=HighLight&PageSize=${PAGE_SIZE}&Page=${page}`,
+        `${API_BASE_URL}/api/Products/products?ProductFilter=HighLight&PageSize=${PAGE_SIZE}&Page=${page}`,
         {
           headers: {
             'accept': '*/*',

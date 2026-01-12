@@ -5,6 +5,7 @@ import '../styles/Products2.css';
 const desktopBackground = `${process.env.PUBLIC_URL}/products-bg2.jpg`;
 const mobileBackground = `${process.env.PUBLIC_URL}/mobile-background.jpg`;
 const arrow = `${process.env.PUBLIC_URL}/right-arrow2.svg`;
+const API_BASE_URL = 'https://api.litox.ge';
 
 function Products2() {
   const [categories, setCategories] = useState([]);
@@ -24,7 +25,7 @@ function Products2() {
       setError(null);
 
       try {
-        const response = await fetch('http://api.litox.synaptica.online/api/Category/categories', {
+        const response = await fetch(`${API_BASE_URL}/api/Category/categories`, {
           headers: {
             'accept': '*/*',
             'X-Language': language

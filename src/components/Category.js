@@ -7,6 +7,8 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import '../styles/Category.css';
 
+const API_BASE_URL = 'https://api.litox.ge';
+
 function Category() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -38,7 +40,7 @@ function Category() {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch('http://api.litox.synaptica.online/api/Category/categories', {
+        const response = await fetch(`${API_BASE_URL}/api/Category/categories`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

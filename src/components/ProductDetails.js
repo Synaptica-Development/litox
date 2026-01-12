@@ -8,6 +8,8 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import '../styles/ProductDetails.css';
 
+const API_BASE_URL = 'https://api.litox.ge';
+
 function ProductDetails() {
   const { categoryId, productId } = useParams();
   const [activeTab, setActiveTab] = useState('application');
@@ -49,7 +51,7 @@ function ProductDetails() {
       try {
         // Fetch product details
         const productResponse = await fetch(
-          `http://api.litox.synaptica.online/api/Products/products/details?ProductID=${productId}`,
+          `${API_BASE_URL}/api/Products/products/details?ProductID=${productId}`,
           {
             headers: {
               'accept': '*/*',

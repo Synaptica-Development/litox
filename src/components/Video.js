@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import '../styles/Video.css';
 
 const videoBackground = process.env.PUBLIC_URL + '/video-thumb.webp';
+const API_BASE_URL = 'https://api.litox.ge';
 
 function Video() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -20,7 +21,7 @@ function Video() {
     const fetchVideoData = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://api.litox.synaptica.online/api/Hero/hero', {
+        const response = await fetch(`${API_BASE_URL}/api/Hero/hero`, {
           headers: {
             'accept': '*/*',
             'X-Language': language

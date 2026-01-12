@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Landing.css';
 
+const API_BASE_URL = 'https://api.litox.ge';
+
 function Landing() {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -24,7 +26,7 @@ function Landing() {
     const fetchBanners = async () => {
       setLoading(true);
       try {
-        const response = await fetch('http://api.litox.synaptica.online/api/Banners/banners', {
+        const response = await fetch(`${API_BASE_URL}/api/Banners/banners`, {
           headers: {
             'accept': '*/*',
             'X-Language': language
