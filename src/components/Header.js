@@ -4,7 +4,7 @@ import '../styles/Header.css';
 
 const search = process.env.PUBLIC_URL + '/search.svg';
 const logo = process.env.PUBLIC_URL + '/logoru.svg';
-const API_BASE_URL = 'http://api.litox.ge';
+const API_BASE_URL = 'https://api.litox.ge';
 
 function Header() {
   const [isLargeMenuOpen, setIsLargeMenuOpen] = useState(false);

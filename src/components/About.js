@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import '../styles/About.css';
 
 const background = process.env.PUBLIC_URL + '/products-bg.jpg';
-const API_BASE_URL = 'http://api.litox.ge';
+const API_BASE_URL = 'https://api.litox.ge';
 
 function About() {
   const [aboutData, setAboutData] = useState(null);

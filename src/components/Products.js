@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import '../styles/Products.css';
 
 const arrow = `${process.env.PUBLIC_URL}/next.png`;
-const API_BASE_URL = 'http://api.litox.ge';
+const API_BASE_URL = 'https://api.litox.ge';
 
 function Products() {
   const [highlightedProducts, setHighlightedProducts] = useState([]);

@@ -8,7 +8,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import '../styles/ProductDetails.css';
 
-const API_BASE_URL = 'http://api.litox.ge';
+const API_BASE_URL = 'https://api.litox.ge';
 
 function ProductDetails() {
   const { categoryId, productId } = useParams();

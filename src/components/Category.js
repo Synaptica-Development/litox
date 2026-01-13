@@ -7,7 +7,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import '../styles/Category.css';
 
-const API_BASE_URL = 'http://api.litox.ge';
+const API_BASE_URL = 'https://api.litox.ge';
 
 function Category() {
   const [categories, setCategories] = useState([]);

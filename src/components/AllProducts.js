@@ -4,7 +4,7 @@ import '../styles/AllProducts.css';
 
 const background = `${process.env.PUBLIC_URL}/products-bg.jpg`;
 const arrow = `${process.env.PUBLIC_URL}/right-arrow2.svg`;
-const API_BASE_URL = 'http://api.litox.ge';
+const API_BASE_URL = 'https://api.litox.ge';
 
 function AllProducts() {
   const [searchParams, setSearchParams] = useSearchParams();
