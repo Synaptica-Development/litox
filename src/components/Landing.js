@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Landing.css';
 
-const API_BASE_URL = 'https://api.litox.ge';
+const API_BASE_URL = 'http://api.litox.ge';
 
 function Landing() {
   const navigate = useNavigate();

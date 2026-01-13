@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import '../styles/Video.css';
 
 const videoBackground = process.env.PUBLIC_URL + '/video-thumb.webp';
-const API_BASE_URL = 'https://api.litox.ge';
+const API_BASE_URL = 'http://api.litox.ge';
 
 function Video() {
   const [isPlaying, setIsPlaying] = useState(false);

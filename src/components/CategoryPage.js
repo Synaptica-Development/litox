@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import '../styles/CategoryPage.css';
 
 const background = process.env.PUBLIC_URL + '/products-bg.jpg';
-const API_BASE_URL = 'https://api.litox.ge';
+const API_BASE_URL = 'http://api.litox.ge';
 
 function CategoryPage() {
   const { categoryId } = useParams();

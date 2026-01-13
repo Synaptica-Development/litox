@@ -5,7 +5,7 @@ import '../styles/Products2.css';
 const desktopBackground = `${process.env.PUBLIC_URL}/products-bg2.jpg`;
 const mobileBackground = `${process.env.PUBLIC_URL}/mobile-background.jpg`;
 const arrow = `${process.env.PUBLIC_URL}/right-arrow2.svg`;
-const API_BASE_URL = 'https://api.litox.ge';
+const API_BASE_URL = 'http://api.litox.ge';
 
 function Products2() {
   const [categories, setCategories] = useState([]);
