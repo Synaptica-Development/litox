@@ -39,9 +39,7 @@ function Contacts() {
                 <div className="info-content">
                   <span className="icon">📞</span>
                   <div className="phone-list">
-                    <a href="tel:+78782213541">+7 (8782) 21-35-41</a>
-                    <a href="tel:+78782210077">+7 (8782) 21-00-77</a>
-                    <a href="tel:+78782215524">+7 (8782) 21-55-24</a>
+                    <a href="tel:+995598347784">598 34 77 84 </a>
                   </div>
                 </div>
               </div>
