@@ -67,6 +67,7 @@ function About() {
         ru: 'Litox Грузия'
       }
     };
+
     return translations[key]?.[language] || translations[key]?.['en'] || key;
   };
 
@@ -104,9 +105,10 @@ function About() {
               {aboutData.aboutLitox && (
                 <section className="about-section">
                   <h2>{translate('aboutLitox')}</h2>
-                  <div className="about-text">
-                    <p>{aboutData.aboutLitox}</p>
-                  </div>
+                  <div 
+                    className="about-text"
+                    dangerouslySetInnerHTML={{ __html: aboutData.aboutLitox }}
+                  />
                 </section>
               )}
 
@@ -114,9 +116,10 @@ function About() {
               {aboutData.aboutLitoxGeorgia && (
                 <section className="about-section">
                   <h2>{translate('aboutLitoxGeorgia')}</h2>
-                  <div className="about-text">
-                    <p>{aboutData.aboutLitoxGeorgia}</p>
-                  </div>
+                  <div 
+                    className="about-text"
+                    dangerouslySetInnerHTML={{ __html: aboutData.aboutLitoxGeorgia }}
+                  />
                 </section>
               )}
             </div>

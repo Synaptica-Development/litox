@@ -188,3 +188,96 @@
     font-size: 14px;
   }
 }
+
+
+
+.about-text,
+.about-text * {
+  color: #ffffff !important;
+  letter-spacing: 0.5px;
+}
+
+.about-text p,
+.about-text h1,
+.about-text h2,
+.about-text h3,
+.about-text h4,
+.about-text h5,
+.about-text h6,
+.about-text strong,
+.about-text em,
+.about-text span,
+.about-text li,
+.about-text ul,
+.about-text ol {
+  color: #ffffff !important;
+  letter-spacing: 0.5px;
+}
+
+
+.about-text {
+  color: #ffffff !important;
+  letter-spacing: 0.5px;
+  line-height: 1.8;
+  font-size: 16px;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.about-text * {
+  color: #ffffff !important;
+  letter-spacing: 0.5px;
+}
+
+.about-text p {
+  margin-bottom: 1.5em;
+  line-height: 1.8;
+}
+
+.about-text h1,
+.about-text h2,
+.about-text h3,
+.about-text h4,
+.about-text h5,
+.about-text h6 {
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+  line-height: 1.4;
+  font-weight: 600;
+  text-align: center;
+}
+
+.about-text h1 { font-size: 2em; }
+.about-text h2 { font-size: 1.75em; }
+.about-text h3 { font-size: 1.5em; }
+.about-text h4 { font-size: 1.25em; }
+
+.about-text ul,
+.about-text ol {
+  margin-bottom: 1.5em;
+  padding-left: 2em;
+  text-align: left;
+  display: inline-block;
+}
+
+.about-text li {
+  margin-bottom: 0.5em;
+  line-height: 1.8;
+}
+
+.about-text strong {
+  font-weight: 300;
+}
+
+.about-text em {
+  font-style: italic;
+}
+
+/* Add some breathing room on mobile */
+@media (max-width: 768px) {
+  .about-text {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+}
