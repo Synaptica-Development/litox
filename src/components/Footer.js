@@ -7,6 +7,10 @@ const img1 = `${process.env.PUBLIC_URL}/icon1.svg`;
 const img2 = `${process.env.PUBLIC_URL}/icon2.svg`;
 const img3 = `${process.env.PUBLIC_URL}/icon3.svg`;
 
+const fb_link = 'https://www.facebook.com/LitoxGeorgia';
+const insta_link = 'https://www.instagram.com/litox_georgia/';
+const tiktok_link = 'https://www.tiktok.com/@litox_georgia'
+
 function Footer() {
   return (
     <footer>
@@ -29,7 +33,7 @@ function Footer() {
   <span>Call Us</span>
 </a>
 
-            <a href="/contacts">
+            <a href="mailto:info@litox.ge">
               <span className="img-wrapper">
                 <img src={img3} alt="Address" width="62" height="40" className="bad-vector" />
               </span>
@@ -39,13 +43,13 @@ function Footer() {
         </div>
 
         <ul className="footer-socials">
-          <a className="social social_fb" href="https://facebook.com/litox" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+          <a className="social social_fb" href={fb_link} target="_blank" rel="noopener noreferrer" aria-label="Facebook">
             <FaFacebookF size={24} />
           </a>
-          <a className="social social_ig" href="https://instagram.com/litox" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <a className="social social_ig" href={insta_link} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
             <FaInstagram size={24} />
           </a>
-          <a className="social social_tiktok" href="https://tiktok.com/@litox" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+          <a className="social social_tiktok" href={tiktok_link} target="_blank" rel="noopener noreferrer" aria-label="TikTok">
             <FaTiktok size={24} />
           </a>
         </ul>
@@ -54,7 +58,7 @@ function Footer() {
           <div>
             <a href="/catalog.pdf" target="_blank" rel="noopener noreferrer">Download Electronic Catalog</a>
             &nbsp;&nbsp;&nbsp;
-            <a href="mailto:info@litox.pro" className="mail">info@litox.pro</a>
+            <a href="mailto:info@litox.ge" className="mail">info@litox.ge</a>
           </div>
           <div>
             <p>
