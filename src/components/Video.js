@@ -43,21 +43,6 @@ function Video() {
     fetchVideoData();
   }, [language]);
 
-  // Convert YouTube URL to embed URL
-  const getYouTubeEmbedUrl = (url) => {
-    if (!url) return null;
-    
-    // Check if it's a YouTube URL
-    const youtubeRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
-    const match = url.match(youtubeRegex);
-    
-    if (match && match[1]) {
-      return `https://www.youtube.com/embed/${match[1]}?autoplay=1`;
-    }
-    
-    return null;
-  };
-
   const handlePlayClick = () => {
     setIsPlaying(true);
   };
@@ -74,8 +59,10 @@ function Video() {
     );
   }
 
-  const youtubeEmbedUrl = getYouTubeEmbedUrl(videoUrl);
-  const isYouTube = !!youtubeEmbedUrl;
+  // Don't render if no video is available
+  if (!videoUrl) {
+    return null;
+  }
 
   return (
     <div className="video-section" id="video">
@@ -87,7 +74,8 @@ function Video() {
                 className="video-cover" 
                 onClick={handlePlayClick}
                 style={{
-                  backgroundImage: `url(${thumbnailUrl})`,
+                  backgroundImage: thumbnailUrl ? `url(${thumbnailUrl})` : 'none',
+                  backgroundColor: thumbnailUrl ? 'transparent' : '#000',
                   backgroundSize: 'cover',
                   backgroundPosition: 'center'
                 }}
@@ -104,29 +92,15 @@ function Video() {
               </div>
             ) : (
               <div className="video-player">
-                {isYouTube ? (
-                  <iframe
-                    ref={videoRef}
-                    width="100%"
-                    height="100%"
-                    src={youtubeEmbedUrl}
-                    title="YouTube video player"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    style={{ width: '100%', height: '100%' }}
-                  ></iframe>
-                ) : (
-                  <video 
-                    ref={videoRef}
-                    controls 
-                    autoPlay
-                    style={{ width: '100%', height: '100%' }}
-                  >
-                    <source src={videoUrl} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                )}
+                <video 
+                  ref={videoRef}
+                  controls 
+                  autoPlay
+                  style={{ width: '100%', height: '100%' }}
+                >
+                  <source src={videoUrl} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
               </div>
             )}
           </div>
