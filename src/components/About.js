@@ -31,6 +31,8 @@ function About() {
         if (response.ok) {
           const data = await response.json();
           console.log('About data:', data);
+          console.log('imageUrl1:', data.imageUrl1);
+          console.log('imageUrl2:', data.imageUrl2);
           setAboutData(data);
         }
       } catch (err) {
@@ -109,6 +111,21 @@ function About() {
                     className="about-text"
                     dangerouslySetInnerHTML={{ __html: aboutData.aboutLitox }}
                   />
+                  {aboutData.imageUrl1 && (
+                    <div className="about-image">
+                      <img 
+                        src={aboutData.imageUrl1} 
+                        alt="About Litox" 
+                        style={{ 
+                          width: '100%', 
+                          maxWidth: '800px',
+                          height: 'auto',
+                          borderRadius: '8px',
+                          marginTop: '20px'
+                        }} 
+                      />
+                    </div>
+                  )}
                 </section>
               )}
 
@@ -120,6 +137,21 @@ function About() {
                     className="about-text"
                     dangerouslySetInnerHTML={{ __html: aboutData.aboutLitoxGeorgia }}
                   />
+                  {aboutData.imageUrl2 && (
+                    <div className="about-image">
+                      <img 
+                        src={aboutData.imageUrl2} 
+                        alt="Litox Georgia" 
+                        style={{ 
+                          width: '100%', 
+                          maxWidth: '800px',
+                          height: 'auto',
+                          borderRadius: '8px',
+                          marginTop: '20px'
+                        }} 
+                      />
+                    </div>
+                  )}
                 </section>
               )}
             </div>

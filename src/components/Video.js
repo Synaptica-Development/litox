@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../styles/Video.css';
 
-const videoBackground = process.env.PUBLIC_URL + '/video-thumb.webp';
 const API_BASE_URL = 'https://api.litox.ge';
 
 function Video() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [videoUrl, setVideoUrl] = useState('');
+  const [thumbnailUrl, setThumbnailUrl] = useState('');
   const [loading, setLoading] = useState(true);
   const [language, setLanguage] = useState('ka');
   const videoRef = useRef(null);
@@ -31,6 +31,7 @@ function Video() {
         if (response.ok) {
           const data = await response.json();
           setVideoUrl(data.videoLink);
+          setThumbnailUrl(data.thumbnailLink);
         }
       } catch (err) {
         console.error('Error fetching video data:', err);
@@ -41,6 +42,21 @@ function Video() {
 
     fetchVideoData();
   }, [language]);
+
+  // Convert YouTube URL to embed URL
+  const getYouTubeEmbedUrl = (url) => {
+    if (!url) return null;
+    
+    // Check if it's a YouTube URL
+    const youtubeRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+    const match = url.match(youtubeRegex);
+    
+    if (match && match[1]) {
+      return `https://www.youtube.com/embed/${match[1]}?autoplay=1`;
+    }
+    
+    return null;
+  };
 
   const handlePlayClick = () => {
     setIsPlaying(true);
@@ -58,6 +74,9 @@ function Video() {
     );
   }
 
+  const youtubeEmbedUrl = getYouTubeEmbedUrl(videoUrl);
+  const isYouTube = !!youtubeEmbedUrl;
+
   return (
     <div className="video-section" id="video">
       <div className="video-section__wrapper">
@@ -68,7 +87,7 @@ function Video() {
                 className="video-cover" 
                 onClick={handlePlayClick}
                 style={{
-                  backgroundImage: `url(${videoBackground})`,
+                  backgroundImage: `url(${thumbnailUrl})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center'
                 }}
@@ -85,15 +104,29 @@ function Video() {
               </div>
             ) : (
               <div className="video-player">
-                <video 
-                  ref={videoRef}
-                  controls 
-                  autoPlay
-                  style={{ width: '100%', height: '100%' }}
-                >
-                  <source src={videoUrl} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
+                {isYouTube ? (
+                  <iframe
+                    ref={videoRef}
+                    width="100%"
+                    height="100%"
+                    src={youtubeEmbedUrl}
+                    title="YouTube video player"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    style={{ width: '100%', height: '100%' }}
+                  ></iframe>
+                ) : (
+                  <video 
+                    ref={videoRef}
+                    controls 
+                    autoPlay
+                    style={{ width: '100%', height: '100%' }}
+                  >
+                    <source src={videoUrl} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                )}
               </div>
             )}
           </div>
