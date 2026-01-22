@@ -1,43 +1,173 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-  </body>
+<html lang="ka">
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#1a1a1a" />
+  
+  <!-- Primary Meta Tags -->
+  <title>Litox Georgia - სამშენებლო მასალები | გიპსის და ცემენტის შპაკლები, წებოები, საბალახეები</title>
+  <meta name="title" content="Litox Georgia - სამშენებლო მასალები | გიპსის და ცემენტის შპაკლები, წებოები, საბალახეები" />
+  <meta name="description" content="Litox Georgia - ოფიციალური წარმომადგენელი საქართველოში. მაღალი ხარისხის სამშენებლო და სარემონტო მასალები: გიპსის და ცემენტის შპაკლები, კაფელის წებო, საბალახეები, მასობრივი იატაკები, ჰიდროიზოლაცია. 30+ წლიანი გამოცდილება." />
+  <meta name="keywords" content="Litox Georgia, ლითოქსი საქართველო, სამშენებლო მასალები, გიპსის შპაკლი, ცემენტის შპაკლი, კაფელის წებო, საბალახე, მასობრივი იატაკი, ჰიდროიზოლაცია, კერამზიტი, სამშენებლო ნარევები, სარემონტო მასალები თბილისი, Free Way LLC" />
+  <meta name="author" content="Litox Georgia - Free Way LLC" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://litoxgeorgia.ge/" />
+  <meta property="og:title" content="Litox Georgia - სამშენებლო მასალები | გიპსის და ცემენტის შპაკლები, წებოები" />
+  <meta property="og:description" content="ოფიციალური Litox წარმომადგენელი საქართველოში. მაღალი ხარისხის სამშენებლო მასალები: შპაკლები, წებოები, საბალახეები, ჰიდროიზოლაცია. 30+ წლიანი გამოცდილება." />
+  <meta property="og:image" content="%PUBLIC_URL%/og-image.jpg" />
+  <meta property="og:locale" content="ka_GE" />
+  <meta property="og:site_name" content="Litox Georgia" />
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://litoxgeorgia.ge/" />
+  <meta property="twitter:title" content="Litox Georgia - სამშენებლო მასალები" />
+  <meta property="twitter:description" content="ოფიციალური Litox წარმომადგენელი საქართველოში. მაღალი ხარისხის სამშენებლო და სარემონტო მასალები." />
+  <meta property="twitter:image" content="%PUBLIC_URL%/og-image.jpg" />
+  
+  <!-- Geo Tags -->
+  <meta name="geo.region" content="GE-TB" />
+  <meta name="geo.placename" content="Tbilisi" />
+  <meta name="geo.position" content="41.7151;44.8271" />
+  <meta name="ICBM" content="41.7151, 44.8271" />
+  
+  <!-- Additional SEO Tags -->
+  <meta name="language" content="Georgian" />
+  <meta name="revisit-after" content="7 days" />
+  <meta name="distribution" content="global" />
+  <meta name="rating" content="general" />
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://litoxgeorgia.ge/" />
+  
+  <!-- Apple Touch Icon -->
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+  
+  <!-- Manifest -->
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  
+  <!-- Preconnect for Performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  
+  <!-- Structured Data - Organization Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Litox Georgia",
+    "legalName": "Free Way LLC",
+    "url": "https://litoxgeorgia.ge",
+    "logo": "https://litoxgeorgia.ge/logo.png",
+    "description": "Official Litox representative in Georgia. High-quality construction materials: gypsum and cement plasters, tile adhesives, putties, levelers, waterproofing.",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Tbilisi",
+      "addressRegion": "Tbilisi",
+      "addressCountry": "GE"
+    },
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "sales",
+      "areaServed": "GE"
+    },
+    "foundingDate": "2024",
+    "sameAs": [
+      "https://facebook.com/litoxgeorgia",
+      "https://instagram.com/litoxgeorgia"
+    ]
+  }
+  </script>
+  
+  <!-- Structured Data - Product Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "Litox Construction Materials",
+    "description": "Professional construction and finishing materials including gypsum plasters, cement adhesives, putties, levelers, waterproofing, and expanded clay",
+    "brand": {
+      "@type": "Brand",
+      "name": "Litox"
+    },
+    "category": "Construction Materials",
+    "offers": {
+      "@type": "AggregateOffer",
+      "availability": "https://schema.org/InStock",
+      "priceCurrency": "GEL"
+    }
+  }
+  </script>
+  
+  <!-- Structured Data - LocalBusiness Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Litox Georgia",
+    "image": "https://litoxgeorgia.ge/logo.png",
+    "@id": "https://litoxgeorgia.ge",
+    "url": "https://litoxgeorgia.ge",
+    "priceRange": "$$",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "",
+      "addressLocality": "Tbilisi",
+      "addressRegion": "Tbilisi",
+      "postalCode": "",
+      "addressCountry": "GE"
+    },
+    "openingHoursSpecification": {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday"
+      ],
+      "opens": "09:00",
+      "closes": "18:00"
+    }
+  }
+  </script>
+</head>
+<body>
+  <noscript>You need to enable JavaScript to run this app. Litox Georgia - Official representative of Litox construction materials in Georgia.</noscript>
+  
+  <!-- Semantic HTML for better SEO -->
+  <div id="root"></div>
+  
+  <!-- Hidden SEO Content (will be replaced by React) -->
+  <noscript>
+    <header>
+      <h1>Litox Georgia - სამშენებლო მასალები</h1>
+      <p>ოფიციალური Litox წარმომადგენელი საქართველოში</p>
+    </header>
+    <main>
+      <section>
+        <h2>ჩვენს შესახებ</h2>
+        <p>Litox არის წამყვანი სამშენებლო მასალების მწარმოებელი 30+ წლიანი გამოცდილებით. Free Way LLC არის ოფიციალური წარმომადგენელი საქართველოში.</p>
+      </section>
+      <section>
+        <h2>პროდუქცია</h2>
+        <ul>
+          <li>გიპსის და ცემენტის შპაკლები</li>
+          <li>კაფელის ცემენტის წებოები</li>
+          <li>გიპსის, ცემენტის და პოლიმერის შპაკლები</li>
+          <li>საბალახეები და მასობრივი იატაკები</li>
+          <li>სამონტაჟო ნარევები</li>
+          <li>სარემონტო ნარევები</li>
+          <li>ჰიდროიზოლაცია</li>
+          <li>კერამზიტის ღორღი</li>
+        </ul>
+      </section>
+    </main>
+  </noscript>
+</body>
 </html>
