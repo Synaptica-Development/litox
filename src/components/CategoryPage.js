@@ -62,7 +62,7 @@ function CategoryPage() {
 
         while (hasMorePages) {
           const productsResponse = await fetch(
-            `http://api.litox.synaptica.online/api/Products/products?CategoryID=${categoryId}&PageSize=8&Page=${currentApiPage}`,
+            `${API_BASE_URL}/api/Products/products?CategoryID=${categoryId}&PageSize=8&Page=${currentApiPage}`,
             {
               headers: {
                 'accept': '*/*',
