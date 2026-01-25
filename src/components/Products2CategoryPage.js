@@ -55,7 +55,7 @@ function Products2CategoryPage() {
 
         // Fetch products for this category
         const productsResponse = await fetch(
-          `http://api.litox.synaptica.online/api/Products/products?CategoryID=${categoryId}&PageSize=100&Page=1`,
+          `${API_BASE_URL}/api/Products/products?CategoryID=${categoryId}&PageSize=100&Page=1`,
           {
             headers: {
               'accept': '*/*',

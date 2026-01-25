@@ -66,7 +66,7 @@ function Header() {
       setIsSearching(true);
       try {
         const response = await fetch(
-          `http://api.litox.synaptica.online/api/Products/products?SearchText=${encodeURIComponent(searchQuery)}`,
+          `${API_BASE_URL}/api/Products/products?SearchText=${encodeURIComponent(searchQuery)}`,
           {
             headers: {
               'accept': '*/*',

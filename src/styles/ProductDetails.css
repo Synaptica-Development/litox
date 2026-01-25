@@ -96,7 +96,7 @@
 }
 
 .product-hero h1 {
-  font-size: 38px;
+  font-size: 30px;
   font-weight: 700;
   color: #fff;
   margin: 0 0 20px 0;
@@ -104,10 +104,11 @@
   text-align: left;
   align-self: flex-start;
   max-width: 700px;
+  margin-top: 140px;
 }
 
 .product-hero .preview-text {
-  font-size: 18px;
+  font-size: 16px;
   color: #fff;
   margin: 0 0 30px 0;
   max-width: 600px;
@@ -634,7 +635,8 @@
   }
 
   .product-hero h1 {
-    font-size: 36px;
+    font-size: 28px;
+    margin-top: 60px;
   }
 
   .content-row {
@@ -702,9 +704,10 @@
   }
 
   .product-hero h1 {
-    font-size: 28px;
+    font-size: 26px;
     text-align: center;
     align-self: center;
+    margin-top: 40px;
   }
 
   .product-hero .preview-text {
@@ -803,6 +806,7 @@
 
   .product-hero h1 {
     font-size: 24px;
+    margin-top: 20px;
   }
 
   .product-hero .preview-text {

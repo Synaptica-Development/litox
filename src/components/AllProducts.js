@@ -72,7 +72,7 @@ function AllProducts() {
         
         const productPromises = initialCategories.map(category =>
           fetch(
-            `http://api.litox.synaptica.online/api/Products/products?CategoryID=${category.id}&PageSize=100&Page=1`,
+            `${API_BASE_URL}/api/Products/products?CategoryID=${category.id}&PageSize=100&Page=1`,
             {
               headers: {
                 'accept': '*/*',
@@ -154,7 +154,7 @@ function AllProducts() {
         
         const batchPromises = batch.map(category =>
           fetch(
-            `http://api.litox.synaptica.online/api/Products/products?CategoryID=${category.id}&PageSize=100&Page=1`,
+            `${API_BASE_URL}/api/Products/products?CategoryID=${category.id}&PageSize=100&Page=1`,
             {
               headers: {
                 'accept': '*/*',

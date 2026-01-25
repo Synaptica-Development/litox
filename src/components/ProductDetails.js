@@ -69,7 +69,7 @@ function ProductDetails() {
 
         // Fetch category info
         const categoriesResponse = await fetch(
-          'http://api.litox.synaptica.online/api/Category/categories',
+          `${API_BASE_URL}/api/Category/categories`,
           {
             headers: {
               'accept': '*/*',
@@ -86,7 +86,7 @@ function ProductDetails() {
 
         // Fetch related products from the same category
         const relatedResponse = await fetch(
-          `http://api.litox.synaptica.online/api/Products/products?CategoryID=${categoryId}&PageSize=10&Page=1`,
+          `${API_BASE_URL}/api/Products/products?CategoryID=${categoryId}&PageSize=10&Page=1`,
           {
             headers: {
               'accept': '*/*',
