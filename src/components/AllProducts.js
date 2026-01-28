@@ -11,7 +11,10 @@ function AllProducts() {
   const [categories, setCategories] = useState([]);
   const [allProducts, setAllProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState(() => {
+    // Initialize from URL parameter
+    return searchParams.get('category') || 'all';
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [language, setLanguage] = useState(() => {
@@ -39,6 +42,16 @@ function AllProducts() {
       }
     };
   }, []);
+
+  // Update filtered products whenever allProducts or selectedCategory changes
+  useEffect(() => {
+    if (selectedCategory === 'all') {
+      setFilteredProducts(allProducts);
+    } else {
+      const filtered = allProducts.filter(product => product.categoryId === selectedCategory);
+      setFilteredProducts(filtered);
+    }
+  }, [allProducts, selectedCategory]);
 
   // Fetch data when language changes
   useEffect(() => {
@@ -103,17 +116,6 @@ function AllProducts() {
         const allProductsArray = results.flatMap(result => result.products);
 
         setAllProducts(allProductsArray);
-        
-        // Check for category parameter in URL
-        const categoryParam = searchParams.get('category');
-        if (categoryParam && categoryParam !== 'all') {
-          setSelectedCategory(categoryParam);
-          const filtered = allProductsArray.filter(product => product.categoryId === categoryParam);
-          setFilteredProducts(filtered);
-        } else {
-          setFilteredProducts(allProductsArray);
-        }
-
         setLoading(false);
 
         // Load remaining categories in background
@@ -185,14 +187,6 @@ function AllProducts() {
         
         setAllProducts([...allProductsArray]);
         
-        // Update filtered products if showing all
-        setFilteredProducts(prevFiltered => {
-          if (selectedCategory === 'all') {
-            return [...allProductsArray];
-          }
-          return prevFiltered;
-        });
-        
         // Small delay between batches to prevent overwhelming the server
         if (i + BATCH_SIZE < remainingCategories.length) {
           await new Promise(resolve => setTimeout(resolve, 50));
@@ -258,11 +252,8 @@ function AllProducts() {
     
     if (categoryId === 'all') {
       setSearchParams({});
-      setFilteredProducts(allProducts);
     } else {
       setSearchParams({ category: categoryId });
-      const filtered = allProducts.filter(product => product.categoryId === categoryId);
-      setFilteredProducts(filtered);
     }
   };
 
