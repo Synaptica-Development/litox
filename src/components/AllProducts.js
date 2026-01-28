@@ -266,6 +266,15 @@ function AllProducts() {
     return product.title || product.name || 'Product';
   };
 
+  // Get the current page title (category name or "All Products")
+  const getPageTitle = () => {
+    if (selectedCategory === 'all') {
+      return translate('allProducts');
+    }
+    const category = categories.find(cat => cat.id === selectedCategory);
+    return category ? category.title : translate('allProducts');
+  };
+
   const SkeletonCard = () => (
     <div className="all-products-card all-products-skeleton">
       <div className="all-products-image all-products-skeleton-image">
@@ -402,7 +411,7 @@ function AllProducts() {
             <li><Link to="/">{translate('home')}</Link></li>
             <li><span>{translate('products')}</span></li>
           </ul>
-          <h1>{translate('allProducts')}</h1>
+          <h1>{getPageTitle()}</h1>
         </div>
       </section>
 
