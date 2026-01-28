@@ -88,20 +88,315 @@
   text-align: center;
 }
 
+/* Base About Text Styling */
 .about-text {
-  width: 100%;
-}
-
-.about-section p {
-  font-size: 16px;
+  color: #ffffff;
+  letter-spacing: 0.5px;
   line-height: 1.8;
-  color: #aba39e;
-  margin: 0;
-  font-family: 'Century Gothic Paneuropean', sans-serif;
-  font-weight: 400;
-  text-align: center;
+  font-size: 16px;
   max-width: 800px;
   margin: 0 auto;
+  text-align: center;
+  font-family: 'Century Gothic Paneuropean', sans-serif;
+  font-weight: 400;
+}
+
+/* ========================================
+   RICH TEXT CONTENT - PRESERVES FORMATTING
+   ======================================== */
+
+/* Base formatting preservation */
+.rich-text-content {
+  color: #ffffff !important;
+  letter-spacing: 0.5px;
+  line-height: 1.8;
+  font-size: 16px;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* CRITICAL: Preserve Bold Text */
+.rich-text-content strong,
+.rich-text-content b {
+  font-weight: 700 !important;
+  color: #ffffff !important;
+}
+
+/* CRITICAL: Preserve Italic Text */
+.rich-text-content em,
+.rich-text-content i {
+  font-style: italic !important;
+  color: #ffffff !important;
+}
+
+/* CRITICAL: Preserve Underline Text */
+.rich-text-content u {
+  text-decoration: underline !important;
+  color: #ffffff !important;
+}
+
+/* CRITICAL: Preserve Strikethrough Text */
+.rich-text-content s,
+.rich-text-content strike,
+.rich-text-content del {
+  text-decoration: line-through !important;
+  color: #ffffff !important;
+}
+
+/* Paragraphs */
+.rich-text-content p {
+  margin-bottom: 1.5em;
+  line-height: 1.8;
+  color: #ffffff !important;
+}
+
+/* Headings */
+.rich-text-content h1,
+.rich-text-content h2,
+.rich-text-content h3,
+.rich-text-content h4,
+.rich-text-content h5,
+.rich-text-content h6 {
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+  line-height: 1.4;
+  font-weight: 600 !important;
+  text-align: center;
+  color: #ffffff !important;
+}
+
+.rich-text-content h1 { font-size: 2em !important; }
+.rich-text-content h2 { font-size: 1.75em !important; }
+.rich-text-content h3 { font-size: 1.5em !important; }
+.rich-text-content h4 { font-size: 1.25em !important; }
+.rich-text-content h5 { font-size: 1.1em !important; }
+.rich-text-content h6 { font-size: 1em !important; }
+
+/* Lists */
+.rich-text-content ul,
+.rich-text-content ol {
+  margin-bottom: 1.5em;
+  padding-left: 2em;
+  text-align: left;
+  display: inline-block;
+  color: #ffffff !important;
+}
+
+.rich-text-content ul {
+  list-style-type: disc !important;
+}
+
+.rich-text-content ol {
+  list-style-type: decimal !important;
+}
+
+.rich-text-content li {
+  margin-bottom: 0.5em;
+  line-height: 1.8;
+  color: #ffffff !important;
+}
+
+/* Nested lists */
+.rich-text-content ul ul,
+.rich-text-content ol ol,
+.rich-text-content ul ol,
+.rich-text-content ol ul {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+/* Links */
+.rich-text-content a {
+  color: #ff6b00 !important;
+  text-decoration: underline;
+  transition: opacity 0.3s ease;
+}
+
+.rich-text-content a:hover {
+  opacity: 0.8;
+}
+
+/* Blockquotes */
+.rich-text-content blockquote {
+  border-left: 4px solid #ff6b00;
+  padding-left: 1.5em;
+  margin: 1.5em 0;
+  font-style: italic;
+  color: #ffffff !important;
+  opacity: 0.9;
+}
+
+/* Code */
+.rich-text-content code {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+  color: #ffffff !important;
+}
+
+.rich-text-content pre {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 1em;
+  border-radius: 5px;
+  overflow-x: auto;
+  margin: 1em 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.rich-text-content pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+/* Tables */
+.rich-text-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5em auto;
+  color: #ffffff !important;
+}
+
+.rich-text-content table th,
+.rich-text-content table td {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.75em;
+  text-align: left;
+  color: #ffffff !important;
+}
+
+.rich-text-content table th {
+  background-color: rgba(255, 107, 0, 0.2);
+  font-weight: bold !important;
+}
+
+/* Horizontal rules */
+.rich-text-content hr {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  margin: 2em 0;
+}
+
+/* Line breaks */
+.rich-text-content br {
+  display: block;
+  content: "";
+  margin-top: 0.5em;
+}
+
+/* Subscript and Superscript */
+.rich-text-content sub {
+  vertical-align: sub;
+  font-size: 0.8em;
+}
+
+.rich-text-content sup {
+  vertical-align: super;
+  font-size: 0.8em;
+}
+
+/* Mark/Highlight */
+.rich-text-content mark {
+  background-color: rgba(255, 255, 0, 0.3);
+  padding: 0.1em 0.3em;
+  border-radius: 2px;
+  color: #000 !important;
+}
+
+/* Small text */
+.rich-text-content small {
+  font-size: 0.875em;
+  color: #ffffff !important;
+}
+
+/* Images in rich text */
+.rich-text-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1em auto;
+  border-radius: 8px;
+}
+
+/* Text alignment */
+.rich-text-content [style*="text-align: center"] {
+  text-align: center !important;
+}
+
+.rich-text-content [style*="text-align: right"] {
+  text-align: right !important;
+}
+
+.rich-text-content [style*="text-align: left"] {
+  text-align: left !important;
+}
+
+.rich-text-content [style*="text-align: justify"] {
+  text-align: justify !important;
+}
+
+/* Definition lists */
+.rich-text-content dl {
+  margin: 1em 0;
+}
+
+.rich-text-content dt {
+  font-weight: bold !important;
+  margin-top: 1em;
+  color: #ffffff !important;
+}
+
+.rich-text-content dd {
+  margin-left: 2em;
+  margin-bottom: 0.5em;
+  color: #ffffff !important;
+}
+
+/* Address */
+.rich-text-content address {
+  font-style: italic;
+  margin: 1em 0;
+  color: #ffffff !important;
+}
+
+/* Abbreviations */
+.rich-text-content abbr[title] {
+  text-decoration: underline dotted;
+  cursor: help;
+}
+
+/* Keyboard input */
+.rich-text-content kbd {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  padding: 0.2em 0.4em;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+  color: #ffffff !important;
+}
+
+/* Sample output */
+.rich-text-content samp {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+  color: #ffffff !important;
+}
+
+/* Variable */
+.rich-text-content var {
+  font-style: italic;
+  font-family: 'Courier New', monospace;
+  color: #ffffff !important;
+}
+
+/* Ensure all text elements inherit white color */
+.rich-text-content span,
+.rich-text-content div {
+  color: #ffffff !important;
 }
 
 /* Responsive */
@@ -156,7 +451,8 @@
     margin-bottom: 24px;
   }
 
-  .about-section p {
+  .about-text,
+  .rich-text-content {
     font-size: 15px;
     line-height: 1.7;
   }
@@ -184,100 +480,8 @@
     margin-bottom: 20px;
   }
 
-  .about-section p {
+  .about-text,
+  .rich-text-content {
     font-size: 14px;
-  }
-}
-
-
-
-.about-text,
-.about-text * {
-  color: #ffffff !important;
-  letter-spacing: 0.5px;
-}
-
-.about-text p,
-.about-text h1,
-.about-text h2,
-.about-text h3,
-.about-text h4,
-.about-text h5,
-.about-text h6,
-.about-text strong,
-.about-text em,
-.about-text span,
-.about-text li,
-.about-text ul,
-.about-text ol {
-  color: #ffffff !important;
-  letter-spacing: 0.5px;
-}
-
-
-.about-text {
-  color: #ffffff !important;
-  letter-spacing: 0.5px;
-  line-height: 1.8;
-  font-size: 16px;
-  max-width: 800px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.about-text * {
-  color: #ffffff !important;
-  letter-spacing: 0.5px;
-}
-
-.about-text p {
-  margin-bottom: 1.5em;
-  line-height: 1.8;
-}
-
-.about-text h1,
-.about-text h2,
-.about-text h3,
-.about-text h4,
-.about-text h5,
-.about-text h6 {
-  margin-top: 1.5em;
-  margin-bottom: 0.75em;
-  line-height: 1.4;
-  font-weight: 600;
-  text-align: center;
-}
-
-.about-text h1 { font-size: 2em; }
-.about-text h2 { font-size: 1.75em; }
-.about-text h3 { font-size: 1.5em; }
-.about-text h4 { font-size: 1.25em; }
-
-.about-text ul,
-.about-text ol {
-  margin-bottom: 1.5em;
-  padding-left: 2em;
-  text-align: left;
-  display: inline-block;
-}
-
-.about-text li {
-  margin-bottom: 0.5em;
-  line-height: 1.8;
-}
-
-.about-text strong {
-  font-weight: 300;
-}
-
-.about-text em {
-  font-style: italic;
-}
-
-/* Add some breathing room on mobile */
-@media (max-width: 768px) {
-  .about-text {
-    font-size: 15px;
-    line-height: 1.7;
   }
 }

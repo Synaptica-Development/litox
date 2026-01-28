@@ -12,7 +12,6 @@ function About() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    // Get language from localStorage
     const savedLanguage = localStorage.getItem('language') || 'en';
     setLanguage(savedLanguage);
   }, []);
@@ -30,9 +29,17 @@ function About() {
 
         if (response.ok) {
           const data = await response.json();
-          console.log('About data:', data);
-          console.log('imageUrl1:', data.imageUrl1);
-          console.log('imageUrl2:', data.imageUrl2);
+          console.log('=== ABOUT DATA DEBUG ===');
+          console.log('aboutLitox RAW:', data.aboutLitox);
+          console.log('aboutLitoxGeorgia RAW:', data.aboutLitoxGeorgia);
+          
+          // Check if content contains HTML tags
+          const hasHTMLTags = (text) => text && /<[^>]+>/.test(text);
+          
+          console.log('aboutLitox has HTML?', hasHTMLTags(data.aboutLitox));
+          console.log('aboutLitoxGeorgia has HTML?', hasHTMLTags(data.aboutLitoxGeorgia));
+          console.log('======================');
+          
           setAboutData(data);
         }
       } catch (err) {
@@ -45,6 +52,26 @@ function About() {
 
     fetchAboutData();
   }, [language]);
+
+  // Smart content formatter - handles both HTML and plain text
+  const formatContent = (text) => {
+    if (!text) return '';
+    
+    // Check if text already contains HTML tags
+    const hasHTMLTags = /<[^>]+>/.test(text);
+    
+    if (hasHTMLTags) {
+      // Already has HTML formatting, return as is
+      return text;
+    } else {
+      // Plain text - convert line breaks to paragraphs
+      return text
+        .split('\n')
+        .filter(line => line.trim() !== '')
+        .map(line => `<p>${line.trim()}</p>`)
+        .join('');
+    }
+  };
 
   const translate = (key) => {
     const translations = {
@@ -108,8 +135,8 @@ function About() {
                 <section className="about-section">
                   <h2>{translate('aboutLitox')}</h2>
                   <div 
-                    className="about-text"
-                    dangerouslySetInnerHTML={{ __html: aboutData.aboutLitox }}
+                    className="about-text rich-text-content"
+                    dangerouslySetInnerHTML={{ __html: formatContent(aboutData.aboutLitox) }}
                   />
                   {aboutData.imageUrl1 && (
                     <div className="about-image">
@@ -134,8 +161,8 @@ function About() {
                 <section className="about-section">
                   <h2>{translate('aboutLitoxGeorgia')}</h2>
                   <div 
-                    className="about-text"
-                    dangerouslySetInnerHTML={{ __html: aboutData.aboutLitoxGeorgia }}
+                    className="about-text rich-text-content"
+                    dangerouslySetInnerHTML={{ __html: formatContent(aboutData.aboutLitoxGeorgia) }}
                   />
                   {aboutData.imageUrl2 && (
                     <div className="about-image">
