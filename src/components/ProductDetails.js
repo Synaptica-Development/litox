@@ -18,7 +18,7 @@ function ProductDetails() {
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState('ka');
   const [isMobile, setIsMobile] = useState(false);
 
   // Detect mobile screen
@@ -524,7 +524,21 @@ function ProductDetails() {
                           />
                         </span>
                       </Link>
-                      <span className="category-product-name">{relatedProduct.title}</span>
+                      <span 
+  className="category-product-name" 
+   style={{ 
+    maxWidth: '270px', 
+    overflow: 'hidden', 
+    textOverflow: 'ellipsis', 
+    display: '-webkit-box',
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: 'vertical',
+    lineHeight: '1.4em',
+    maxHeight: '2.8em'
+  }}
+>
+  {relatedProduct.title}
+</span>
                     </div>
                   </SwiperSlide>
                 ))}
