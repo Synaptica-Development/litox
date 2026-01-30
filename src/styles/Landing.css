@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -174,7 +176,8 @@ html, body {
   color: #fff;
   font-weight: 600;
   margin: 0 0 20px 0;
-  font-family: 'Century Gothic Paneuropean', sans-serif;
+  font-family: "Montserrat", sans-serif;
+
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
   line-height: 1.4;
   width: 720px;

@@ -1,3 +1,6 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+
 /* Category Page */
 .category-page {
   background: #2a2522;
@@ -58,7 +61,7 @@
   gap: 8px;
   font-size: 14px;
   color: #aba39e;
-  font-family: 'Century Gothic Paneuropean', sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 .breadcrumbs li:not(:last-child)::after {
@@ -103,7 +106,7 @@
   font-weight: 700;
   color: #fff;
   margin: 0;
-  font-family: 'Century Gothic Paneuropean', sans-serif;
+  font-family: "Montserrat", sans-serif;
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
   text-align: center;
 }
@@ -194,7 +197,7 @@
 .product-name {
   font-size: 18px;
   color: #fff;
-  font-family: 'Century Gothic Paneuropean', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 600;
   margin: 0;
   line-height: 1.4;
@@ -362,7 +365,7 @@
   color: #ef6f2e;
   font-size: 18px;
   padding: 60px 20px;
-  font-family: 'Century Gothic Paneuropean', sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 /* Responsive */

@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+
+
 /* Product Details Container */
 .product-details-container {
   min-height: 100vh;
@@ -72,7 +75,8 @@
   gap: 10px;
   font-size: 14px;
   color: #aba39e;
-  font-family: 'Century Gothic Paneuropean', sans-serif;
+  font-family: "Montserrat", sans-serif;
+  
 }
 
 .breadcrumbs li:not(:last-child)::after {
@@ -100,7 +104,7 @@
   font-weight: 700;
   color: #fff;
   margin: 0 0 20px 0;
-  font-family: 'Century Gothic Paneuropean', sans-serif;
+  font-family: "Montserrat", sans-serif;
   text-align: left;
   align-self: flex-start;
   max-width: 700px;
@@ -113,7 +117,7 @@
   margin: 0 0 30px 0;
   max-width: 600px;
   line-height: 1.6;
-  font-family: 'Century Gothic Paneuropean', sans-serif;
+  font-family: "Montserrat", sans-serif;
   text-align: left;
   align-self: flex-start;
 }
@@ -186,7 +190,7 @@
 .features-overlay .col span {
   color: #fff;
   font-size: 14px;
-  font-family: 'Century Gothic Paneuropean', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 500;
   white-space: nowrap;
   line-height: 1;
@@ -332,7 +336,7 @@
   font-weight: 400;
   cursor: pointer;
   transition: color 0.4s ease;
-  font-family: 'Century Gothic Paneuropean', sans-serif;
+  font-family: "Montserrat", sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   position: relative;
@@ -504,7 +508,7 @@
   font-weight: 500;
   color: #ffffff;
   margin-bottom: 25px;
-  font-family: 'Century Gothic Paneuropean', sans-serif;
+  font-family: "Montserrat", sans-serif;
   letter-spacing: 0.5px;
   display: block;
   text-align: left;
@@ -515,7 +519,7 @@
   font-size: 16px;
   line-height: 1.8;
   color: #aba39e;
-  font-family: 'Century Gothic Paneuropean', sans-serif;
+  font-family: "Montserrat", sans-serif;
   display: block;
   text-align: left;
   width: 100%;
@@ -540,7 +544,7 @@
 .specifications-table table td {
   padding: 15px 20px;
   border-bottom: 1px solid #4e4845;
-  font-family: 'Century Gothic Paneuropean', sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 .specifications-table table td:first-child {
@@ -563,7 +567,7 @@
   font-size: 20px;
   color: #ef6f2e;
   margin: 30px 0 15px;
-  font-family: 'Century Gothic Paneuropean', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 700;
 }
 
@@ -572,7 +576,7 @@
   line-height: 1.8;
   color: #aba39e;
   margin-bottom: 15px;
-  font-family: 'Century Gothic Paneuropean', sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 /* Documents List */
@@ -603,7 +607,7 @@
   display: flex;
   align-items: center;
   gap: 15px;
-  font-family: 'Century Gothic Paneuropean', sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 /* Loading and Error States */
@@ -613,7 +617,7 @@
   padding: 100px 40px;
   color: #fff;
   font-size: 18px;
-  font-family: 'Century Gothic Paneuropean', sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 /* Responsive Design */
@@ -979,7 +983,7 @@
 .category-product-name {
   font-size: 16px;
   color: #fff;
-  font-family: 'Century Gothic Paneuropean', sans-serif;
+  font-family: "Montserrat", sans-serif;
   margin-bottom: 5px;
   max-width: 270px;
   overflow: hidden;
@@ -996,7 +1000,7 @@
 .category-product-category {
   font-size: 14px;
   color: #aba39e;
-  font-family: 'Century Gothic Paneuropean', sans-serif;
+  font-family: "Montserrat", sans-serif;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1071,7 +1075,7 @@
   font-weight: 400;
   color: #fff;
   margin: 0;
-  font-family: 'Century Gothic Paneuropean', sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 /* Responsive */
@@ -1279,7 +1283,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  font-family: 'Century Gothic Paneuropean', sans-serif;
+  font-family: "Montserrat", sans-serif;
   transition: color 0.3s ease;
 }
 
@@ -1626,7 +1630,7 @@
 .features-overlay .col span {
   color: #fff;
   font-size: 14px;
-  font-family: 'Century Gothic Paneuropean', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 500;
   white-space: nowrap;
   line-height: 1;
@@ -1692,7 +1696,7 @@
   gap: 10px;
   font-size: 14px;
   color: #aba39e;
-  font-family: 'Century Gothic Paneuropean', sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 .product-detail-breadcrumbs li:not(:last-child)::after {

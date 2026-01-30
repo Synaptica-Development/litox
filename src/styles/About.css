@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
 /* Hero Section */
 .about-page-hero {
   min-height: 424px;
@@ -84,7 +85,7 @@
   font-weight: 600;
   color: #fff;
   margin: 0 0 30px 0;
-  font-family: 'Century Gothic Paneuropean', sans-serif;
+  font-family: "Montserrat", sans-serif;
   text-align: center;
 }
 
@@ -97,7 +98,7 @@
   max-width: 800px;
   margin: 0 auto;
   text-align: center;
-  font-family: 'Century Gothic Paneuropean', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 400;
 }
 
