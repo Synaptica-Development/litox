@@ -12,7 +12,6 @@ function AllProducts() {
   const [allProducts, setAllProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(() => {
-    // Initialize from URL parameter
     return searchParams.get('category') || 'all';
   });
   const [loading, setLoading] = useState(true);
@@ -24,17 +23,14 @@ function AllProducts() {
   const isLoadingRest = useRef(false);
   const abortControllerRef = useRef(null);
   
-  // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const PRODUCTS_PER_PAGE = 16;
   const INITIAL_CATEGORIES_TO_LOAD = 3;
 
-  // Scroll to top when page changes
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentPage]);
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (abortControllerRef.current) {
@@ -43,7 +39,6 @@ function AllProducts() {
     };
   }, []);
 
-  // Update filtered products whenever allProducts or selectedCategory changes
   useEffect(() => {
     if (selectedCategory === 'all') {
       setFilteredProducts(allProducts);
@@ -53,7 +48,6 @@ function AllProducts() {
     }
   }, [allProducts, selectedCategory]);
 
-  // Fetch data when language changes
   useEffect(() => {
     const fetchInitialData = async () => {
       if (abortControllerRef.current) {
@@ -118,7 +112,6 @@ function AllProducts() {
         setAllProducts(allProductsArray);
         setLoading(false);
 
-        // Load remaining categories in background
         if (categoriesData.length > INITIAL_CATEGORIES_TO_LOAD) {
           loadRemainingCategories(categoriesData, allProductsArray);
         }
@@ -187,7 +180,6 @@ function AllProducts() {
         
         setAllProducts([...allProductsArray]);
         
-        // Small delay between batches to prevent overwhelming the server
         if (i + BATCH_SIZE < remainingCategories.length) {
           await new Promise(resolve => setTimeout(resolve, 50));
         }
@@ -202,46 +194,14 @@ function AllProducts() {
 
   const translate = (key) => {
     const translations = {
-      home: {
-        ka: 'მთავარი',
-        en: 'Home',
-        ru: 'Главная'
-      },
-      products: {
-        ka: 'პროდუქტები',
-        en: 'Products',
-        ru: 'Продукты'
-      },
-      allProducts: {
-        ka: 'ყველა პროდუქტი',
-        en: 'All Products',
-        ru: 'Все продукты'
-      },
-      loading: {
-        ka: 'იტვირთება ყველა პროდუქტი...',
-        en: 'Loading all products...',
-        ru: 'Загрузка всех продуктов...'
-      },
-      error: {
-        ka: 'შეცდომა პროდუქტების ჩატვირთვისას',
-        en: 'Error loading products',
-        ru: 'Ошибка загрузки продуктов'
-      },
-      noProducts: {
-        ka: 'პროდუქტები არ არის ხელმისაწვდომი',
-        en: 'No products available',
-        ru: 'Продукты недоступны'
-      },
-      previous: {
-        ka: 'წინა',
-        en: 'Previous',
-        ru: 'Предыдущая'
-      },
-      next: {
-        ka: 'შემდეგი',
-        en: 'Next',
-        ru: 'Следующая'
-      }
+      home: { ka: 'მთავარი', en: 'Home', ru: 'Главная' },
+      products: { ka: 'პროდუქტები', en: 'Products', ru: 'Продукты' },
+      allProducts: { ka: 'ყველა პროდუქტი', en: 'All Products', ru: 'Все продукты' },
+      loading: { ka: 'იტვირთება ყველა პროდუქტი...', en: 'Loading all products...', ru: 'Загрузка всех продуктов...' },
+      error: { ka: 'შეცდომა პროდუქტების ჩატვირთვისას', en: 'Error loading products', ru: 'Ошибка загрузки продуктов' },
+      noProducts: { ka: 'პროდუქტები არ არის ხელმისაწვდომი', en: 'No products available', ru: 'Продукты недоступны' },
+      previous: { ka: 'წინა', en: 'Previous', ru: 'Предыдущая' },
+      next: { ka: 'შემდეგი', en: 'Next', ru: 'Следующая' }
     };
     return translations[key]?.[language] || translations[key]?.['en'] || key;
   };
@@ -266,7 +226,6 @@ function AllProducts() {
     return product.title || product.name || 'Product';
   };
 
-  // Get the current page title (category name or "All Products")
   const getPageTitle = () => {
     if (selectedCategory === 'all') {
       return translate('allProducts');
@@ -276,13 +235,13 @@ function AllProducts() {
   };
 
   const SkeletonCard = () => (
-    <div className="all-products-card all-products-skeleton">
-      <div className="all-products-image all-products-skeleton-image">
-        <div className="all-products-skeleton-shimmer"></div>
+    <div className="all-products-page-card all-products-page-skeleton">
+      <div className="all-products-page-image all-products-page-skeleton-image">
+        <div className="all-products-page-skeleton-shimmer"></div>
       </div>
-      <div className="all-products-info">
-        <div className="all-products-skeleton-text all-products-skeleton-title"></div>
-        <div className="all-products-skeleton-text all-products-skeleton-category"></div>
+      <div className="all-products-page-info">
+        <div className="all-products-page-skeleton-text all-products-page-skeleton-title"></div>
+        <div className="all-products-page-skeleton-text all-products-page-skeleton-category"></div>
       </div>
     </div>
   );
@@ -310,86 +269,46 @@ function AllProducts() {
     }
 
     pages.push(
-      <button
-        key="prev"
-        className="pagination-btn pagination-arrow"
-        onClick={() => handlePageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-        aria-label={translate('previous')}
-      >
+      <button key="prev" className="all-products-page-pagination-btn all-products-page-pagination-arrow" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
         {translate('previous')}
       </button>
     );
 
     if (startPage > 1) {
-      pages.push(
-        <button
-          key={1}
-          className="pagination-btn"
-          onClick={() => handlePageChange(1)}
-          aria-label="Page 1"
-        >
-          1
-        </button>
-      );
+      pages.push(<button key={1} className="all-products-page-pagination-btn" onClick={() => handlePageChange(1)}>1</button>);
       if (startPage > 2) {
-        pages.push(<span key="dots1" className="pagination-dots">...</span>);
+        pages.push(<span key="dots1" className="all-products-page-pagination-dots">...</span>);
       }
     }
 
     for (let i = startPage; i <= endPage; i++) {
       pages.push(
-        <button
-          key={i}
-          className={`pagination-btn ${currentPage === i ? 'active' : ''}`}
-          onClick={() => handlePageChange(i)}
-          aria-label={`Page ${i}`}
-          aria-current={currentPage === i ? 'page' : undefined}
-        >
-          {i}
-        </button>
+        <button key={i} className={`all-products-page-pagination-btn ${currentPage === i ? 'active' : ''}`} onClick={() => handlePageChange(i)}>{i}</button>
       );
     }
 
     if (endPage < totalPages) {
       if (endPage < totalPages - 1) {
-        pages.push(<span key="dots2" className="pagination-dots">...</span>);
+        pages.push(<span key="dots2" className="all-products-page-pagination-dots">...</span>);
       }
-      pages.push(
-        <button
-          key={totalPages}
-          className="pagination-btn"
-          onClick={() => handlePageChange(totalPages)}
-          aria-label={`Page ${totalPages}`}
-        >
-          {totalPages}
-        </button>
-      );
+      pages.push(<button key={totalPages} className="all-products-page-pagination-btn" onClick={() => handlePageChange(totalPages)}>{totalPages}</button>);
     }
 
     pages.push(
-      <button
-        key="next"
-        className="pagination-btn pagination-arrow"
-        onClick={() => handlePageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        aria-label={translate('next')}
-      >
+      <button key="next" className="all-products-page-pagination-btn all-products-page-pagination-arrow" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
         {translate('next')}
       </button>
     );
 
-    return <div className="pagination">{pages}</div>;
+    return <div className="all-products-page-pagination">{pages}</div>;
   };
 
   if (error) {
     return (
-      <div className="all-products-container">
+      <div className="all-products-page-container">
         <div className="container">
-          <div className="error">{translate('error')}: {error}</div>
-          <Link to="/" className="back-link">
-            ← {translate('home')}
-          </Link>
+          <div className="all-products-page-error">{translate('error')}: {error}</div>
+          <Link to="/">← {translate('home')}</Link>
         </div>
       </div>
     );
@@ -397,15 +316,7 @@ function AllProducts() {
 
   return (
     <>
-      <section 
-        className="products-hero2"
-        style={{
-          backgroundImage: `url(${background})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
-        }}
-      >
+      <section className="products-hero2" style={{ backgroundImage: `url(${background})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
         <div className="container2">
           <ul className="breadcrumbs">
             <li><Link to="/">{translate('home')}</Link></li>
@@ -415,34 +326,21 @@ function AllProducts() {
         </div>
       </section>
 
-      <div className="products-section">
+      <div className="all-products-page-section">
         <div className="container">
           {loading ? (
-            <div className="filter-wrapper">
-              <div className="filter-btn skeleton skeleton-filter"></div>
-              <div className="filter-btn skeleton skeleton-filter"></div>
-              <div className="filter-btn skeleton skeleton-filter"></div>
-              <div className="filter-btn skeleton skeleton-filter"></div>
+            <div className="all-products-page-filter-wrapper">
+              {[...Array(4)].map((_, i) => <div key={i} className="all-products-page-filter-btn skeleton all-products-page-skeleton-filter"></div>)}
             </div>
           ) : (
-            <div className="filter-wrapper">
-              <button
-                className={`filter-btn ${selectedCategory === 'all' ? 'active' : ''}`}
-                onClick={() => handleCategoryFilter('all')}
-                aria-label={translate('allProducts')}
-              >
-                {translate('allProducts')} ({allProducts.length})
-                {loadingBackground && ' ⟳'}
+            <div className="all-products-page-filter-wrapper">
+              <button className={`all-products-page-filter-btn ${selectedCategory === 'all' ? 'active' : ''}`} onClick={() => handleCategoryFilter('all')}>
+                {translate('allProducts')} ({allProducts.length}) {loadingBackground && ' ⟳'}
               </button>
               {categories.map((category) => {
                 const count = allProducts.filter(p => p.categoryId === category.id).length;
                 return (
-                  <button
-                    key={category.id}
-                    className={`filter-btn ${selectedCategory === category.id ? 'active' : ''}`}
-                    onClick={() => handleCategoryFilter(category.id)}
-                    aria-label={`${category.title} category`}
-                  >
+                  <button key={category.id} className={`all-products-page-filter-btn ${selectedCategory === category.id ? 'active' : ''}`} onClick={() => handleCategoryFilter(category.id)}>
                     {category.title} {count > 0 ? `(${count})` : ''}
                   </button>
                 );
@@ -451,45 +349,27 @@ function AllProducts() {
           )}
 
           {loading ? (
-            <div className="products-grid">
-              {[...Array(12)].map((_, index) => (
-                <SkeletonCard key={index} />
-              ))}
+            <div className="all-products-page-grid">
+              {[...Array(16)].map((_, index) => <SkeletonCard key={index} />)}
             </div>
           ) : filteredProducts.length === 0 ? (
-            <div className="error">{translate('noProducts')}</div>
+            <div className="all-products-page-error">{translate('noProducts')}</div>
           ) : (
             <>
-              <div className="products-grid">
+              <div className="all-products-page-grid">
                 {currentProducts.map((product, index) => (
-                  <Link 
-                    key={product.id || index} 
-                    to={`/products/${product.categoryId}/${product.id}`} 
-                    className="all-products-card"
-                  >
-                    <div className="all-products-image">
-                      <img 
-                        src={getProductImage(product)} 
-                        alt={getProductName(product)}
-                        loading="lazy"
-                        onError={(e) => {
-                          e.target.src = `${process.env.PUBLIC_URL}/prod.webp`;
-                        }}
-                      />
+                  <Link key={product.id || index} to={`/products/${product.categoryId}/${product.id}`} className="all-products-page-card">
+                    <div className="all-products-page-image">
+                      <img src={getProductImage(product)} alt={getProductName(product)} loading="lazy" onError={(e) => { e.target.src = `${process.env.PUBLIC_URL}/prod.webp`; }} />
                     </div>
-                    <div className="all-products-info">
-                      <h3 className="all-products-name">{getProductName(product)}</h3>
-                      <p className="all-products-category">{product.categoryName}</p>
-                      <img 
-                        src={arrow} 
-                        alt="" 
-                        className="all-products-arrow"
-                      />
+                    <div className="all-products-page-info">
+                      <h3 className="all-products-page-name">{getProductName(product)}</h3>
+                      <p className="all-products-page-category">{product.categoryName}</p>
+                      <img src={arrow} alt="" className="all-products-page-arrow" />
                     </div>
                   </Link>
                 ))}
               </div>
-              
               {renderPagination()}
             </>
           )}
