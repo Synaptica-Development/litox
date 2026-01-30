@@ -8,7 +8,7 @@ const API_BASE_URL = 'https://api.litox.ge';
 function About() {
   const [aboutData, setAboutData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState('ka');
 
   useEffect(() => {
     window.scrollTo(0, 0);
