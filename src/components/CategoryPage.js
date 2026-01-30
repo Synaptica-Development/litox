@@ -11,7 +11,7 @@ function CategoryPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState('ka');
   
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);

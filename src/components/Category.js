@@ -13,7 +13,7 @@ function Category() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState('ka');
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 767);
 
   // Handle window resize
