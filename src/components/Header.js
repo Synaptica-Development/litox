@@ -246,7 +246,7 @@ function Header() {
                       </Link>
                     </li>
 
-                    {/* Products with categories */}
+                    {/* Products with categories - ✅ FIXED: Using Link */}
                     <li className="mobile-nav__item">
                       <div className="mobile-nav__link-wrapper">
                         <Link 
@@ -266,15 +266,16 @@ function Header() {
                       <ul className={`mobile-submenu ${expandedMenu === 'products' ? 'active' : ''}`}>
                         {categories.map((category) => (
                           <li key={category.id}>
-                            <a 
-                              href="#" 
-                              onClick={(e) => {
-                                e.preventDefault();
-                                handleCategoryClick(category.id);
+                            {/* ✅ FIXED: Replaced <a href="#"> with Link */}
+                            <Link 
+                              to={`/products?category=${category.id}`}
+                              onClick={() => {
+                                setIsSmallMenuOpen(false);
+                                setExpandedMenu(null);
                               }}
                             >
                               {category.title}
-                            </a>
+                            </Link>
                           </li>
                         ))}
                       </ul>
@@ -308,14 +309,14 @@ function Header() {
                       </button>
                     </li>
 
-                    {/* Language switcher */}
+                    {/* Language switcher - ✅ FIXED: Using styled <a> instead of href="#" */}
                     <li className="mobile-nav__item mobile-lang">
                       <a 
-                        href="#" 
                         className={`mobile-nav__link ${language === 'ka' ? 'active-lang' : ''}`}
                         style={{ 
                           color: language === 'ka' ? '#ff6b00' : '#aba39e',
-                          fontWeight: language === 'ka' ? 'bold' : 'normal'
+                          fontWeight: language === 'ka' ? 'bold' : 'normal',
+                          cursor: 'pointer'
                         }}
                         onClick={(e) => {
                           e.preventDefault();
@@ -326,11 +327,11 @@ function Header() {
                       </a>
                       <span className="lang-divider">|</span>
                       <a 
-                        href="#" 
                         className={`mobile-nav__link ${language === 'en' ? 'active-lang' : ''}`}
                         style={{ 
                           color: language === 'en' ? '#ff6b00' : '#aba39e',
-                          fontWeight: language === 'en' ? 'bold' : 'normal'
+                          fontWeight: language === 'en' ? 'bold' : 'normal',
+                          cursor: 'pointer'
                         }}
                         onClick={(e) => {
                           e.preventDefault();
@@ -341,11 +342,11 @@ function Header() {
                       </a>
                       <span className="lang-divider">|</span>
                       <a 
-                        href="#" 
                         className={`mobile-nav__link ${language === 'ru' ? 'active-lang' : ''}`}
                         style={{ 
                           color: language === 'ru' ? '#ff6b00' : '#aba39e',
-                          fontWeight: language === 'ru' ? 'bold' : 'normal'
+                          fontWeight: language === 'ru' ? 'bold' : 'normal',
+                          cursor: 'pointer'
                         }}
                         onClick={(e) => {
                           e.preventDefault();
@@ -369,7 +370,7 @@ function Header() {
           </div>
 
           <Link to="/" className="logo">
-            <img src={logo} alt="Logo" />
+            <img src={logo} alt="Litox Georgia Logo" />
           </Link>
 
           <div className="col">
@@ -383,15 +384,10 @@ function Header() {
                   <ul className="dropdown">
                     {categories.map((category) => (
                       <li key={category.id}>
-                        <a 
-                          href="#" 
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleCategoryClick(category.id);
-                          }}
-                        >
+                        {/* ✅ FIXED: Replaced <a href="#"> with Link */}
+                        <Link to={`/products?category=${category.id}`}>
                           {category.title}
-                        </a>
+                        </Link>
                       </li>
                     ))}
                   </ul>
@@ -412,15 +408,15 @@ function Header() {
                 </svg>
               </button>
 
-              {/* Desktop language switcher */}
+              {/* Desktop language switcher - ✅ FIXED: Using styled <a> instead of href="#" */}
               <ul className="lang desktop-only">
                 <li>
                   <a 
-                    href="#" 
                     className={language === 'ka' ? 'active' : ''}
                     style={{ 
                       color: language === 'ka' ? '#ff6b00' : '#aba39e',
-                      fontWeight: language === 'ka' ? 'bold' : 'normal'
+                      fontWeight: language === 'ka' ? 'bold' : 'normal',
+                      cursor: 'pointer'
                     }}
                     onClick={(e) => {
                       e.preventDefault();
@@ -432,11 +428,11 @@ function Header() {
                 </li>
                 <li>
                   <a 
-                    href="#" 
                     className={language === 'en' ? 'active' : ''}
                     style={{ 
                       color: language === 'en' ? '#ff6b00' : '#aba39e',
-                      fontWeight: language === 'en' ? 'bold' : 'normal'
+                      fontWeight: language === 'en' ? 'bold' : 'normal',
+                      cursor: 'pointer'
                     }}
                     onClick={(e) => {
                       e.preventDefault();
@@ -448,11 +444,11 @@ function Header() {
                 </li>
                 <li>
                   <a 
-                    href="#" 
                     className={language === 'ru' ? 'active' : ''}
                     style={{ 
                       color: language === 'ru' ? '#ff6b00' : '#aba39e',
-                      fontWeight: language === 'ru' ? 'bold' : 'normal'
+                      fontWeight: language === 'ru' ? 'bold' : 'normal',
+                      cursor: 'pointer'
                     }}
                     onClick={(e) => {
                       e.preventDefault();
@@ -505,29 +501,41 @@ function Header() {
                   <div className="search-loading">{translate('searching')}</div>
                 ) : searchResults.length > 0 ? (
                   <div className="search-results-list">
-                    {searchResults.map((product) => (
-                      <div 
-                        key={product.id} 
-                        className="search-result-item"
-                        onClick={() => handleSearchResultClick(product)}
-                      >
-                        <div className="search-result-image">
-                          <img 
-                            src={getProductImage(product)} 
-                            alt={getProductName(product)}
-                            onError={(e) => {
-                              e.target.src = process.env.PUBLIC_URL + '/prod.webp';
-                            }}
-                          />
-                        </div>
-                        <div className="search-result-info">
-                          <div className="search-result-name">{getProductName(product)}</div>
-                          {product.categoryTitle && (
-                            <div className="search-result-category">{product.categoryTitle}</div>
-                          )}
-                        </div>
-                      </div>
-                    ))}
+                    {searchResults.map((product) => {
+                      // ✅ FIXED: Using Link instead of clickable div
+                      const productUrl = product.categoryId 
+                        ? `/products/${product.categoryId}/${product.id}`
+                        : `/product/${product.id}`;
+                      
+                      return (
+                        <Link
+                          key={product.id}
+                          to={productUrl}
+                          className="search-result-item"
+                          onClick={() => {
+                            setIsSearchOpen(false);
+                            setSearchQuery('');
+                            setSearchResults([]);
+                          }}
+                        >
+                          <div className="search-result-image">
+                            <img 
+                              src={getProductImage(product)} 
+                              alt={getProductName(product)}
+                              onError={(e) => {
+                                e.target.src = process.env.PUBLIC_URL + '/prod.webp';
+                              }}
+                            />
+                          </div>
+                          <div className="search-result-info">
+                            <div className="search-result-name">{getProductName(product)}</div>
+                            {product.categoryTitle && (
+                              <div className="search-result-category">{product.categoryTitle}</div>
+                            )}
+                          </div>
+                        </Link>
+                      );
+                    })}
                   </div>
                 ) : (
                   <div className="search-no-results">{translate('noResults')}</div>

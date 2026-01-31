@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import '../styles/Landing.css';
 
 const API_BASE_URL = 'https://api.litox.ge';
@@ -250,20 +250,6 @@ function Landing() {
     setCurrentSlide(index);
   };
 
-  // Navigate based on whether banner has productID
-  const handleMoreDetails = (e) => {
-    e.preventDefault();
-    const currentBanner = banners[currentSlide];
-    
-    if (currentBanner?.productID) {
-      // Navigate directly to product details using just productID
-      navigate(`/product/${currentBanner.productID}`);
-    } else {
-      // If no productID, go to general products page
-      navigate('/products');
-    }
-  };
-
   // Translation function for button text
   const translate = (key) => {
     const translations = {
@@ -355,11 +341,14 @@ function Landing() {
             {banners[currentSlide]?.text && (
               <p className="banner-text">{banners[currentSlide].text}</p>
             )}
-            {/* Only show button if banner has productID */}
+            {/* Only show button if banner has productID - ✅ FIXED: Using Link instead of <a href="#"> */}
             {banners[currentSlide]?.productID && (
-              <a href="#" className="default-btn" onClick={handleMoreDetails}>
+              <Link 
+                to={`/product/${banners[currentSlide].productID}`}
+                className="default-btn"
+              >
                 {translate('moreDetailed')}
-              </a>
+              </Link>
             )}
           </div>
         </div>
