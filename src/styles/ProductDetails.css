@@ -1619,8 +1619,8 @@
 }
 
 .features-overlay .col img {
-  width: 32px !important;
-  height: 32px !important;
+  width: 45px !important;
+  height: 45px !important;
   margin-right: 0 !important;
   flex-shrink: 0;
   object-fit: contain;
@@ -1629,7 +1629,7 @@
 
 .features-overlay .col span {
   color: #fff;
-  font-size: 14px;
+  font-size: 16px;
   font-family: "Montserrat", sans-serif;
   font-weight: 500;
   white-space: nowrap;
@@ -1811,3 +1811,130 @@
 }
 
 
+
+
+/* Responsive Features Overlay */
+@media (max-width: 1199px) {
+  .features-overlay .flex {
+    gap: 20px;
+  }
+  
+  .features-overlay .col img {
+    width: 40px !important;
+    height: 40px !important;
+  }
+  
+  .features-overlay .col span {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 991px) {
+  .features-overlay .flex {
+    gap: 15px;
+  }
+  
+  .features-overlay .col img {
+    width: 35px !important;
+    height: 35px !important;
+  }
+  
+  .features-overlay .col span {
+    font-size: 13px;
+  }
+  
+  .razd {
+    height: 25px;
+  }
+}
+
+@media (max-width: 768px) {
+  .features-overlay {
+    height: auto;
+    padding: 15px 0;
+  }
+  .preview-text{
+    padding-bottom: 30px;
+  }
+  
+  .features-overlay .flex {
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+  }
+  
+  .features-overlay .col {
+    flex: 0 0 calc(50% - 6px); /* 2 items per row */
+    gap: 8px;
+    justify-content: flex-start;
+    padding: 0 5px;
+  }
+  
+  .features-overlay .col img {
+    width: 32px !important;
+    height: 32px !important;
+  }
+  
+  .features-overlay .col span {
+    font-size: 12px;
+    white-space: normal; /* Allow text to wrap if needed */
+    line-height: 1.3;
+  }
+  
+  .razd {
+    display: none; /* Hide dividers on mobile */
+  }
+}
+
+@media (max-width: 600px) {
+  .features-overlay .col img {
+    width: 28px !important;
+    height: 28px !important;
+  }
+  
+  .features-overlay .col span {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .features-overlay {
+    padding: 12px 5px;
+  }
+  
+  .features-overlay .container {
+    padding: 0 10px;
+  }
+  
+  .features-overlay .flex {
+    gap: 10px;
+  }
+  
+  .features-overlay .col {
+    flex: 0 0 calc(50% - 5px);
+    gap: 6px;
+    padding: 0 3px;
+  }
+  
+  .features-overlay .col img {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  
+  .features-overlay .col span {
+    font-size: 10px;
+    line-height: 1.2;
+  }
+}
+
+/* For very small screens */
+@media (max-width: 380px) {
+  .features-overlay .col img {
+    width: 22px !important;
+    height: 22px !important;
+  }
+  
+  .features-overlay .col span {
+    font-size: 9px;
+  }
+}
