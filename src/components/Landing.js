@@ -4,6 +4,52 @@ import '../styles/Landing.css';
 
 const API_BASE_URL = 'https://api.litox.ge';
 
+// SEO Meta Data for Homepage
+const META_DATA = {
+  ka: {
+    title: 'Litox Georgia - სამშენებლო მასალები თბილისში | ცემენტი, ბათქაში, წებო, შპაკლები',
+    description: 'Litox Georgia - წამყვანი სამშენებლო მასალების მომწოდებელი საქართველოში. ხარისხიანი ცემენტი, ბათქაში, წებო, შპაკლები და სხვა სამშენებლო პროდუქტები. უფასო მიწოდება თბილისში.',
+    keywords: 'Litox Georgia, ლითოქსი საქართველო, სამშენებლო მასალები თბილისში, ცემენტი თბილისში, ბათქაში, წებო, შპაკლები, სამშენებლო პროდუქტები, Free Way LLC',
+    ogImage: process.env.PUBLIC_URL + '/og-image.jpg'
+  },
+  en: {
+    title: 'Litox Georgia - Construction Materials in Tbilisi | Cement, Plaster, Glue, Putty',
+    description: 'Litox Georgia - Leading construction materials supplier in Georgia. High-quality cement, plasters, adhesives, putties and other building products. Free delivery in Tbilisi.',
+    keywords: 'Litox Georgia, construction materials Tbilisi, cement Tbilisi, plaster, adhesive, putty, building products, Free Way LLC',
+    ogImage: process.env.PUBLIC_URL + '/og-image.jpg'
+  },
+  ru: {
+    title: 'Litox Georgia - Строительные материалы в Тбилиси | Цемент, Штукатурка, Клей, Шпатлёвка',
+    description: 'Litox Georgia - ведущий поставщик строительных материалов в Грузии. Качественный цемент, штукатурки, клей, шпатлёвки и другие стройматериалы. Бесплатная доставка по Тбилиси.',
+    keywords: 'Litox Georgia, строительные материалы Тбилиси, цемент Тбилиси, штукатурка, клей, шпатлёвка, стройматериалы, Free Way LLC',
+    ogImage: process.env.PUBLIC_URL + '/og-image.jpg'
+  }
+};
+
+// Helper function to update or create meta tag
+const updateMetaTag = (selector, attribute, attributeValue, content) => {
+  let element = document.querySelector(selector);
+  if (!element) {
+    element = document.createElement(selector.startsWith('link') ? 'link' : 'meta');
+    if (attribute) {
+      element.setAttribute(attribute, attributeValue);
+    } else {
+      element.name = attributeValue;
+    }
+    document.head.appendChild(element);
+  }
+  if (selector.startsWith('link')) {
+    element.href = content;
+  } else {
+    element.content = content;
+  }
+};
+
+// Helper to update HTML lang attribute
+const updateHtmlLang = (lang) => {
+  document.documentElement.lang = lang;
+};
+
 function Landing() {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -21,8 +67,120 @@ function Landing() {
     setLanguage(savedLanguage);
   }, []);
 
+  // SEO: Update meta tags for homepage
+  useEffect(() => {
+    const meta = META_DATA[language] || META_DATA['ka'];
+
+    // Update page title
+    document.title = meta.title;
+
+    // Update HTML lang attribute
+    updateHtmlLang(language);
+
+    // Update basic meta tags
+    updateMetaTag('meta[name="description"]', null, 'description', meta.description);
+    updateMetaTag('meta[name="keywords"]', null, 'keywords', meta.keywords);
+    
+    // Open Graph tags for social sharing
+    updateMetaTag('meta[property="og:title"]', 'property', 'og:title', meta.title);
+    updateMetaTag('meta[property="og:description"]', 'property', 'og:description', meta.description);
+    updateMetaTag('meta[property="og:type"]', 'property', 'og:type', 'website');
+    updateMetaTag('meta[property="og:url"]', 'property', 'og:url', 'https://litoxgeorgia.ge');
+    updateMetaTag('meta[property="og:image"]', 'property', 'og:image', meta.ogImage);
+    updateMetaTag('meta[property="og:locale"]', 'property', 'og:locale', language === 'ka' ? 'ka_GE' : language === 'ru' ? 'ru_RU' : 'en_US');
+    updateMetaTag('meta[property="og:site_name"]', 'property', 'og:site_name', 'Litox Georgia');
+    
+    // Twitter Card tags
+    updateMetaTag('meta[name="twitter:card"]', null, 'twitter:card', 'summary_large_image');
+    updateMetaTag('meta[name="twitter:title"]', null, 'twitter:title', meta.title);
+    updateMetaTag('meta[name="twitter:description"]', null, 'twitter:description', meta.description);
+    updateMetaTag('meta[name="twitter:image"]', null, 'twitter:image', meta.ogImage);
+    
+    // Canonical URL
+    updateMetaTag('link[rel="canonical"]', 'rel', 'canonical', 'https://litoxgeorgia.ge');
+
+    // Hreflang tags for multilingual SEO
+    updateMetaTag('link[rel="alternate"][hreflang="ka"]', 'rel', 'alternate', 'https://litoxgeorgia.ge');
+    document.querySelector('link[rel="alternate"][hreflang="ka"]')?.setAttribute('hreflang', 'ka');
+    
+    updateMetaTag('link[rel="alternate"][hreflang="en"]', 'rel', 'alternate', 'https://litoxgeorgia.ge/en');
+    document.querySelector('link[rel="alternate"][hreflang="en"]')?.setAttribute('hreflang', 'en');
+    
+    updateMetaTag('link[rel="alternate"][hreflang="ru"]', 'rel', 'alternate', 'https://litoxgeorgia.ge/ru');
+    document.querySelector('link[rel="alternate"][hreflang="ru"]')?.setAttribute('hreflang', 'ru');
+
+    updateMetaTag('link[rel="alternate"][hreflang="x-default"]', 'rel', 'alternate', 'https://litoxgeorgia.ge');
+    document.querySelector('link[rel="alternate"][hreflang="x-default"]')?.setAttribute('hreflang', 'x-default');
+
+    // Robots meta
+    updateMetaTag('meta[name="robots"]', null, 'robots', 'index, follow, max-image-preview:large');
+    
+    // Add JSON-LD structured data for Organization
+    const organizationSchema = {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Litox Georgia",
+      "alternateName": "Free Way LLC",
+      "url": "https://litoxgeorgia.ge",
+      "logo": "https://litoxgeorgia.ge/logo.png",
+      "description": meta.description,
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "GE",
+        "addressLocality": "Tbilisi",
+        "addressRegion": "Tbilisi"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "Customer Service",
+        "availableLanguage": ["Georgian", "English", "Russian"]
+      },
+      "sameAs": [
+        // Add social media links here when available
+        // "https://www.facebook.com/litoxgeorgia",
+        // "https://www.instagram.com/litoxgeorgia"
+      ]
+    };
+
+    // Add JSON-LD for WebSite with search action
+    const websiteSchema = {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Litox Georgia",
+      "url": "https://litoxgeorgia.ge",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://litoxgeorgia.ge/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    };
+
+    // Create or update structured data script tags
+    let orgScript = document.getElementById('organization-structured-data');
+    if (!orgScript) {
+      orgScript = document.createElement('script');
+      orgScript.type = 'application/ld+json';
+      orgScript.id = 'organization-structured-data';
+      document.head.appendChild(orgScript);
+    }
+    orgScript.text = JSON.stringify(organizationSchema);
+
+    let websiteScript = document.getElementById('website-structured-data');
+    if (!websiteScript) {
+      websiteScript = document.createElement('script');
+      websiteScript.type = 'application/ld+json';
+      websiteScript.id = 'website-structured-data';
+      document.head.appendChild(websiteScript);
+    }
+    websiteScript.text = JSON.stringify(websiteSchema);
+
+    // No cleanup needed for homepage since this is the default state
+  }, [language]);
+
   // Fetch banners when language changes
   useEffect(() => {
+    let isMounted = true;
+
     const fetchBanners = async () => {
       setLoading(true);
       try {
@@ -39,20 +197,30 @@ function Landing() {
 
         const data = await response.json();
         
-        if (data && data.length > 0) {
-          setBanners(data);
-        } else {
-          setBanners([]);
+        if (isMounted) {
+          if (data && data.length > 0) {
+            setBanners(data);
+          } else {
+            setBanners([]);
+          }
         }
       } catch (err) {
         console.error('Error fetching banners:', err);
-        setBanners([]);
+        if (isMounted) {
+          setBanners([]);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     fetchBanners();
+
+    return () => {
+      isMounted = false;
+    };
   }, [language]);
 
   const images = banners.map(banner => banner.imageLink).filter(url => url);
@@ -173,7 +341,7 @@ function Landing() {
                 <div className="image-wrapper">
                   <img 
                     src={img} 
-                    alt={`Slide ${index + 1}`}
+                    alt={banners[index]?.text || `Litox Georgia - სამშენებლო მასალები ${index + 1}`}
                     className="carousel-image"
                     loading={index === 0 ? 'eager' : 'lazy'}
                     key={`${index}-${currentSlide}`}

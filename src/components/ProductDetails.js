@@ -10,6 +10,70 @@ import '../styles/ProductDetails.css';
 
 const API_BASE_URL = 'https://api.litox.ge';
 
+// Default homepage title for cleanup
+const DEFAULT_TITLE = 'Litox Georgia - სამშენებლო მასალები თბილისში | ცემენტი, ბათქაში, წებო, შპაკლები';
+
+// Helper function to update or create meta tag
+const updateMetaTag = (selector, attribute, attributeValue, content) => {
+  let element = document.querySelector(selector);
+  if (!element) {
+    element = document.createElement(selector.startsWith('link') ? 'link' : 'meta');
+    if (attribute) {
+      element.setAttribute(attribute, attributeValue);
+    } else {
+      element.name = attributeValue;
+    }
+    document.head.appendChild(element);
+  }
+  if (selector.startsWith('link')) {
+    element.href = content;
+  } else {
+    element.content = content;
+  }
+};
+
+// Helper function to remove meta tag
+const removeMetaTag = (selector) => {
+  const element = document.querySelector(selector);
+  if (element && element.parentNode) {
+    element.parentNode.removeChild(element);
+  }
+};
+
+// Helper to update HTML lang attribute
+const updateHtmlLang = (lang) => {
+  document.documentElement.lang = lang;
+};
+
+// Helper to generate SEO-friendly title
+const generatePageTitle = (productTitle, categoryTitle, language) => {
+  const suffixes = {
+    ka: 'Litox Georgia - სამშენებლო მასალები თბილისში',
+    en: 'Litox Georgia - Construction Materials Tbilisi',
+    ru: 'Litox Georgia - Строительные материалы Тбилиси'
+  };
+  
+  const suffix = suffixes[language] || suffixes['ka'];
+  
+  if (categoryTitle) {
+    return `${productTitle} | ${categoryTitle} | ${suffix}`;
+  }
+  return `${productTitle} | ${suffix}`;
+};
+
+// Helper to generate SEO-friendly description
+const generateMetaDescription = (product, language) => {
+  const templates = {
+    ka: `${product.title} - ${product.description || 'ხარისხიანი სამშენებლო მასალა Litox Georgia-სგან'} | უფასო მიწოდება თბილისში`,
+    en: `${product.title} - ${product.description || 'High-quality construction material from Litox Georgia'} | Free delivery in Tbilisi`,
+    ru: `${product.title} - ${product.description || 'Качественный строительный материал от Litox Georgia'} | Бесплатная доставка по Тбилиси`
+  };
+  
+  const description = templates[language] || templates['en'];
+  // Limit to 160 characters for SEO
+  return description.length > 160 ? description.substring(0, 157) + '...' : description;
+};
+
 function ProductDetails() {
   const { categoryId, productId } = useParams();
   const [activeTab, setActiveTab] = useState('application');
@@ -33,7 +97,7 @@ function ProductDetails() {
 
   // Load language from localStorage
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('language') || 'en';
+    const savedLanguage = localStorage.getItem('language') || 'ka';
     setLanguage(savedLanguage);
   }, []);
 
@@ -44,6 +108,8 @@ function ProductDetails() {
 
   // Fetch product details when language or productId changes
   useEffect(() => {
+    let isMounted = true;
+
     const fetchProductDetails = async () => {
       setLoading(true);
       setError(null);
@@ -65,7 +131,9 @@ function ProductDetails() {
         }
 
         const productData = await productResponse.json();
-        setProduct(productData);
+        if (isMounted) {
+          setProduct(productData);
+        }
 
         // Fetch category info
         const categoriesResponse = await fetch(
@@ -78,7 +146,7 @@ function ProductDetails() {
           }
         );
 
-        if (categoriesResponse.ok) {
+        if (categoriesResponse.ok && isMounted) {
           const categoriesData = await categoriesResponse.json();
           const foundCategory = categoriesData.find(cat => cat.id === categoryId);
           setCategory(foundCategory);
@@ -95,7 +163,7 @@ function ProductDetails() {
           }
         );
 
-        if (relatedResponse.ok) {
+        if (relatedResponse.ok && isMounted) {
           const relatedData = await relatedResponse.json();
           // Filter out the current product
           const filtered = relatedData.filter(p => p.id !== productId);
@@ -103,18 +171,202 @@ function ProductDetails() {
         }
 
       } catch (err) {
-        setError(err.message);
-        setProduct(null);
-        setCategory(null);
+        if (isMounted) {
+          setError(err.message);
+          setProduct(null);
+          setCategory(null);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     if (productId) {
       fetchProductDetails();
     }
+
+    return () => {
+      isMounted = false;
+    };
   }, [productId, categoryId, language]);
+
+  // SEO: Update meta tags when product data is available - WITH PROPER CLEANUP
+  useEffect(() => {
+    if (!product) return;
+
+    const pageTitle = generatePageTitle(product.title, category?.title, language);
+    const metaDescription = generateMetaDescription(product, language);
+    const productImage = product.iconImageLink || product.bannerImageLink || 'https://litoxgeorgia.ge/prod.webp';
+    const productUrl = `https://litoxgeorgia.ge/products/${categoryId}/${productId}`;
+
+    // Save original lang for cleanup
+    const originalLang = document.documentElement.lang;
+
+    // Update page title
+    document.title = pageTitle;
+
+    // Update HTML lang attribute
+    updateHtmlLang(language);
+
+    // Update basic meta tags
+    updateMetaTag('meta[name="description"]', null, 'description', metaDescription);
+    updateMetaTag('meta[name="keywords"]', null, 'keywords', 
+      `${product.title}, Litox Georgia, სამშენებლო მასალები, construction materials, ${category?.title || 'products'}`
+    );
+
+    // Open Graph tags for Facebook/Instagram sharing
+    updateMetaTag('meta[property="og:title"]', 'property', 'og:title', pageTitle);
+    updateMetaTag('meta[property="og:description"]', 'property', 'og:description', metaDescription);
+    updateMetaTag('meta[property="og:type"]', 'property', 'og:type', 'product');
+    updateMetaTag('meta[property="og:url"]', 'property', 'og:url', productUrl);
+    updateMetaTag('meta[property="og:image"]', 'property', 'og:image', productImage);
+    updateMetaTag('meta[property="og:image:alt"]', 'property', 'og:image:alt', product.title);
+    updateMetaTag('meta[property="og:image:width"]', 'property', 'og:image:width', '1200');
+    updateMetaTag('meta[property="og:image:height"]', 'property', 'og:image:height', '630');
+    updateMetaTag('meta[property="og:site_name"]', 'property', 'og:site_name', 'Litox Georgia');
+    updateMetaTag('meta[property="og:locale"]', 'property', 'og:locale', 
+      language === 'ka' ? 'ka_GE' : language === 'ru' ? 'ru_RU' : 'en_US'
+    );
+
+    // Product-specific OG tags
+    if (category?.title) {
+      updateMetaTag('meta[property="product:category"]', 'property', 'product:category', category.title);
+    }
+    updateMetaTag('meta[property="product:brand"]', 'property', 'product:brand', 'Litox');
+
+    // Canonical URL
+    updateMetaTag('link[rel="canonical"]', 'rel', 'canonical', productUrl);
+
+    // Robots meta
+    updateMetaTag('meta[name="robots"]', null, 'robots', 'index, follow, max-image-preview:large');
+
+    // Add JSON-LD structured data for Product
+    const productSchema = {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": product.title,
+      "description": product.description || `${product.title} from Litox Georgia`,
+      "image": productImage,
+      "brand": {
+        "@type": "Brand",
+        "name": "Litox"
+      },
+      "manufacturer": {
+        "@type": "Organization",
+        "name": "Litox Georgia",
+        "url": "https://litoxgeorgia.ge"
+      },
+      "category": category?.title || "Construction Materials",
+      "url": productUrl
+    };
+
+    // Add aggregateRating if you have reviews
+    // Add offers if you have price data
+
+    // Add BreadcrumbList structured data
+    const breadcrumbItems = [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": translate('home'),
+        "item": "https://litoxgeorgia.ge"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": translate('products'),
+        "item": "https://litoxgeorgia.ge/products"
+      }
+    ];
+
+    if (category) {
+      breadcrumbItems.push({
+        "@type": "ListItem",
+        "position": 3,
+        "name": category.title,
+        "item": `https://litoxgeorgia.ge/category/${categoryId}`
+      });
+      breadcrumbItems.push({
+        "@type": "ListItem",
+        "position": 4,
+        "name": product.title,
+        "item": productUrl
+      });
+    } else {
+      breadcrumbItems.push({
+        "@type": "ListItem",
+        "position": 3,
+        "name": product.title,
+        "item": productUrl
+      });
+    }
+
+    const breadcrumbSchema = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": breadcrumbItems
+    };
+
+    // Create or update structured data script tags
+    let productScript = document.getElementById('product-structured-data');
+    if (!productScript) {
+      productScript = document.createElement('script');
+      productScript.type = 'application/ld+json';
+      productScript.id = 'product-structured-data';
+      document.head.appendChild(productScript);
+    }
+    productScript.text = JSON.stringify(productSchema);
+
+    let breadcrumbScript = document.getElementById('breadcrumb-structured-data');
+    if (!breadcrumbScript) {
+      breadcrumbScript = document.createElement('script');
+      breadcrumbScript.type = 'application/ld+json';
+      breadcrumbScript.id = 'breadcrumb-structured-data';
+      document.head.appendChild(breadcrumbScript);
+    }
+    breadcrumbScript.text = JSON.stringify(breadcrumbSchema);
+
+    // Cleanup function - restore everything when leaving page
+    return () => {
+      // Restore default title
+      document.title = DEFAULT_TITLE;
+      
+      // Restore lang attribute
+      if (originalLang) {
+        document.documentElement.lang = originalLang;
+      }
+
+      // Remove page-specific Open Graph tags
+      removeMetaTag('meta[property="og:title"]');
+      removeMetaTag('meta[property="og:description"]');
+      removeMetaTag('meta[property="og:type"]');
+      removeMetaTag('meta[property="og:url"]');
+      removeMetaTag('meta[property="og:image"]');
+      removeMetaTag('meta[property="og:image:alt"]');
+      removeMetaTag('meta[property="og:image:width"]');
+      removeMetaTag('meta[property="og:image:height"]');
+      removeMetaTag('meta[property="og:site_name"]');
+      removeMetaTag('meta[property="og:locale"]');
+      removeMetaTag('meta[property="product:category"]');
+      removeMetaTag('meta[property="product:brand"]');
+
+      // Remove canonical link
+      removeMetaTag('link[rel="canonical"]');
+
+      // Remove structured data
+      const productScriptEl = document.getElementById('product-structured-data');
+      if (productScriptEl && productScriptEl.parentNode) {
+        productScriptEl.parentNode.removeChild(productScriptEl);
+      }
+
+      const breadcrumbScriptEl = document.getElementById('breadcrumb-structured-data');
+      if (breadcrumbScriptEl && breadcrumbScriptEl.parentNode) {
+        breadcrumbScriptEl.parentNode.removeChild(breadcrumbScriptEl);
+      }
+    };
+  }, [product, category, language, categoryId, productId]);
 
   // Helper function to get the product image
   const getProductImage = () => {
@@ -301,6 +553,7 @@ function ProductDetails() {
           src={getProductImage()} 
           alt={product.title} 
           className="product-small-img"
+          loading="eager"
           onError={(e) => {
             e.target.src = '/prod.webp';
           }}
@@ -311,39 +564,40 @@ function ProductDetails() {
           {product.description && <div className="preview-text">{product.description}</div>}
         </div>
 
-      {/* Features Overlay - Only show if keywords exist from API */}
-{product.keywrods && product.keywrods.length > 0 && (
-  <div className="features-overlay">
-    <div className="container">
-      <div className="flex">
-        {product.keywrods.map((keyword, index) => (
-          <React.Fragment key={keyword.id}>
-            <div className="col">
-              {keyword.imageLink && (
-                <img 
-                  src={keyword.imageLink} 
-                  alt={keyword.name}
-                  style={{ 
-                    width: '24px', 
-                    height: '24px', 
-                    marginRight: '8px',
-                    verticalAlign: 'middle'
-                  }}
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                  }}
-                />
-              )}
-              <span>{keyword.name}</span>
+        {/* Features Overlay - Only show if keywords exist from API */}
+        {product.keywrods && product.keywrods.length > 0 && (
+          <div className="features-overlay">
+            <div className="container">
+              <div className="flex">
+                {product.keywrods.map((keyword, index) => (
+                  <React.Fragment key={keyword.id}>
+                    <div className="col">
+                      {keyword.imageLink && (
+                        <img 
+                          src={keyword.imageLink} 
+                          alt={keyword.name}
+                          style={{ 
+                            width: '24px', 
+                            height: '24px', 
+                            marginRight: '8px',
+                            verticalAlign: 'middle'
+                          }}
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                          }}
+                        />
+                      )}
+                      <span>{keyword.name}</span>
+                    </div>
+                    {index < product.keywrods.length - 1 && <div className="razd"></div>}
+                  </React.Fragment>
+                ))}
+              </div>
             </div>
-            {index < product.keywrods.length - 1 && <div className="razd"></div>}
-          </React.Fragment>
-        ))}
-      </div>
-    </div>
-  </div>
-)}
-</section>
+          </div>
+        )}
+      </section>
+
       {/* Tabs Section */}
       <section className="product-tabs-section">
         <div className="container">
@@ -385,6 +639,7 @@ function ProductDetails() {
                             <img 
                               src={app.image} 
                               alt={app.title}
+                              loading="lazy"
                               onError={(e) => {
                                 e.target.src = '/prod.webp';
                               }}
@@ -518,6 +773,7 @@ function ProductDetails() {
                           <img 
                             src={relatedProduct.iconImageLink || relatedProduct.imageLink || '/prod.webp'} 
                             alt={relatedProduct.title}
+                            loading="lazy"
                             onError={(e) => {
                               e.target.src = '/prod.webp';
                             }}
@@ -525,20 +781,20 @@ function ProductDetails() {
                         </span>
                       </Link>
                       <span 
-  className="category-product-name" 
-   style={{ 
-    maxWidth: '270px', 
-    overflow: 'hidden', 
-    textOverflow: 'ellipsis', 
-    display: '-webkit-box',
-    WebkitLineClamp: 2,
-    WebkitBoxOrient: 'vertical',
-    lineHeight: '1.4em',
-    maxHeight: '2.8em'
-  }}
->
-  {relatedProduct.title}
-</span>
+                        className="category-product-name" 
+                        style={{ 
+                          maxWidth: '270px', 
+                          overflow: 'hidden', 
+                          textOverflow: 'ellipsis', 
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical',
+                          lineHeight: '1.4em',
+                          maxHeight: '2.8em'
+                        }}
+                      >
+                        {relatedProduct.title}
+                      </span>
                     </div>
                   </SwiperSlide>
                 ))}

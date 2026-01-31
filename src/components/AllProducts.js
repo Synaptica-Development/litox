@@ -1,10 +1,69 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import '../styles/AllProducts.css';
 
 const background = `${process.env.PUBLIC_URL}/products-bg.jpg`;
 const arrow = `${process.env.PUBLIC_URL}/right-arrow2.svg`;
 const API_BASE_URL = 'https://api.litox.ge';
+
+// SEO Meta Data
+const SEO_META_DATA = {
+  ka: {
+    allProducts: {
+      title: 'ყველა პროდუქტი - Litox Georgia | სამშენებლო მასალები თბილისში',
+      description: 'Litox Georgia - სრული კატალოგი: ცემენტი, ბათქაში, შპაკლები, წებოები, თვითსწორებადი იატაკი, საჰიდროიზოლაციო მასალები თბილისში. Free Way LLC - ოფიციალური წარმომადგენელი.',
+      keywords: 'სამშენებლო მასალები თბილისში, ცემენტი თბილისში, ბათქაში, წებო ცემენტი, შპაკლები, თვითსწორებადი იატაკი, Litox Georgia'
+    },
+    category: {
+      title: '{category} - Litox Georgia | სამშენებლო მასალები თბილისში',
+      description: '{category} - მაღალი ხარისხის პროდუქცია Litox Georgia-სგან. Free Way LLC - ოფიციალური წარმომადგენელი საქართველოში.',
+      keywords: '{category}, სამშენებლო მასალები, Litox Georgia, თბილისი'
+    }
+  },
+  en: {
+    allProducts: {
+      title: 'All Products - Litox Georgia | Construction Materials in Tbilisi',
+      description: 'Litox Georgia - Full catalog: cement, plasters, putties, adhesives, levelers, waterproofing materials in Tbilisi. Free Way LLC - official representative.',
+      keywords: 'construction materials Tbilisi, cement Tbilisi, plasters, tile adhesives, putties, levelers, Litox Georgia'
+    },
+    category: {
+      title: '{category} - Litox Georgia | Construction Materials in Tbilisi',
+      description: '{category} - High-quality products from Litox Georgia. Free Way LLC - official representative in Georgia.',
+      keywords: '{category}, construction materials, Litox Georgia, Tbilisi'
+    }
+  },
+  ru: {
+    allProducts: {
+      title: 'Все продукты - Litox Georgia | Строительные материалы в Тбилиси',
+      description: 'Litox Georgia - Полный каталог: цемент, штукатурки, шпатлёвки, клеи, ровницели, гидроизоляционные материалы в Тбилиси. Free Way LLC - официальный представитель.',
+      keywords: 'строительные материалы Тбилиси, цемент Тбилиси, штукатурки, плиточные клеи, шпатлёвки, ровницели, Litox Georgia'
+    },
+    category: {
+      title: '{category} - Litox Georgia | Строительные материалы в Тбилиси',
+      description: '{category} - Высококачественная продукция от Litox Georgia. Free Way LLC - официальный представитель в Грузии.',
+      keywords: '{category}, строительные материалы, Litox Georgia, Тбилиси'
+    }
+  }
+};
+
+// Helper function to update or create meta tag
+const updateMetaTag = (selector, attribute, attributeValue, content) => {
+  let element = document.querySelector(selector);
+  if (!element) {
+    element = document.createElement(selector.startsWith('link') ? 'link' : 'meta');
+    if (attribute) {
+      element.setAttribute(attribute, attributeValue);
+    } else {
+      element.name = attributeValue;
+    }
+    document.head.appendChild(element);
+  }
+  if (selector.startsWith('link')) {
+    element.href = content;
+  } else {
+    element.content = content;
+  }
+};
 
 function AllProducts() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -16,7 +75,7 @@ function AllProducts() {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [language, setLanguage] = useState(() => {
+  const [language] = useState(() => {
     return localStorage.getItem('language') || 'ka';
   });
   const [loadingBackground, setLoadingBackground] = useState(false);
@@ -26,6 +85,45 @@ function AllProducts() {
   const [currentPage, setCurrentPage] = useState(1);
   const PRODUCTS_PER_PAGE = 16;
   const INITIAL_CATEGORIES_TO_LOAD = 3;
+
+  // SEO: Update meta tags - WITH CLEANUP
+  useEffect(() => {
+    const seoData = SEO_META_DATA[language] || SEO_META_DATA['ka'];
+    let meta;
+
+    if (selectedCategory === 'all') {
+      meta = seoData.allProducts;
+    } else {
+      const category = categories.find(cat => cat.id === selectedCategory);
+      const categoryName = category ? category.title : '';
+      
+      meta = {
+        title: seoData.category.title.replace('{category}', categoryName),
+        description: seoData.category.description.replace('{category}', categoryName),
+        keywords: seoData.category.keywords.replace('{category}', categoryName)
+      };
+    }
+
+    // Update page title
+    document.title = meta.title;
+
+    // Update meta tags
+    updateMetaTag('meta[name="description"]', null, 'description', meta.description);
+    updateMetaTag('meta[name="keywords"]', null, 'keywords', meta.keywords);
+    updateMetaTag('meta[property="og:title"]', 'property', 'og:title', meta.title);
+    updateMetaTag('meta[property="og:description"]', 'property', 'og:description', meta.description);
+    
+    // Update canonical URL
+    const canonicalUrl = selectedCategory === 'all' 
+      ? 'https://litoxgeorgia.ge/products' 
+      : `https://litoxgeorgia.ge/products?category=${selectedCategory}`;
+    updateMetaTag('link[rel="canonical"]', 'rel', 'canonical', canonicalUrl);
+
+    // Cleanup function - restore original title when leaving page
+    return () => {
+      document.title = 'Litox Georgia - სამშენებლო მასალები თბილისში | ცემენტი, ბათქაში, წებო, შპაკლები';
+    };
+  }, [selectedCategory, categories, language]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -118,7 +216,6 @@ function AllProducts() {
         
       } catch (err) {
         if (err.name === 'AbortError') {
-          console.log('Fetch aborted');
           return;
         }
         console.error('Error fetching initial data:', err);
@@ -192,7 +289,7 @@ function AllProducts() {
     }
   };
 
-  const translate = (key) => {
+  const translate = useCallback((key) => {
     const translations = {
       home: { ka: 'მთავარი', en: 'Home', ru: 'Главная' },
       products: { ka: 'პროდუქტები', en: 'Products', ru: 'Продукты' },
@@ -204,9 +301,9 @@ function AllProducts() {
       next: { ka: 'შემდეგი', en: 'Next', ru: 'Следующая' }
     };
     return translations[key]?.[language] || translations[key]?.['en'] || key;
-  };
+  }, [language]);
 
-  const handleCategoryFilter = (categoryId) => {
+  const handleCategoryFilter = useCallback((categoryId) => {
     setSelectedCategory(categoryId);
     setCurrentPage(1);
     
@@ -215,26 +312,26 @@ function AllProducts() {
     } else {
       setSearchParams({ category: categoryId });
     }
-  };
+  }, [setSearchParams]);
 
-  const getProductImage = (product) => {
+  const getProductImage = useCallback((product) => {
     const imageUrl = product.iconImageLink || product.imageLink || product.image;
     return imageUrl || `${process.env.PUBLIC_URL}/prod.webp`;
-  };
+  }, []);
 
-  const getProductName = (product) => {
+  const getProductName = useCallback((product) => {
     return product.title || product.name || 'Product';
-  };
+  }, []);
 
-  const getPageTitle = () => {
+  const getPageTitle = useCallback(() => {
     if (selectedCategory === 'all') {
       return translate('allProducts');
     }
     const category = categories.find(cat => cat.id === selectedCategory);
     return category ? category.title : translate('allProducts');
-  };
+  }, [selectedCategory, categories, translate]);
 
-  const SkeletonCard = () => (
+  const SkeletonCard = useMemo(() => () => (
     <div className="all-products-page-card all-products-page-skeleton">
       <div className="all-products-page-image all-products-page-skeleton-image">
         <div className="all-products-page-skeleton-shimmer"></div>
@@ -244,18 +341,18 @@ function AllProducts() {
         <div className="all-products-page-skeleton-text all-products-page-skeleton-category"></div>
       </div>
     </div>
-  );
+  ), []);
 
   const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
   const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
   const endIndex = startIndex + PRODUCTS_PER_PAGE;
   const currentProducts = filteredProducts.slice(startIndex, endIndex);
 
-  const handlePageChange = (pageNumber) => {
+  const handlePageChange = useCallback((pageNumber) => {
     setCurrentPage(pageNumber);
-  };
+  }, []);
 
-  const renderPagination = () => {
+  const renderPagination = useCallback(() => {
     if (totalPages <= 1) return null;
 
     const pages = [];
@@ -301,7 +398,7 @@ function AllProducts() {
     );
 
     return <div className="all-products-page-pagination">{pages}</div>;
-  };
+  }, [totalPages, currentPage, handlePageChange, translate]);
 
   if (error) {
     return (

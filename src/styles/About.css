@@ -92,9 +92,9 @@
 /* Base About Text Styling */
 .about-text {
   color: #ffffff;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.9px;
   line-height: 1.8;
-  font-size: 16px;
+  font-size: 20px;
   max-width: 800px;
   margin: 0 auto;
   text-align: center;
@@ -491,4 +491,16 @@
 
 .about-text{
   text-align: left;
+}
+
+/* Base About Text Styling */
+.about-text {
+  color: #ffffff;
+  letter-spacing: 0.9px;
+  line-height: 1.8;
+  font-size: 17px;
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
 }

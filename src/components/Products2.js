@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/Products2.css';
 
@@ -7,19 +7,79 @@ const mobileBackground = `${process.env.PUBLIC_URL}/mobile-background.jpg`;
 const arrow = `${process.env.PUBLIC_URL}/right-arrow2.svg`;
 const API_BASE_URL = 'https://api.litox.ge';
 
+// SEO Meta Data
+const SEO_META_DATA = {
+  ka: {
+    title: 'პროდუქტების კატეგორიები - Litox Georgia | სამშენებლო მასალები თბილისში',
+    description: 'აირჩიეთ კატეგორია: ბათქაში, ცემენტი, წებოები, შპაკლები, თვითსწორებადი იატაკი, საჰიდროიზოლაციო მასალები. Litox Georgia - Free Way LLC ოფიციალური წარმომადგენელი.',
+    keywords: 'პროდუქტების კატეგორიები, ბათქაში, ცემენტი თბილისში, წებო ცემენტი, შპაკლები, თვითსწორებადი იატაკი, საჰიდროიზოლაციო მასალები, სამშენებლო მასალები, Litox Georgia'
+  },
+  en: {
+    title: 'Product Categories - Litox Georgia | Construction Materials in Tbilisi',
+    description: 'Choose a category: plasters, cement, adhesives, putties, levelers, waterproofing materials. Litox Georgia - Free Way LLC official representative.',
+    keywords: 'product categories, plasters, cement Tbilisi, tile adhesives, putties, levelers, waterproofing materials, construction materials, Litox Georgia'
+  },
+  ru: {
+    title: 'Категории продуктов - Litox Georgia | Строительные материалы в Тбилиси',
+    description: 'Выберите категорию: штукатурки, цемент, клеи, шпатлёвки, ровницели, гидроизоляционные материалы. Litox Georgia - Free Way LLC официальный представитель.',
+    keywords: 'категории продуктов, штукатурки, цемент Тбилиси, плиточные клеи, шпатлёвки, ровницели, гидроизоляционные материалы, строительные материалы, Litox Georgia'
+  }
+};
+
+// Helper function to update or create meta tag
+const updateMetaTag = (selector, attribute, attributeValue, content) => {
+  let element = document.querySelector(selector);
+  if (!element) {
+    element = document.createElement(selector.startsWith('link') ? 'link' : 'meta');
+    if (attribute) {
+      element.setAttribute(attribute, attributeValue);
+    } else {
+      element.name = attributeValue;
+    }
+    document.head.appendChild(element);
+  }
+  if (selector.startsWith('link')) {
+    element.href = content;
+  } else {
+    element.content = content;
+  }
+};
+
 function Products2() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [language, setLanguage] = useState(() => {
+  const [language] = useState(() => {
     return localStorage.getItem('language') || 'ka';
   });
 
+  // SEO: Update meta tags - WITH CLEANUP
   useEffect(() => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}, []);
+    const meta = SEO_META_DATA[language] || SEO_META_DATA['ka'];
+
+    // Update page title
+    document.title = meta.title;
+
+    // Update meta tags
+    updateMetaTag('meta[name="description"]', null, 'description', meta.description);
+    updateMetaTag('meta[name="keywords"]', null, 'keywords', meta.keywords);
+    updateMetaTag('meta[property="og:title"]', 'property', 'og:title', meta.title);
+    updateMetaTag('meta[property="og:description"]', 'property', 'og:description', meta.description);
+    updateMetaTag('link[rel="canonical"]', 'rel', 'canonical', 'https://litoxgeorgia.ge/products2');
+
+    // Cleanup function - restore original title when leaving page
+    return () => {
+      document.title = 'Litox Georgia - სამშენებლო მასალები თბილისში | ცემენტი, ბათქაში, წებო, შპაკლები';
+    };
+  }, [language]);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
     const fetchCategories = async () => {
       setLoading(true);
       setError(null);
@@ -37,19 +97,29 @@ function Products2() {
         }
 
         const data = await response.json();
-        setCategories(data);
+        if (isMounted) {
+          setCategories(data);
+        }
       } catch (err) {
-        setError(err.message);
+        if (isMounted) {
+          setError(err.message);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     fetchCategories();
+
+    return () => {
+      isMounted = false;
+    };
   }, [language]);
 
-  // Translation function
-  const translate = (key) => {
+  // Translation function - memoized
+  const translate = useCallback((key) => {
     const translations = {
       title: {
         ka: 'პროდუქტების კატეგორიები',
@@ -73,10 +143,10 @@ function Products2() {
       }
     };
     return translations[key]?.[language] || translations[key]?.['ka'] || key;
-  };
+  }, [language]);
 
-  // Skeleton loader
-  const SkeletonCard = () => (
+  // Skeleton loader - memoized
+  const SkeletonCard = useMemo(() => () => (
     <div className="category-card skeleton">
       <div className="category-image-wrapper">
         <div className="category-banner skeleton-img">
@@ -87,7 +157,7 @@ function Products2() {
         </div>
       </div>
     </div>
-  );
+  ), []);
 
   return (
     <div className="products2-page">
@@ -95,7 +165,7 @@ function Products2() {
       <section className="products2-hero">
         <picture>
           <source media="(max-width: 768px)" srcSet={mobileBackground} />
-          <img src={desktopBackground} alt="Products Background" />
+          <img src={desktopBackground} alt="Products Background" loading="eager" />
         </picture>
         <div className="products2-hero-content">
           <h1>{translate('title')}</h1>
@@ -116,16 +186,17 @@ function Products2() {
           ) : (
             <div className="categories-grid">
               {categories.map((category) => (
-               <Link
-  key={category.id}
-  to={`/products2/category/${category.id}`}
-  className="category-card"
->
+                <Link
+                  key={category.id}
+                  to={`/products2/category/${category.id}`}
+                  className="category-card"
+                >
                   <div className="category-image-wrapper">
                     <div className="category-banner">
                       <img
                         src={category.bannerLink}
                         alt={category.title}
+                        loading="lazy"
                         onError={(e) => {
                           e.target.src = process.env.PUBLIC_URL + '/prod.webp';
                         }}

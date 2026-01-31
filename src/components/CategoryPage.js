@@ -1,9 +1,47 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import '../styles/CategoryPage.css';
 
 const background = process.env.PUBLIC_URL + '/products-bg.jpg';
 const API_BASE_URL = 'https://api.litox.ge';
+
+// SEO Meta Data Templates
+const SEO_META_TEMPLATES = {
+  ka: {
+    title: '{category} - Litox Georgia | სამშენებლო მასალები თბილისში',
+    description: '{category} - მაღალი ხარისხის პროდუქცია Litox Georgia-სგან. Free Way LLC - ოფიციალური წარმომადგენელი საქართველოში. სამშენებლო მასალები თბილისში.',
+    keywords: '{category}, სამშენებლო მასალები თბილისში, ცემენტი, ბათქაში, შპაკლები, წებოები, Litox Georgia, Free Way LLC'
+  },
+  en: {
+    title: '{category} - Litox Georgia | Construction Materials in Tbilisi',
+    description: '{category} - High-quality products from Litox Georgia. Free Way LLC - official representative in Georgia. Construction materials in Tbilisi.',
+    keywords: '{category}, construction materials Tbilisi, cement, plasters, putties, adhesives, Litox Georgia, Free Way LLC'
+  },
+  ru: {
+    title: '{category} - Litox Georgia | Строительные материалы в Тбилиси',
+    description: '{category} - Высококачественная продукция от Litox Georgia. Free Way LLC - официальный представитель в Грузии. Строительные материалы в Тбилиси.',
+    keywords: '{category}, строительные материалы Тбилиси, цемент, штукатурки, шпатлёвки, клеи, Litox Georgia, Free Way LLC'
+  }
+};
+
+// Helper function to update or create meta tag
+const updateMetaTag = (selector, attribute, attributeValue, content) => {
+  let element = document.querySelector(selector);
+  if (!element) {
+    element = document.createElement(selector.startsWith('link') ? 'link' : 'meta');
+    if (attribute) {
+      element.setAttribute(attribute, attributeValue);
+    } else {
+      element.name = attributeValue;
+    }
+    document.head.appendChild(element);
+  }
+  if (selector.startsWith('link')) {
+    element.href = content;
+  } else {
+    element.content = content;
+  }
+};
 
 function CategoryPage() {
   const { categoryId } = useParams();
@@ -11,17 +49,43 @@ function CategoryPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [language, setLanguage] = useState('ka');
+  const [language] = useState(() => localStorage.getItem('language') || 'ka');
   
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const PRODUCTS_PER_PAGE = 12;
 
-  // Load language from localStorage
+  // SEO: Update meta tags when category changes - WITH CLEANUP
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('language') || 'ka';
-    setLanguage(savedLanguage);
-  }, []);
+    if (!category) return;
+
+    const templates = SEO_META_TEMPLATES[language] || SEO_META_TEMPLATES['ka'];
+    const categoryName = category.title || '';
+
+    const meta = {
+      title: templates.title.replace('{category}', categoryName),
+      description: templates.description.replace('{category}', categoryName),
+      keywords: templates.keywords.replace('{category}', categoryName)
+    };
+
+    // Update page title
+    document.title = meta.title;
+
+    // Update meta tags
+    updateMetaTag('meta[name="description"]', null, 'description', meta.description);
+    updateMetaTag('meta[name="keywords"]', null, 'keywords', meta.keywords);
+    updateMetaTag('meta[property="og:title"]', 'property', 'og:title', meta.title);
+    updateMetaTag('meta[property="og:description"]', 'property', 'og:description', meta.description);
+    
+    // Update canonical URL
+    const canonicalUrl = `https://litoxgeorgia.ge/products2/category/${categoryId}`;
+    updateMetaTag('link[rel="canonical"]', 'rel', 'canonical', canonicalUrl);
+
+    // Cleanup function - restore original title when leaving page
+    return () => {
+      document.title = 'Litox Georgia - სამშენებლო მასალები თბილისში | ცემენტი, ბათქაში, წებო, შპაკლები';
+    };
+  }, [category, categoryId, language]);
 
   // Scroll to top when component mounts or page changes
   useEffect(() => {
@@ -30,6 +94,8 @@ function CategoryPage() {
 
   // Fetch category and products when categoryId or language changes
   useEffect(() => {
+    let isMounted = true;
+
     const fetchCategoryData = async () => {
       setLoading(true);
       setError(null);
@@ -53,7 +119,9 @@ function CategoryPage() {
           throw new Error('Category not found');
         }
         
-        setCategory(currentCategory);
+        if (isMounted) {
+          setCategory(currentCategory);
+        }
 
         // Fetch all products for this category
         let allProducts = [];
@@ -96,23 +164,33 @@ function CategoryPage() {
           }
         }
 
-        setProducts(allProducts);
+        if (isMounted) {
+          setProducts(allProducts);
+        }
       } catch (err) {
-        setError(err.message);
-        setCategory(null);
-        setProducts([]);
+        if (isMounted) {
+          setError(err.message);
+          setCategory(null);
+          setProducts([]);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     if (categoryId) {
       fetchCategoryData();
     }
+
+    return () => {
+      isMounted = false;
+    };
   }, [categoryId, language]);
 
-  // Translation function
-  const translate = (key) => {
+  // Translation function - memoized
+  const translate = useCallback((key) => {
     const translations = {
       home: {
         ka: 'მთავარი',
@@ -156,16 +234,16 @@ function CategoryPage() {
       }
     };
     return translations[key]?.[language] || translations[key]?.['en'] || key;
-  };
+  }, [language]);
 
-  const getProductImage = (product) => {
+  const getProductImage = useCallback((product) => {
     const imageUrl = product.iconImageLink || product.imageLink || product.image;
     return imageUrl || process.env.PUBLIC_URL + '/prod.webp';
-  };
+  }, []);
 
-  const getProductName = (product) => {
+  const getProductName = useCallback((product) => {
     return product.title || product.name || 'Product';
-  };
+  }, []);
 
   // Pagination logic
   const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
@@ -173,11 +251,11 @@ function CategoryPage() {
   const endIndex = startIndex + PRODUCTS_PER_PAGE;
   const currentProducts = products.slice(startIndex, endIndex);
 
-  const handlePageChange = (pageNumber) => {
+  const handlePageChange = useCallback((pageNumber) => {
     setCurrentPage(pageNumber);
-  };
+  }, []);
 
-  const renderPagination = () => {
+  const renderPagination = useCallback(() => {
     if (totalPages <= 1) return null;
 
     const pages = [];
@@ -260,16 +338,19 @@ function CategoryPage() {
     );
 
     return <div className="pagination">{pages}</div>;
-  };
+  }, [totalPages, currentPage, handlePageChange, translate]);
+
+  // Memoized loading component
+  const loadingComponent = useMemo(() => (
+    <div className="category-page-container">
+      <div className="container">
+        <div className="loading">{translate('loading')}</div>
+      </div>
+    </div>
+  ), [translate]);
 
   if (loading) {
-    return (
-      <div className="category-page-container">
-        <div className="container">
-          <div className="loading">{translate('loading')}</div>
-        </div>
-      </div>
-    );
+    return loadingComponent;
   }
 
   if (error) {
@@ -324,6 +405,7 @@ function CategoryPage() {
                       <img 
                         src={getProductImage(product)} 
                         alt={getProductName(product)}
+                        loading="lazy"
                         onError={(e) => {
                           e.target.src = process.env.PUBLIC_URL + '/prod.webp';
                         }}
