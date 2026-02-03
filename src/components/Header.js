@@ -101,27 +101,6 @@ function Header() {
     window.location.reload();
   };
 
-  // Handle category click
-  const handleCategoryClick = (categoryId) => {
-    setIsSmallMenuOpen(false);
-    setIsLargeMenuOpen(false);
-    navigate(`/products?category=${categoryId}`);
-  };
-
-  // Handle search result click
-  const handleSearchResultClick = (product) => {
-    setIsSearchOpen(false);
-    setSearchQuery('');
-    setSearchResults([]);
-    // Navigate to product page - adjust this based on your routing structure
-    if (product.categoryId) {
-      navigate(`/products/${product.categoryId}/${product.id}`);
-    } else {
-      // If categoryId is not available, just navigate with product id
-      navigate(`/product/${product.id}`);
-    }
-  };
-
   // Toggle submenu
   const toggleSubmenu = (menuName) => {
     setExpandedMenu(expandedMenu === menuName ? null : menuName);
@@ -246,7 +225,7 @@ function Header() {
                       </Link>
                     </li>
 
-                    {/* Products with categories - ✅ FIXED: Using Link */}
+                    {/* Products with categories */}
                     <li className="mobile-nav__item">
                       <div className="mobile-nav__link-wrapper">
                         <Link 
@@ -259,6 +238,7 @@ function Header() {
                         <button 
                           className="submenu-toggle"
                           onClick={() => toggleSubmenu('products')}
+                          aria-label="Toggle products submenu"
                         >
                           {expandedMenu === 'products' ? '−' : '+'}
                         </button>
@@ -266,7 +246,6 @@ function Header() {
                       <ul className={`mobile-submenu ${expandedMenu === 'products' ? 'active' : ''}`}>
                         {categories.map((category) => (
                           <li key={category.id}>
-                            {/* ✅ FIXED: Replaced <a href="#"> with Link */}
                             <Link 
                               to={`/products?category=${category.id}`}
                               onClick={() => {
@@ -300,6 +279,7 @@ function Header() {
                           setIsSmallMenuOpen(false);
                           setIsSearchOpen(true);
                         }}
+                        aria-label="Open search"
                       >
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                           <circle cx="11" cy="11" r="8"></circle>
@@ -309,52 +289,52 @@ function Header() {
                       </button>
                     </li>
 
-                    {/* Language switcher - ✅ FIXED: Using styled <a> instead of href="#" */}
+                    {/* Language switcher - Using button instead of <a> for non-navigation actions */}
                     <li className="mobile-nav__item mobile-lang">
-                      <a 
+                      <button 
                         className={`mobile-nav__link ${language === 'ka' ? 'active-lang' : ''}`}
                         style={{ 
                           color: language === 'ka' ? '#ff6b00' : '#aba39e',
                           fontWeight: language === 'ka' ? 'bold' : 'normal',
-                          cursor: 'pointer'
+                          cursor: 'pointer',
+                          background: 'none',
+                          border: 'none',
+                          padding: 0
                         }}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleLanguageChange('ka');
-                        }}
+                        onClick={() => handleLanguageChange('ka')}
                       >
                         {language === 'ka' && '✓ '}GE
-                      </a>
+                      </button>
                       <span className="lang-divider">|</span>
-                      <a 
+                      <button 
                         className={`mobile-nav__link ${language === 'en' ? 'active-lang' : ''}`}
                         style={{ 
                           color: language === 'en' ? '#ff6b00' : '#aba39e',
                           fontWeight: language === 'en' ? 'bold' : 'normal',
-                          cursor: 'pointer'
+                          cursor: 'pointer',
+                          background: 'none',
+                          border: 'none',
+                          padding: 0
                         }}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleLanguageChange('en');
-                        }}
+                        onClick={() => handleLanguageChange('en')}
                       >
                         {language === 'en' && '✓ '}EN
-                      </a>
+                      </button>
                       <span className="lang-divider">|</span>
-                      <a 
+                      <button 
                         className={`mobile-nav__link ${language === 'ru' ? 'active-lang' : ''}`}
                         style={{ 
                           color: language === 'ru' ? '#ff6b00' : '#aba39e',
                           fontWeight: language === 'ru' ? 'bold' : 'normal',
-                          cursor: 'pointer'
+                          cursor: 'pointer',
+                          background: 'none',
+                          border: 'none',
+                          padding: 0
                         }}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleLanguageChange('ru');
-                        }}
+                        onClick={() => handleLanguageChange('ru')}
                       >
                         {language === 'ru' && '✓ '}РУ
-                      </a>
+                      </button>
                     </li>
                   </ul>
                 </nav>
@@ -384,7 +364,6 @@ function Header() {
                   <ul className="dropdown">
                     {categories.map((category) => (
                       <li key={category.id}>
-                        {/* ✅ FIXED: Replaced <a href="#"> with Link */}
                         <Link to={`/products?category=${category.id}`}>
                           {category.title}
                         </Link>
@@ -401,6 +380,7 @@ function Header() {
               <button 
                 className="open-search-popup desktop-only"
                 onClick={() => setIsSearchOpen(!isSearchOpen)}
+                aria-label="Open search"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#aba39e" strokeWidth="2">
                   <circle cx="11" cy="11" r="8"></circle>
@@ -408,55 +388,55 @@ function Header() {
                 </svg>
               </button>
 
-              {/* Desktop language switcher - ✅ FIXED: Using styled <a> instead of href="#" */}
+              {/* Desktop language switcher - Using button for non-navigation actions */}
               <ul className="lang desktop-only">
                 <li>
-                  <a 
+                  <button 
                     className={language === 'ka' ? 'active' : ''}
                     style={{ 
                       color: language === 'ka' ? '#ff6b00' : '#aba39e',
                       fontWeight: language === 'ka' ? 'bold' : 'normal',
-                      cursor: 'pointer'
+                      cursor: 'pointer',
+                      background: 'none',
+                      border: 'none',
+                      padding: 0
                     }}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleLanguageChange('ka');
-                    }}
+                    onClick={() => handleLanguageChange('ka')}
                   >
                     {language === 'ka' && '✓ '}GE
-                  </a>
+                  </button>
                 </li>
                 <li>
-                  <a 
+                  <button 
                     className={language === 'en' ? 'active' : ''}
                     style={{ 
                       color: language === 'en' ? '#ff6b00' : '#aba39e',
                       fontWeight: language === 'en' ? 'bold' : 'normal',
-                      cursor: 'pointer'
+                      cursor: 'pointer',
+                      background: 'none',
+                      border: 'none',
+                      padding: 0
                     }}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleLanguageChange('en');
-                    }}
+                    onClick={() => handleLanguageChange('en')}
                   >
                     {language === 'en' && '✓ '}EN
-                  </a>
+                  </button>
                 </li>
                 <li>
-                  <a 
+                  <button 
                     className={language === 'ru' ? 'active' : ''}
                     style={{ 
                       color: language === 'ru' ? '#ff6b00' : '#aba39e',
                       fontWeight: language === 'ru' ? 'bold' : 'normal',
-                      cursor: 'pointer'
+                      cursor: 'pointer',
+                      background: 'none',
+                      border: 'none',
+                      padding: 0
                     }}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleLanguageChange('ru');
-                    }}
+                    onClick={() => handleLanguageChange('ru')}
                   >
                     {language === 'ru' && '✓ '}RU
-                  </a>
+                  </button>
                 </li>
               </ul>
             </div>
@@ -487,6 +467,7 @@ function Header() {
                   setSearchQuery('');
                   setSearchResults([]);
                 }}
+                aria-label="Close search"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                   <path d="M18 6L6 18M6 6L18 18" stroke="#aba39e" strokeWidth="2" strokeLinecap="round"/>
@@ -502,7 +483,6 @@ function Header() {
                 ) : searchResults.length > 0 ? (
                   <div className="search-results-list">
                     {searchResults.map((product) => {
-                      // ✅ FIXED: Using Link instead of clickable div
                       const productUrl = product.categoryId 
                         ? `/products/${product.categoryId}/${product.id}`
                         : `/product/${product.id}`;

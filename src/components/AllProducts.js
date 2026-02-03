@@ -366,33 +366,71 @@ function AllProducts() {
     }
 
     pages.push(
-      <button key="prev" className="all-products-page-pagination-btn all-products-page-pagination-arrow" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+      <button 
+        key="prev" 
+        className="all-products-page-pagination-btn all-products-page-pagination-arrow" 
+        onClick={() => handlePageChange(currentPage - 1)} 
+        disabled={currentPage === 1}
+        aria-label={translate('previous')}
+      >
         {translate('previous')}
       </button>
     );
 
     if (startPage > 1) {
-      pages.push(<button key={1} className="all-products-page-pagination-btn" onClick={() => handlePageChange(1)}>1</button>);
+      pages.push(
+        <button 
+          key={1} 
+          className="all-products-page-pagination-btn" 
+          onClick={() => handlePageChange(1)}
+          aria-label="Go to page 1"
+        >
+          1
+        </button>
+      );
       if (startPage > 2) {
-        pages.push(<span key="dots1" className="all-products-page-pagination-dots">...</span>);
+        pages.push(<span key="dots1" className="all-products-page-pagination-dots" aria-hidden="true">...</span>);
       }
     }
 
     for (let i = startPage; i <= endPage; i++) {
       pages.push(
-        <button key={i} className={`all-products-page-pagination-btn ${currentPage === i ? 'active' : ''}`} onClick={() => handlePageChange(i)}>{i}</button>
+        <button 
+          key={i} 
+          className={`all-products-page-pagination-btn ${currentPage === i ? 'active' : ''}`} 
+          onClick={() => handlePageChange(i)}
+          aria-label={`Go to page ${i}`}
+          aria-current={currentPage === i ? 'page' : undefined}
+        >
+          {i}
+        </button>
       );
     }
 
     if (endPage < totalPages) {
       if (endPage < totalPages - 1) {
-        pages.push(<span key="dots2" className="all-products-page-pagination-dots">...</span>);
+        pages.push(<span key="dots2" className="all-products-page-pagination-dots" aria-hidden="true">...</span>);
       }
-      pages.push(<button key={totalPages} className="all-products-page-pagination-btn" onClick={() => handlePageChange(totalPages)}>{totalPages}</button>);
+      pages.push(
+        <button 
+          key={totalPages} 
+          className="all-products-page-pagination-btn" 
+          onClick={() => handlePageChange(totalPages)}
+          aria-label={`Go to page ${totalPages}`}
+        >
+          {totalPages}
+        </button>
+      );
     }
 
     pages.push(
-      <button key="next" className="all-products-page-pagination-btn all-products-page-pagination-arrow" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+      <button 
+        key="next" 
+        className="all-products-page-pagination-btn all-products-page-pagination-arrow" 
+        onClick={() => handlePageChange(currentPage + 1)} 
+        disabled={currentPage === totalPages}
+        aria-label={translate('next')}
+      >
         {translate('next')}
       </button>
     );
@@ -431,13 +469,22 @@ function AllProducts() {
             </div>
           ) : (
             <div className="all-products-page-filter-wrapper">
-              <button className={`all-products-page-filter-btn ${selectedCategory === 'all' ? 'active' : ''}`} onClick={() => handleCategoryFilter('all')}>
+              <button 
+                className={`all-products-page-filter-btn ${selectedCategory === 'all' ? 'active' : ''}`} 
+                onClick={() => handleCategoryFilter('all')}
+                aria-label={`Filter all products (${allProducts.length})`}
+              >
                 {translate('allProducts')} ({allProducts.length}) {loadingBackground && ' ⟳'}
               </button>
               {categories.map((category) => {
                 const count = allProducts.filter(p => p.categoryId === category.id).length;
                 return (
-                  <button key={category.id} className={`all-products-page-filter-btn ${selectedCategory === category.id ? 'active' : ''}`} onClick={() => handleCategoryFilter(category.id)}>
+                  <button 
+                    key={category.id} 
+                    className={`all-products-page-filter-btn ${selectedCategory === category.id ? 'active' : ''}`} 
+                    onClick={() => handleCategoryFilter(category.id)}
+                    aria-label={`Filter ${category.title} products${count > 0 ? ` (${count})` : ''}`}
+                  >
                     {category.title} {count > 0 ? `(${count})` : ''}
                   </button>
                 );
@@ -454,18 +501,34 @@ function AllProducts() {
           ) : (
             <>
               <div className="all-products-page-grid">
-                {currentProducts.map((product, index) => (
-                  <Link key={product.id || index} to={`/products/${product.categoryId}/${product.id}`} className="all-products-page-card">
-                    <div className="all-products-page-image">
-                      <img src={getProductImage(product)} alt={getProductName(product)} loading="lazy" onError={(e) => { e.target.src = `${process.env.PUBLIC_URL}/prod.webp`; }} />
-                    </div>
-                    <div className="all-products-page-info">
-                      <h3 className="all-products-page-name">{getProductName(product)}</h3>
-                      <p className="all-products-page-category">{product.categoryName}</p>
-                      <img src={arrow} alt="" className="all-products-page-arrow" />
-                    </div>
-                  </Link>
-                ))}
+                {currentProducts.map((product, index) => {
+                  const productName = getProductName(product);
+                  const categoryName = product.categoryName || '';
+                  return (
+                    <Link 
+                      key={product.id || index} 
+                      to={`/products/${product.categoryId}/${product.id}`} 
+                      className="all-products-page-card"
+                      aria-label={`View ${productName}${categoryName ? ` in ${categoryName}` : ''} details`}
+                    >
+                      <div className="all-products-page-image">
+                        <img 
+                          src={getProductImage(product)} 
+                          alt={`${productName}${categoryName ? ` - ${categoryName}` : ''}`} 
+                          loading="lazy" 
+                          onError={(e) => { e.target.src = `${process.env.PUBLIC_URL}/prod.webp`; }} 
+                        />
+                      </div>
+                      <div className="all-products-page-info">
+                        <h3 className="all-products-page-name">{productName}</h3>
+                        {categoryName && (
+                          <p className="all-products-page-category">{categoryName}</p>
+                        )}
+                        <img src={arrow} alt="" className="all-products-page-arrow" aria-hidden="true" />
+                      </div>
+                    </Link>
+                  );
+                })}
               </div>
               {renderPagination()}
             </>

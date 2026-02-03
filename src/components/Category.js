@@ -163,36 +163,40 @@ function Category() {
             {groupedCategories.map((group, groupIndex) => (
               <SwiperSlide key={groupIndex}>
                 <div className="category-grid-2x2">
-                  {group.map((category, index) => (
-                    <Link 
-                      key={category.id || index}
-                      to={`/category/${category.id}`}
-                      className="catalog-card"
-                    >
-                      <div className="icon">
-                        <img 
-                          src={getCategoryIcon(category)} 
-                          alt={getCategoryName(category)}
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                          }}
-                        />
-                      </div>
-                      <div className="catalog-name">{getCategoryName(category)}</div>
-                    </Link>
-                  ))}
+                  {group.map((category, index) => {
+                    const categoryName = getCategoryName(category);
+                    return (
+                      <Link 
+                        key={category.id || index}
+                        to={`/category/${category.id}`}
+                        className="catalog-card"
+                        aria-label={`View ${categoryName} products`}
+                      >
+                        <div className="icon">
+                          <img 
+                            src={getCategoryIcon(category)} 
+                            alt={`${categoryName} category icon`}
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                            }}
+                          />
+                        </div>
+                        <span className="catalog-name">{categoryName}</span>
+                      </Link>
+                    );
+                  })}
                 </div>
               </SwiperSlide>
             ))}
           </Swiper>
 
           {/* Custom Navigation Buttons */}
-          <button className="category-button-prev category-nav" aria-label="Previous">
+          <button className="category-button-prev category-nav" aria-label="Previous categories">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
           </button>
-          <button className="category-button-next category-nav" aria-label="Next">
+          <button className="category-button-next category-nav" aria-label="Next categories">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <polyline points="9 18 15 12 9 6"></polyline>
             </svg>
@@ -209,24 +213,28 @@ function Category() {
   return (
     <div className="home-catalog-list">
       <div className="flex-row">
-        {categories.map((category, index) => (
-          <Link 
-            to={`/category/${category.id}`}
-            key={category.id || index} 
-            className="catalog-card"
-          >
-            <div className="icon">
-              <img 
-                src={getCategoryIcon(category)} 
-                alt={getCategoryName(category)}
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                }}
-              />
-            </div>
-            <div className="catalog-name">{getCategoryName(category)}</div>
-          </Link>
-        ))}
+        {categories.map((category, index) => {
+          const categoryName = getCategoryName(category);
+          return (
+            <Link 
+              to={`/category/${category.id}`}
+              key={category.id || index} 
+              className="catalog-card"
+              aria-label={`View ${categoryName} products`}
+            >
+              <div className="icon">
+                <img 
+                  src={getCategoryIcon(category)} 
+                  alt={`${categoryName} category icon`}
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                  }}
+                />
+              </div>
+              <span className="catalog-name">{categoryName}</span>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

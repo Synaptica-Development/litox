@@ -237,57 +237,69 @@ function Products() {
                 transition: 'transform 0.5s ease'
               }}
             >
-              {highlightedProducts.map((product, index) => (
-                <div 
-                  key={`${product.id}-${index}`} 
-                  className="custom-slide"
-                  style={{ width: `${slideWidth}%` }}
-                >
-                  <div className="home-product-item">
-                    <Link to={`/products/${product.categoryId}/${product.id}`} className="home-product-card">
-                      <span className="home-product-img-wrapper">
-                        <img 
-                          src={getProductImage(product)} 
-                          alt={getProductName(product)}
-                          loading="lazy"
-                          onError={(e) => {
-                            e.target.src = `${process.env.PUBLIC_URL}/prod.webp`;
-                          }}
-                        />
-                        <span 
-                          className="product-arrow-circle"
-                          style={{
-                            position: 'absolute',
-                            right: '17px',
-                            top: '17px',
-                            width: '37px',
-                            height: '37px',
-                            backgroundColor: '#ef6f2e',
-                            borderRadius: '50%',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            pointerEvents: 'none',
-                            zIndex: 3
-                          }}
-                        >
+              {highlightedProducts.map((product, index) => {
+                const productName = getProductName(product);
+                const categoryName = product.categoryTitle || 'product';
+                
+                return (
+                  <div 
+                    key={`${product.id}-${index}`} 
+                    className="custom-slide"
+                    style={{ width: `${slideWidth}%` }}
+                  >
+                    <div className="home-product-item">
+                      <Link 
+                        to={`/products/${product.categoryId}/${product.id}`} 
+                        className="home-product-card"
+                        aria-label={`View ${productName} details`}
+                      >
+                        <span className="home-product-img-wrapper">
                           <img 
-                            src={arrow} 
-                            alt=""
-                            className='arrow-img' 
-                            style={{
-                              height: '19px',
-                              filter: 'brightness(0) invert(1)'
+                            src={getProductImage(product)} 
+                            alt={`${productName} - ${categoryName}`}
+                            loading="lazy"
+                            onError={(e) => {
+                              e.target.src = `${process.env.PUBLIC_URL}/prod.webp`;
                             }}
                           />
+                          <span 
+                            className="product-arrow-circle"
+                            style={{
+                              position: 'absolute',
+                              right: '17px',
+                              top: '17px',
+                              width: '37px',
+                              height: '37px',
+                              backgroundColor: '#ef6f2e',
+                              borderRadius: '50%',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              pointerEvents: 'none',
+                              zIndex: 3
+                            }}
+                            aria-hidden="true"
+                          >
+                            <img 
+                              src={arrow} 
+                              alt=""
+                              className='arrow-img' 
+                              style={{
+                                height: '19px',
+                                filter: 'brightness(0) invert(1)'
+                              }}
+                            />
+                          </span>
                         </span>
-                      </span>
-                      <span className="home-product-name">{getProductName(product)}</span>
-                      <span className="home-product-category">{product.categoryTitle || ''}</span>
-                    </Link>
+                        <span className="home-product-name">{productName}</span>
+                        {product.categoryTitle && (
+                          <span className="home-product-category">{product.categoryTitle}</span>
+                        )}
+                      </Link>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
               
               {loadingMore && (
                 <div className="custom-slide" style={{ width: `${slideWidth}%` }}>
@@ -301,22 +313,22 @@ function Products() {
           <button 
             onClick={handlePrev}
             className={`swiper-button-prev-custom swiper-button-prev-custom-0 home-products-nav ${!canGoPrev ? 'swiper-button-disabled' : ''}`}
-            aria-label="Previous"
+            aria-label="Previous products"
             type="button"
             disabled={!canGoPrev}
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
               <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
           </button>
           <button 
             onClick={handleNext}
             className={`swiper-button-next-custom swiper-button-next-custom-0 home-products-nav home-products-nav-next ${!canGoNext ? 'swiper-button-disabled' : ''}`}
-            aria-label="Next"
+            aria-label="Next products"
             type="button"
             disabled={!canGoNext}
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
               <polyline points="9 18 15 12 9 6"></polyline>
             </svg>
           </button>

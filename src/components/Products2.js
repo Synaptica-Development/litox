@@ -165,7 +165,7 @@ function Products2() {
       <section className="products2-hero">
         <picture>
           <source media="(max-width: 768px)" srcSet={mobileBackground} />
-          <img src={desktopBackground} alt="Products Background" loading="eager" />
+          <img src={desktopBackground} alt="Litox Georgia Products - Construction Materials" loading="eager" />
         </picture>
         <div className="products2-hero-content">
           <h1>{translate('title')}</h1>
@@ -190,12 +190,13 @@ function Products2() {
                   key={category.id}
                   to={`/products2/category/${category.id}`}
                   className="category-card"
+                  aria-label={`View ${category.title} products`}
                 >
                   <div className="category-image-wrapper">
                     <div className="category-banner">
                       <img
                         src={category.bannerLink}
-                        alt={category.title}
+                        alt={`${category.title} category`}
                         loading="lazy"
                         onError={(e) => {
                           e.target.src = process.env.PUBLIC_URL + '/prod.webp';
@@ -205,7 +206,7 @@ function Products2() {
                     <div className="category-info">
                       <h3 className="category-title">{category.title}</h3>
                       <p className="category-subtitle">{translate('subtitle')}</p>
-                      <div className="category-arrow">
+                      <div className="category-arrow" aria-hidden="true">
                         <img src={arrow} alt="" />
                       </div>
                     </div>

@@ -350,7 +350,7 @@ function Landing() {
             {/* Only show button if banner has productID - Using proper <a> tag with href for SEO */}
             {banners[currentSlide]?.productID && (
               <a 
-                href={`https://litoxgeorgia.ge/product/${banners[currentSlide].productID}`}
+                href={`/product/${banners[currentSlide].productID}`}
                 className="default-btn"
                 onClick={(e) => handleProductClick(e, banners[currentSlide].productID)}
                 aria-label={`View product details: ${banners[currentSlide]?.text || 'Product information'}`}
