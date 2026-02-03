@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Landing from './components/Landing';
 import Category from './components/Category';
@@ -34,28 +34,20 @@ function App() {
         <Routes>
           {/* Home route */}
           <Route path="/" element={<HomePage />} />
-          
           {/* All products route */}
           <Route path="/products" element={<AllProducts />} />
-          
           {/* Category page route */}
           <Route path="/category/:categoryId" element={<CategoryPage />} />
-          
           {/* Products2 route */}
           <Route path="/products2" element={<Products2 />} />
-          
           {/* Products2 Category page route */}
           <Route path="/products2/category/:categoryId" element={<Products2CategoryPage />} />
-          
           {/* Product details with just productId */}
           <Route path="/product/:productId" element={<ProductDetails />} />
-          
           {/* Dynamic product details route with categoryId */}
           <Route path="/products/:categoryId/:productId" element={<ProductDetails />} />
-          
           {/* Contacts route */}
           <Route path="/contacts" element={<Contacts />} />
-          
           {/* About route */}
           <Route path="/about" element={<About />} />
         </Routes>
