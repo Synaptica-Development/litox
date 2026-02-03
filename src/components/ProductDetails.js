@@ -70,7 +70,6 @@ const generateMetaDescription = (product, language) => {
   };
   
   const description = templates[language] || templates['en'];
-  // Limit to 160 characters for SEO
   return description.length > 160 ? description.substring(0, 157) + '...' : description;
 };
 
@@ -115,7 +114,6 @@ function ProductDetails() {
       setError(null);
 
       try {
-        // Fetch product details
         const productResponse = await fetch(
           `${API_BASE_URL}/api/Products/products/details?ProductID=${productId}`,
           {
@@ -135,7 +133,6 @@ function ProductDetails() {
           setProduct(productData);
         }
 
-        // Fetch category info
         const categoriesResponse = await fetch(
           `${API_BASE_URL}/api/Category/categories`,
           {
@@ -152,7 +149,6 @@ function ProductDetails() {
           setCategory(foundCategory);
         }
 
-        // Fetch related products from the same category
         const relatedResponse = await fetch(
           `${API_BASE_URL}/api/Products/products?CategoryID=${categoryId}&PageSize=10&Page=1`,
           {
@@ -165,7 +161,6 @@ function ProductDetails() {
 
         if (relatedResponse.ok && isMounted) {
           const relatedData = await relatedResponse.json();
-          // Filter out the current product
           const filtered = relatedData.filter(p => p.id !== productId);
           setRelatedProducts(filtered);
         }
@@ -192,7 +187,7 @@ function ProductDetails() {
     };
   }, [productId, categoryId, language]);
 
-  // SEO: Update meta tags when product data is available - WITH PROPER CLEANUP
+  // SEO: Update meta tags when product data is available
   useEffect(() => {
     if (!product) return;
 
@@ -201,22 +196,16 @@ function ProductDetails() {
     const productImage = product.iconImageLink || product.bannerImageLink || 'https://litoxgeorgia.ge/prod.webp';
     const productUrl = `https://litoxgeorgia.ge/products/${categoryId}/${productId}`;
 
-    // Save original lang for cleanup
     const originalLang = document.documentElement.lang;
 
-    // Update page title
     document.title = pageTitle;
-
-    // Update HTML lang attribute
     updateHtmlLang(language);
 
-    // Update basic meta tags
     updateMetaTag('meta[name="description"]', null, 'description', metaDescription);
     updateMetaTag('meta[name="keywords"]', null, 'keywords', 
       `${product.title}, Litox Georgia, სამშენებლო მასალები, construction materials, ${category?.title || 'products'}`
     );
 
-    // Open Graph tags for Facebook/Instagram sharing
     updateMetaTag('meta[property="og:title"]', 'property', 'og:title', pageTitle);
     updateMetaTag('meta[property="og:description"]', 'property', 'og:description', metaDescription);
     updateMetaTag('meta[property="og:type"]', 'property', 'og:type', 'product');
@@ -230,19 +219,14 @@ function ProductDetails() {
       language === 'ka' ? 'ka_GE' : language === 'ru' ? 'ru_RU' : 'en_US'
     );
 
-    // Product-specific OG tags
     if (category?.title) {
       updateMetaTag('meta[property="product:category"]', 'property', 'product:category', category.title);
     }
     updateMetaTag('meta[property="product:brand"]', 'property', 'product:brand', 'Litox');
 
-    // Canonical URL
     updateMetaTag('link[rel="canonical"]', 'rel', 'canonical', productUrl);
-
-    // Robots meta
     updateMetaTag('meta[name="robots"]', null, 'robots', 'index, follow, max-image-preview:large');
 
-    // Add JSON-LD structured data for Product
     const productSchema = {
       "@context": "https://schema.org",
       "@type": "Product",
@@ -262,10 +246,6 @@ function ProductDetails() {
       "url": productUrl
     };
 
-    // Add aggregateRating if you have reviews
-    // Add offers if you have price data
-
-    // Add BreadcrumbList structured data
     const breadcrumbItems = [
       {
         "@type": "ListItem",
@@ -309,7 +289,6 @@ function ProductDetails() {
       "itemListElement": breadcrumbItems
     };
 
-    // Create or update structured data script tags
     let productScript = document.getElementById('product-structured-data');
     if (!productScript) {
       productScript = document.createElement('script');
@@ -328,17 +307,13 @@ function ProductDetails() {
     }
     breadcrumbScript.text = JSON.stringify(breadcrumbSchema);
 
-    // Cleanup function - restore everything when leaving page
     return () => {
-      // Restore default title
       document.title = DEFAULT_TITLE;
       
-      // Restore lang attribute
       if (originalLang) {
         document.documentElement.lang = originalLang;
       }
 
-      // Remove page-specific Open Graph tags
       removeMetaTag('meta[property="og:title"]');
       removeMetaTag('meta[property="og:description"]');
       removeMetaTag('meta[property="og:type"]');
@@ -351,11 +326,8 @@ function ProductDetails() {
       removeMetaTag('meta[property="og:locale"]');
       removeMetaTag('meta[property="product:category"]');
       removeMetaTag('meta[property="product:brand"]');
-
-      // Remove canonical link
       removeMetaTag('link[rel="canonical"]');
 
-      // Remove structured data
       const productScriptEl = document.getElementById('product-structured-data');
       if (productScriptEl && productScriptEl.parentNode) {
         productScriptEl.parentNode.removeChild(productScriptEl);
@@ -368,14 +340,12 @@ function ProductDetails() {
     };
   }, [product, category, language, categoryId, productId]);
 
-  // Helper function to get the product image
   const getProductImage = () => {
     if (!product) return '/prod.webp';
     const image = product.iconImageLink || '/prod.webp';
     return image;
   };
 
-  // Translation function
   const translate = (key) => {
     const translations = {
       home: {
@@ -433,10 +403,8 @@ function ProductDetails() {
     return translations[key]?.[language] || translations[key]?.['en'] || key;
   };
 
-  // Skeleton Loading Component
   const SkeletonLoader = () => (
     <div className="product-details-container">
-      {/* Skeleton Hero Section */}
       <section 
         className="product-hero skeleton-hero"
         style={{
@@ -459,7 +427,6 @@ function ProductDetails() {
         </div>
       </section>
 
-      {/* Skeleton Tabs Section */}
       <section className="product-tabs-section">
         <div className="container">
           <div className="tabs-header">
@@ -470,7 +437,6 @@ function ProductDetails() {
             </div>
           </div>
 
-          {/* Skeleton Tab Content */}
           <div className="tab-content">
             <div className="tab-pane active">
               {[1, 2, 3].map((item) => (
@@ -489,7 +455,6 @@ function ProductDetails() {
         </div>
       </section>
 
-      {/* Skeleton Related Products */}
       <div className="category-page-products">
         <div className="category-slider-section">
           <div className="category-products-header">
@@ -528,7 +493,6 @@ function ProductDetails() {
 
   return (
     <div className="product-details-container">
-      {/* Hero Section with Banner Background */}
       <section 
         className="product-hero"
         style={{
@@ -564,7 +528,6 @@ function ProductDetails() {
           {product.description && <div className="preview-text">{product.description}</div>}
         </div>
 
-        {/* Features Overlay - Only show if keywords exist from API */}
         {product.keywrods && product.keywrods.length > 0 && (
           <div className="features-overlay">
             <div className="container">
@@ -598,7 +561,6 @@ function ProductDetails() {
         )}
       </section>
 
-      {/* Tabs Section */}
       <section className="product-tabs-section">
         <div className="container">
           <div className="tabs-header">
@@ -621,9 +583,8 @@ function ProductDetails() {
             </ul>
           </div>
 
-          {/* Tab Content */}
           <div className="tab-content">
-            {/* Application Tab */}
+            {/* ✅ Application Tab - WITH FORMATTED TEXT */}
             {activeTab === 'application' && (
               <div className="tab-pane active">
                 {product.applicationTexts && product.applicationTexts.length > 0 ? (
@@ -631,7 +592,11 @@ function ProductDetails() {
                     <div key={index} className={`content-row ${index % 2 === 1 ? 'reverse' : ''}`}>
                       <div className="content-text">
                         <h2>{app.title}</h2>
-                        <p>{app.text}</p>
+                        {/* ✅ Render formatted HTML from backend */}
+                        <div 
+                          className="formatted-content"
+                          dangerouslySetInnerHTML={{ __html: app.text }}
+                        />
                       </div>
                       {app.image && (
                         isMobile ? (
@@ -666,7 +631,6 @@ function ProductDetails() {
               </div>
             )}
 
-            {/* Specifications Tab */}
             {activeTab === 'specifications' && (
               <div className="tab-pane active">
                 <div className="specifications-table">
@@ -688,15 +652,12 @@ function ProductDetails() {
               </div>
             )}
 
-            {/* Documents Tab */}
             {activeTab === 'documents' && (
               <div className="tab-pane active">
                 {product.documentLinks && product.documentLinks.length > 0 ? (
                   <div className="documents-list">
                     {product.documentLinks.map((doc, index) => {
-                      // Extract filename from URL
                       const filename = doc.link.split('/').pop();
-                      // Decode URL encoding and remove extension for display
                       const displayName = decodeURIComponent(filename).replace(/\.[^/.]+$/, '');
                       
                       return (
@@ -717,7 +678,6 @@ function ProductDetails() {
         </div>
       </section>
 
-      {/* Related Products Carousel */}
       {relatedProducts.length > 0 && (
         <div className="category-page-products">
           <div className="category-slider-section">
@@ -800,7 +760,6 @@ function ProductDetails() {
                 ))}
               </Swiper>
 
-              {/* Custom Navigation Buttons */}
               <button 
                 className="swiper-button-prev-custom-related category-products-nav"
                 aria-label="Previous"

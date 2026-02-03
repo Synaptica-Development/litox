@@ -1938,3 +1938,240 @@
     font-size: 9px;
   }
 }
+
+
+
+
+/* ✅ Formatted Content Styles - Handles ALL formatting from backend */
+
+.formatted-content {
+  line-height: 1.8;
+  color: inherit;
+  font-size: inherit;
+}
+
+/* Paragraphs */
+.formatted-content p {
+  margin-bottom: 16px;
+  line-height: 1.8;
+}
+
+.formatted-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* Line breaks */
+.formatted-content br {
+  display: block;
+  content: "";
+  margin: 8px 0;
+}
+
+/* Headings */
+.formatted-content h1,
+.formatted-content h2,
+.formatted-content h3,
+.formatted-content h4,
+.formatted-content h5,
+.formatted-content h6 {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.formatted-content h1 { font-size: 2em; }
+.formatted-content h2 { font-size: 1.5em; }
+.formatted-content h3 { font-size: 1.25em; }
+.formatted-content h4 { font-size: 1.1em; }
+
+/* Bold & Strong */
+.formatted-content strong,
+.formatted-content b {
+  font-weight: 700;
+  color: inherit;
+}
+
+/* Italic & Emphasis */
+.formatted-content em,
+.formatted-content i {
+  font-style: italic;
+}
+
+/* Underline */
+.formatted-content u {
+  text-decoration: underline;
+}
+
+/* Strike-through */
+.formatted-content s,
+.formatted-content strike,
+.formatted-content del {
+  text-decoration: line-through;
+}
+
+/* Links */
+.formatted-content a {
+  color: #ef6f2e;
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.formatted-content a:hover {
+  color: #d45a1a;
+}
+
+/* Lists */
+.formatted-content ul,
+.formatted-content ol {
+  margin: 16px 0;
+  padding-left: 28px;
+}
+
+.formatted-content li {
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+
+.formatted-content ul {
+  list-style-type: disc;
+}
+
+.formatted-content ol {
+  list-style-type: decimal;
+}
+
+.formatted-content ul ul,
+.formatted-content ol ol {
+  margin: 8px 0;
+  padding-left: 24px;
+}
+
+/* Nested lists */
+.formatted-content ul ul {
+  list-style-type: circle;
+}
+
+.formatted-content ul ul ul {
+  list-style-type: square;
+}
+
+/* Blockquotes */
+.formatted-content blockquote {
+  margin: 20px 0;
+  padding: 16px 20px;
+  border-left: 4px solid #ef6f2e;
+  background-color: rgba(239, 111, 46, 0.05);
+  font-style: italic;
+}
+
+/* Code */
+.formatted-content code {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+.formatted-content pre {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 16px 0;
+}
+
+.formatted-content pre code {
+  background: none;
+  padding: 0;
+}
+
+/* Tables */
+.formatted-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.formatted-content table th,
+.formatted-content table td {
+  padding: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.formatted-content table th {
+  background-color: rgba(0, 0, 0, 0.05);
+  font-weight: 600;
+}
+
+/* Horizontal rule */
+.formatted-content hr {
+  margin: 24px 0;
+  border: none;
+  border-top: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Images within formatted content */
+.formatted-content img {
+  max-width: 100%;
+  height: auto;
+  margin: 16px 0;
+  border-radius: 8px;
+}
+
+/* Mark/Highlight */
+.formatted-content mark {
+  background-color: #fff3cd;
+  padding: 2px 4px;
+  border-radius: 2px;
+}
+
+/* Subscript & Superscript */
+.formatted-content sub,
+.formatted-content sup {
+  font-size: 0.75em;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+.formatted-content sup {
+  top: -0.5em;
+}
+
+.formatted-content sub {
+  bottom: -0.25em;
+}
+
+/* Preserve whitespace and line breaks */
+.formatted-content {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .formatted-content {
+    font-size: 14px;
+  }
+  
+  .formatted-content h1 { font-size: 1.75em; }
+  .formatted-content h2 { font-size: 1.4em; }
+  .formatted-content h3 { font-size: 1.2em; }
+  
+  .formatted-content ul,
+  .formatted-content ol {
+    padding-left: 20px;
+  }
+  
+  .formatted-content table {
+    font-size: 13px;
+  }
+  
+  .formatted-content table th,
+  .formatted-content table td {
+    padding: 8px;
+  }
+}
