@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <!-- Homepage -->
+  <url>
+    <loc>https://litoxgeorgia.ge/</loc>
+    <lastmod>2026-02-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://litoxgeorgia.ge/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://litoxgeorgia.ge/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://litoxgeorgia.ge/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://litoxgeorgia.ge/"/>
+  </url>
+  
+  <!-- About Page -->
+  <url>
+    <loc>https://litoxgeorgia.ge/about</loc>
+    <lastmod>2026-02-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://litoxgeorgia.ge/about"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://litoxgeorgia.ge/about"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://litoxgeorgia.ge/about"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://litoxgeorgia.ge/about"/>
+  </url>
+  
+  <!-- All Products Page -->
+  <url>
+    <loc>https://litoxgeorgia.ge/products</loc>
+    <lastmod>2026-02-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://litoxgeorgia.ge/products"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://litoxgeorgia.ge/products"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://litoxgeorgia.ge/products"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://litoxgeorgia.ge/products"/>
+  </url>
+  
+  <!-- Products2 Page -->
+  <url>
+    <loc>https://litoxgeorgia.ge/products2</loc>
+    <lastmod>2026-02-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://litoxgeorgia.ge/products2"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://litoxgeorgia.ge/products2"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://litoxgeorgia.ge/products2"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://litoxgeorgia.ge/products2"/>
+  </url>
+  
+  <!-- Contacts Page -->
+  <url>
+    <loc>https://litoxgeorgia.ge/contacts</loc>
+    <lastmod>2026-02-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://litoxgeorgia.ge/contacts"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://litoxgeorgia.ge/contacts"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://litoxgeorgia.ge/contacts"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://litoxgeorgia.ge/contacts"/>
+  </url>
+
+  <!-- 
+    =====================================================================
+    IMPORTANT: Add your category and product pages below
+    =====================================================================
+    
+    When you know your actual category IDs and product IDs, add them here.
+    
+    Category Page Example:
+    <url>
+      <loc>https://litoxgeorgia.ge/category/1</loc>
+      <lastmod>2026-02-03</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.7</priority>
+    </url>
+    
+    Product Page Example:
+    <url>
+      <loc>https://litoxgeorgia.ge/product/123</loc>
+      <lastmod>2026-02-03</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.6</priority>
+    </url>
+    
+    OR with category:
+    <url>
+      <loc>https://litoxgeorgia.ge/products/1/123</loc>
+      <lastmod>2026-02-03</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.6</priority>
+    </url>
+    
+    Products2 Category Example:
+    <url>
+      <loc>https://litoxgeorgia.ge/products2/category/1</loc>
+      <lastmod>2026-02-03</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.7</priority>
+    </url>
+  -->
+
+</urlset>

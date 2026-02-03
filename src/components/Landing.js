@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '../styles/Landing.css';
 
 const API_BASE_URL = 'https://api.litox.ge';
@@ -250,6 +250,12 @@ function Landing() {
     setCurrentSlide(index);
   };
 
+  // Handle product link click
+  const handleProductClick = (e, productID) => {
+    e.preventDefault();
+    navigate(`/product/${productID}`);
+  };
+
   // Translation function for button text
   const translate = (key) => {
     const translations = {
@@ -341,14 +347,16 @@ function Landing() {
             {banners[currentSlide]?.text && (
               <p className="banner-text">{banners[currentSlide].text}</p>
             )}
-            {/* Only show button if banner has productID - ✅ FIXED: Using Link instead of <a href="#"> */}
+            {/* Only show button if banner has productID - Using proper <a> tag with href for SEO */}
             {banners[currentSlide]?.productID && (
-              <Link 
-                to={`/product/${banners[currentSlide].productID}`}
+              <a 
+                href={`https://litoxgeorgia.ge/product/${banners[currentSlide].productID}`}
                 className="default-btn"
+                onClick={(e) => handleProductClick(e, banners[currentSlide].productID)}
+                aria-label={`View product details: ${banners[currentSlide]?.text || 'Product information'}`}
               >
                 {translate('moreDetailed')}
-              </Link>
+              </a>
             )}
           </div>
         </div>

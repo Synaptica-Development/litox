@@ -85,10 +85,38 @@ const updateHtmlLang = (lang) => {
   document.documentElement.lang = lang;
 };
 
+// SEO-friendly Link component that works with both React Router and crawlers
+const SEOLink = ({ to, children, className, ...props }) => {
+  const handleClick = (e) => {
+    // Let React Router handle the navigation for better UX
+    // The href attribute ensures crawlers can follow the link
+  };
+
+  return (
+    <Link 
+      to={to} 
+      className={className}
+      onClick={handleClick}
+      {...props}
+    >
+      {children}
+    </Link>
+  );
+};
+
 function About() {
   const [aboutData, setAboutData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [language] = useState(() => localStorage.getItem('language') || 'ka');
+
+  // Get the proper URL based on language
+  const getLocalizedUrl = useCallback((path) => {
+    const baseUrl = 'https://litoxgeorgia.ge';
+    if (language === 'ka') {
+      return `${baseUrl}${path}`;
+    }
+    return `${baseUrl}/${language}${path}`;
+  }, [language]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -118,7 +146,7 @@ function About() {
     updateMetaTag('meta[property="og:title"]', 'property', 'og:title', meta.title);
     updateMetaTag('meta[property="og:description"]', 'property', 'og:description', meta.description);
     updateMetaTag('meta[property="og:type"]', 'property', 'og:type', 'website');
-    updateMetaTag('meta[property="og:url"]', 'property', 'og:url', 'https://litoxgeorgia.ge/about');
+    updateMetaTag('meta[property="og:url"]', 'property', 'og:url', getLocalizedUrl('/about'));
     updateMetaTag('meta[property="og:image"]', 'property', 'og:image', meta.ogImage);
     
     // Twitter Card tags
@@ -127,35 +155,83 @@ function About() {
     updateMetaTag('meta[name="twitter:description"]', null, 'twitter:description', meta.description);
     updateMetaTag('meta[name="twitter:image"]', null, 'twitter:image', meta.ogImage);
     
-    // Canonical URL
-    updateMetaTag('link[rel="canonical"]', 'rel', 'canonical', 'https://litoxgeorgia.ge/about');
+    // Canonical URL - use the localized URL
+    updateMetaTag('link[rel="canonical"]', 'rel', 'canonical', getLocalizedUrl('/about'));
 
     // Hreflang tags for multilingual support
-    updateMetaTag('link[rel="alternate"][hreflang="ka"]', 'rel', 'alternate', 'https://litoxgeorgia.ge/about');
-    document.querySelector('link[rel="alternate"][hreflang="ka"]')?.setAttribute('hreflang', 'ka');
-    
-    updateMetaTag('link[rel="alternate"][hreflang="en"]', 'rel', 'alternate', 'https://litoxgeorgia.ge/en/about');
-    document.querySelector('link[rel="alternate"][hreflang="en"]')?.setAttribute('hreflang', 'en');
-    
-    updateMetaTag('link[rel="alternate"][hreflang="ru"]', 'rel', 'alternate', 'https://litoxgeorgia.ge/ru/about');
-    document.querySelector('link[rel="alternate"][hreflang="ru"]')?.setAttribute('hreflang', 'ru');
+    const updateHreflangTag = (lang, url) => {
+      const selector = `link[rel="alternate"][hreflang="${lang}"]`;
+      let element = document.querySelector(selector);
+      if (!element) {
+        element = document.createElement('link');
+        element.rel = 'alternate';
+        element.hreflang = lang;
+        document.head.appendChild(element);
+      }
+      element.href = url;
+    };
 
-    // Add JSON-LD structured data
+    updateHreflangTag('ka', 'https://litoxgeorgia.ge/about');
+    updateHreflangTag('en', 'https://litoxgeorgia.ge/en/about');
+    updateHreflangTag('ru', 'https://litoxgeorgia.ge/ru/about');
+    updateHreflangTag('x-default', 'https://litoxgeorgia.ge/about');
+
+    // Add JSON-LD structured data with BreadcrumbList
     const structuredData = {
       "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "Litox Georgia",
-      "alternateName": "Free Way LLC",
-      "url": "https://litoxgeorgia.ge",
-      "logo": "https://litoxgeorgia.ge/logo.png",
-      "description": meta.description,
-      "address": {
-        "@type": "PostalAddress",
-        "addressCountry": "GE",
-        "addressLocality": "Tbilisi"
-      },
-      "sameAs": [
-        // Add social media links if available
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://litoxgeorgia.ge/#organization",
+          "name": "Litox Georgia",
+          "alternateName": "Free Way LLC",
+          "url": "https://litoxgeorgia.ge",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://litoxgeorgia.ge/logo.png"
+          },
+          "description": meta.description,
+          "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "GE",
+            "addressLocality": "Tbilisi"
+          }
+        },
+        {
+          "@type": "WebPage",
+          "@id": getLocalizedUrl('/about#webpage'),
+          "url": getLocalizedUrl('/about'),
+          "name": meta.title,
+          "description": meta.description,
+          "inLanguage": language,
+          "isPartOf": {
+            "@id": "https://litoxgeorgia.ge/#website"
+          },
+          "about": {
+            "@id": "https://litoxgeorgia.ge/#organization"
+          },
+          "breadcrumb": {
+            "@id": getLocalizedUrl('/about#breadcrumb')
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": getLocalizedUrl('/about#breadcrumb'),
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": TRANSLATIONS.home[language],
+              "item": getLocalizedUrl('/')
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": TRANSLATIONS.about[language],
+              "item": getLocalizedUrl('/about')
+            }
+          ]
+        }
       ]
     };
 
@@ -203,6 +279,7 @@ function About() {
       removeMetaTag('link[rel="alternate"][hreflang="ka"]');
       removeMetaTag('link[rel="alternate"][hreflang="en"]');
       removeMetaTag('link[rel="alternate"][hreflang="ru"]');
+      removeMetaTag('link[rel="alternate"][hreflang="x-default"]');
 
       // Remove structured data
       const script = document.getElementById('about-structured-data');
@@ -210,7 +287,7 @@ function About() {
         script.parentNode.removeChild(script);
       }
     };
-  }, [language]);
+  }, [language, getLocalizedUrl]);
 
   // Fetch about data with cleanup
   useEffect(() => {
@@ -298,10 +375,20 @@ function About() {
         }}
       >
         <div className="container">
-          <ul className="breadcrumbs">
-            <li><Link to="/">{translate('home')}</Link></li>
-            <li><span>{translate('about')}</span></li>
-          </ul>
+          <nav aria-label="Breadcrumb">
+            <ul className="breadcrumbs" itemScope itemType="https://schema.org/BreadcrumbList">
+              <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+                <SEOLink to="/" itemProp="item">
+                  <span itemProp="name">{translate('home')}</span>
+                </SEOLink>
+                <meta itemProp="position" content="1" />
+              </li>
+              <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+                <span itemProp="name">{translate('about')}</span>
+                <meta itemProp="position" content="2" />
+              </li>
+            </ul>
+          </nav>
           <h1>{translate('aboutLitox')}</h1>
         </div>
       </section>
@@ -313,18 +400,22 @@ function About() {
             <div className="about-content-wrapper">
               {/* About Litox Section */}
               {aboutData.aboutLitox && (
-                <section className="about-section">
-                  <h2>{translate('aboutLitox')}</h2>
+                <section className="about-section" itemScope itemType="https://schema.org/AboutPage">
+                  <h2 itemProp="headline">{translate('aboutLitox')}</h2>
                   <div 
                     className="about-text rich-text-content"
+                    itemProp="text"
                     dangerouslySetInnerHTML={{ __html: formatContent(aboutData.aboutLitox) }}
                   />
                   {aboutData.imageUrl1 && (
-                    <div className="about-image">
+                    <div className="about-image" itemProp="image" itemScope itemType="https://schema.org/ImageObject">
                       <img 
                         src={aboutData.imageUrl1} 
-                        alt="About Litox" 
+                        alt="About Litox - construction materials manufacturing" 
+                        itemProp="url"
                         loading="lazy"
+                        width="800"
+                        height="auto"
                         style={{ 
                           width: '100%', 
                           maxWidth: '800px',
@@ -333,6 +424,7 @@ function About() {
                           marginTop: '20px'
                         }} 
                       />
+                      <meta itemProp="description" content="Litox construction materials manufacturing facility" />
                     </div>
                   )}
                 </section>
@@ -340,18 +432,22 @@ function About() {
 
               {/* About Litox Georgia Section */}
               {aboutData.aboutLitoxGeorgia && (
-                <section className="about-section">
-                  <h2>{translate('aboutLitoxGeorgia')}</h2>
+                <section className="about-section" itemScope itemType="https://schema.org/AboutPage">
+                  <h2 itemProp="headline">{translate('aboutLitoxGeorgia')}</h2>
                   <div 
                     className="about-text rich-text-content"
+                    itemProp="text"
                     dangerouslySetInnerHTML={{ __html: formatContent(aboutData.aboutLitoxGeorgia) }}
                   />
                   {aboutData.imageUrl2 && (
-                    <div className="about-image">
+                    <div className="about-image" itemProp="image" itemScope itemType="https://schema.org/ImageObject">
                       <img 
                         src={aboutData.imageUrl2} 
-                        alt="Litox Georgia" 
+                        alt="Litox Georgia - Free Way LLC official representative" 
+                        itemProp="url"
                         loading="lazy"
+                        width="800"
+                        height="auto"
                         style={{ 
                           width: '100%', 
                           maxWidth: '800px',
@@ -360,6 +456,7 @@ function About() {
                           marginTop: '20px'
                         }} 
                       />
+                      <meta itemProp="description" content="Litox Georgia operations and distribution" />
                     </div>
                   )}
                 </section>
