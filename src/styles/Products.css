@@ -430,3 +430,10 @@
     height: 24px;
   }
 }
+
+
+/* Coin flip animation for arrow circle */
+.product-arrow-circle {
+  opacity: 1;
+  transform: perspective(400px) translateX(0) rotateY(0deg);
+}
