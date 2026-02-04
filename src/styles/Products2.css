@@ -336,3 +336,21 @@
     font-size: 16px;
   }
 }
+
+
+
+
+/* Force products2 z-index below header */
+.products2-page,
+.products2-page *,
+.products2-hero,
+.products2-hero-content,
+.categories-section,
+.categories-grid,
+.category-card,
+.category-image-wrapper,
+.category-banner,
+.category-info,
+.category-arrow {
+  z-index: 1 !important;
+}

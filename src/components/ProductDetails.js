@@ -791,11 +791,11 @@ function ProductDetails() {
       {relatedProducts.length > 0 && (
         <aside className="category-page-products" aria-labelledby="related-products-heading">
           <section className="category-slider-section">
-            <header className="category-products-header">
-              <h2 id="related-products-heading" className="category-products-title">
-                {translate('seeAlso')}
-              </h2>
-            </header>
+           <div className="category-products-header">
+  <h3 id="related-products-heading" className="category-products-title">
+    {translate('seeAlso')}
+  </h3>
+</div>
 
             <div className="category-products-carousel-container">
               <Swiper

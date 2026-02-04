@@ -1477,3 +1477,29 @@ header nav.primary-menu > ul > li:hover::after {
   height: 10px !important;
   display: block !important;
 }
+
+
+
+/* ULTIMATE HEADER FIX - Higher z-index */
+header {
+  z-index: 999999 !important;
+}
+
+body > header,
+#root > header,
+.App > header {
+  z-index: 999999 !important;
+}
+
+.search-popup {
+  z-index: 999998 !important;
+}
+
+.left-menu {
+  z-index: 999997 !important;
+}
+
+nav.primary-menu ul.dropdown,
+.primary-menu .dropdown {
+  z-index: 999996 !important;
+}

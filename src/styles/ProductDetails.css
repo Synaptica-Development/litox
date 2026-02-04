@@ -2175,3 +2175,31 @@
     padding: 8px;
   }
 }
+
+
+
+
+/* Force product details z-index below header */
+.product-details-container,
+.product-details-container *,
+.product-hero,
+.product-small-img,
+.features-overlay,
+.breadcrumbs-wrapper,
+.product-tabs-section,
+.tab-list,
+.tab-list button,
+.content-row,
+.react-parallax,
+.category-page-products,
+.swiper,
+.swiper-slide {
+  z-index: 1 !important;
+}
+
+/* Navigation buttons slightly higher but still below header */
+.category-products-nav,
+.swiper-button-prev-custom-related,
+.swiper-button-next-custom-related {
+  z-index: 10 !important;
+}
