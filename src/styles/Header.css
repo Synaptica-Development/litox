@@ -1503,3 +1503,108 @@ nav.primary-menu ul.dropdown,
 .primary-menu .dropdown {
   z-index: 999996 !important;
 }
+
+
+/* ===================================================================
+   SEARCH POPUP X BUTTON FIX
+   Add this to your Header.css to fix multiple X icons and hover issues
+   =================================================================== */
+
+/* Hide the default browser X button in search inputs */
+.search-popup input[type="search"]::-webkit-search-cancel-button,
+.search-popup input[type="search"]::-webkit-search-decoration,
+.search-popup input[type="search"]::-webkit-search-results-button,
+.search-popup input[type="search"]::-webkit-search-results-decoration {
+  display: none !important;
+  -webkit-appearance: none !important;
+}
+
+/* Firefox */
+.search-popup input[type="search"]::-moz-search-clear-button {
+  display: none !important;
+}
+
+/* IE/Edge */
+.search-popup input[type="search"]::-ms-clear {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Custom close button - make sure it stays visible */
+.search-close {
+  position: absolute !important;
+  right: 29px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  background: none !important;
+  border: none !important;
+  cursor: pointer !important;
+  padding: 8px !important;
+  transition: opacity 0.3s ease !important;
+  z-index: 10 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  opacity: 1 !important;
+}
+
+/* Keep close button visible on hover - fix disappearing issue */
+.search-close:hover {
+  opacity: 1 !important;
+  background: none !important;
+}
+
+.search-close svg {
+  width: 24px !important;
+  height: 24px !important;
+  display: block !important;
+  pointer-events: none !important;
+}
+
+.search-close svg path {
+  stroke: #aba39e !important;
+  transition: stroke 0.3s ease !important;
+}
+
+.search-close:hover svg path {
+  stroke: #ef6f2e !important;
+}
+
+/* Make sure the close button doesn't disappear when input is focused */
+.search-input-wrapper:focus-within .search-close {
+  opacity: 1 !important;
+  display: flex !important;
+}
+
+.search-input-wrapper:focus-within .search-close svg path {
+  stroke: #000 !important;
+}
+
+.search-input-wrapper:focus-within .search-close:hover svg path {
+  stroke: #ef6f2e !important;
+}
+
+/* Ensure proper stacking */
+.search-input-wrapper {
+  position: relative !important;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .search-close {
+    right: 15px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-close {
+    right: 10px !important;
+    padding: 6px !important;
+  }
+  
+  .search-close svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+}
