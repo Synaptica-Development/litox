@@ -533,6 +533,7 @@
 /* Specifications Table */
 .specifications-table {
   color: #fff;
+   text-align: left !important; /* Force left alignment */
 }
 
 .specifications-table table {
