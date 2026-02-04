@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Landing from './components/Landing';
 import Category from './components/Category';
@@ -13,7 +13,6 @@ import Contacts from './components/Contacts';
 import About from './components/About';
 import Products2 from './components/Products2';
 import Products2CategoryPage from './components/Products2CategoryPage';
-import Construction from './components/Construction';
 
 // Home page component
 function HomePage() {
@@ -27,25 +26,11 @@ function HomePage() {
   );
 }
 
-// Conditional Header
-function ConditionalHeader() {
-  const location = useLocation();
-  if (location.pathname === '/construction') return null;
-  return <Header />;
-}
-
-// Conditional Footer
-function ConditionalFooter() {
-  const location = useLocation();
-  if (location.pathname === '/construction') return null;
-  return <Footer />;
-}
-
 function App() {
   return (
     <Router>
       <div className="App">
-        <ConditionalHeader />
+        <Header />
         <Routes>
           {/* Home route */}
           <Route path="/" element={<HomePage />} />
@@ -65,10 +50,8 @@ function App() {
           <Route path="/contacts" element={<Contacts />} />
           {/* About route */}
           <Route path="/about" element={<About />} />
-          {/* Construction route */}
-          <Route path="/construction" element={<Construction />} />
         </Routes>
-        <ConditionalFooter />
+        <Footer />
       </div>
     </Router>
   );
