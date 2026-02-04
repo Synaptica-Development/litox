@@ -83,6 +83,21 @@ function ProductDetails() {
   const [error, setError] = useState(null);
   const [language, setLanguage] = useState('ka');
   const [isMobile, setIsMobile] = useState(false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const videoRef = React.useRef(null);
+
+  // Handle video play button click
+  const handlePlayClick = () => {
+    if (videoRef.current) {
+      videoRef.current.play();
+      setIsVideoPlaying(true);
+    }
+  };
+
+  // Handle video pause/ended
+  const handleVideoPause = () => {
+    setIsVideoPlaying(false);
+  };
 
   // Detect mobile screen
   useEffect(() => {
@@ -427,6 +442,11 @@ function ProductDetails() {
         ka: 'მსგავსი პროდუქტები',
         en: 'Related products',
         ru: 'Похожие продукты'
+      },
+      productVideo: {
+        ka: 'პროდუქტის ვიდეო',
+        en: 'Product Video',
+        ru: 'Видео продукта'
       }
     };
 
@@ -788,14 +808,56 @@ function ProductDetails() {
         </div>
       </section>
 
+      {/* Product Video Section - Above "See Also" */}
+      {product.videoLink && (
+        <section className="product-video-section" aria-label={translate('productVideo')}>
+          <div className="container">
+            <div className="video-wrapper">
+              <div className="video-container">
+                <video 
+                  ref={videoRef}
+                  preload="metadata"
+                  poster={product.bannerImageLink || product.iconImageLink}
+                  aria-label={`${translate('productVideo')}: ${product.title}`}
+                  onPause={handleVideoPause}
+                  onEnded={handleVideoPause}
+                  controls
+                >
+                  <source src={product.videoLink} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+                
+                {/* Play Button Overlay */}
+                <div 
+                  className={`video-play-overlay ${isVideoPlaying ? 'hidden' : ''}`}
+                  onClick={handlePlayClick}
+                  role="button"
+                  tabIndex={0}
+                  aria-label="Play video"
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      handlePlayClick();
+                    }
+                  }}
+                >
+                  <div className="play-button-circle">
+                    <div className="play-triangle"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {relatedProducts.length > 0 && (
         <aside className="category-page-products" aria-labelledby="related-products-heading">
           <section className="category-slider-section">
-           <div className="category-products-header">
-  <h3 id="related-products-heading" className="category-products-title">
-    {translate('seeAlso')}
-  </h3>
-</div>
+            <div className="category-products-header">
+              <h3 id="related-products-heading" className="category-products-title">
+                {translate('seeAlso')}
+              </h3>
+            </div>
 
             <div className="category-products-carousel-container">
               <Swiper
