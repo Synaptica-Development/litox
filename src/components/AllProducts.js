@@ -137,6 +137,13 @@ function AllProducts() {
     };
   }, []);
 
+  // Update selectedCategory when URL params change (from header dropdown)
+  useEffect(() => {
+    const categoryFromUrl = searchParams.get('category') || 'all';
+    setSelectedCategory(categoryFromUrl);
+    setCurrentPage(1);
+  }, [searchParams]);
+
   useEffect(() => {
     if (selectedCategory === 'all') {
       setFilteredProducts(allProducts);
@@ -317,7 +324,6 @@ function AllProducts() {
   }, [language]);
 
   const handleCategoryFilter = useCallback((categoryId) => {
-    setSelectedCategory(categoryId);
     setCurrentPage(1);
     
     if (categoryId === 'all') {
@@ -325,6 +331,9 @@ function AllProducts() {
     } else {
       setSearchParams({ category: categoryId });
     }
+    
+    // Force scroll to top when category changes
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [setSearchParams]);
 
   const getProductImage = useCallback((product) => {
