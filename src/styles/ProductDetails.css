@@ -2204,3 +2204,120 @@
 .swiper-button-next-custom-related {
   z-index: 10 !important;
 }
+
+
+
+
+
+/* AGGRESSIVE Breadcrumbs Fix for ProductDetails - Replace your breadcrumbs CSS with this */
+
+.breadcrumbs-wrapper {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  width: 100%;
+  z-index: 9999 !important; /* Very high z-index */
+  pointer-events: none;
+}
+
+.product-detail-breadcrumbs {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0 20px;
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 9999 !important;
+}
+
+.product-detail-breadcrumbs li {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 9999 !important;
+}
+
+.product-detail-breadcrumbs li:not(:last-child)::after {
+  content: '•';
+  margin-left: 8px;
+  color: #fff;
+  opacity: 0.7;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.product-detail-breadcrumbs a {
+  color: #fff !important;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: opacity 0.3s ease;
+  opacity: 0.9;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 9999 !important;
+  display: inline-block;
+  padding: 4px 0;
+}
+
+.product-detail-breadcrumbs a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.product-detail-breadcrumbs span {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 1;
+  pointer-events: none;
+}
+
+/* Make sure the hero section doesn't block breadcrumbs */
+.product-hero {
+  position: relative;
+}
+
+.product-hero::before,
+.product-hero::after {
+  pointer-events: none !important;
+}
+
+/* If there's an overlay on the hero, make sure it doesn't block clicks */
+.product-hero > * {
+  pointer-events: auto;
+}
+
+/* Mobile adjustments */
+@media (max-width: 767px) {
+  .breadcrumbs-wrapper {
+    top: 15px;
+  }
+  
+  .product-detail-breadcrumbs {
+    gap: 6px;
+    padding: 0 15px;
+  }
+  
+  .product-detail-breadcrumbs li:not(:last-child)::after {
+    margin-left: 6px;
+    font-size: 12px;
+  }
+  
+  .product-detail-breadcrumbs a,
+  .product-detail-breadcrumbs span {
+    font-size: 12px;
+  }
+}
+
+/* Additional debug - you can remove this later */
+.product-detail-breadcrumbs a:active {
+  background: rgba(255, 0, 0, 0.3); /* Will flash red when clicked - to test if clicks work */
+}
