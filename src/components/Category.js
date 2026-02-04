@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination } from 'swiper/modules';
+import { Navigation, Pagination, A11y } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -95,6 +95,56 @@ function Category() {
         ka: 'კატეგორიები არ არის ხელმისაწვდომი',
         en: 'No categories available',
         ru: 'Категории недоступны'
+      },
+      categories: {
+        ka: 'კატეგორიები',
+        en: 'Categories',
+        ru: 'Категории'
+      },
+      productCategories: {
+        ka: 'პროდუქტების კატეგორიები',
+        en: 'Product Categories',
+        ru: 'Категории продуктов'
+      },
+      viewProducts: {
+        ka: 'პროდუქტების ნახვა',
+        en: 'View products',
+        ru: 'Посмотреть продукты'
+      },
+      viewCategory: {
+        ka: 'კატეგორიის ნახვა',
+        en: 'View category',
+        ru: 'Посмотреть категорию'
+      },
+      previousCategories: {
+        ka: 'წინა კატეგორიები',
+        en: 'Previous categories',
+        ru: 'Предыдущие категории'
+      },
+      nextCategories: {
+        ka: 'შემდეგი კატეგორიები',
+        en: 'Next categories',
+        ru: 'Следующие категории'
+      },
+      categoryNavigation: {
+        ka: 'კატეგორიების ნავიგაცია',
+        en: 'Category navigation',
+        ru: 'Навигация по категориям'
+      },
+      slideNavigation: {
+        ka: 'სლაიდების ნავიგაცია',
+        en: 'Slide navigation',
+        ru: 'Навигация по слайдам'
+      },
+      slide: {
+        ka: 'სლაიდი',
+        en: 'Slide',
+        ru: 'Слайд'
+      },
+      of: {
+        ka: '-დან',
+        en: 'of',
+        ru: 'из'
       }
     };
     return translations[key]?.[language] || translations[key]?.['en'] || key;
@@ -111,31 +161,56 @@ function Category() {
 
   if (loading) {
     return (
-      <div className="home-catalog-list">
+      <section 
+        className="home-catalog-list" 
+        aria-labelledby="categories-heading"
+        aria-busy="true"
+      >
+        <h2 id="categories-heading" className="visually-hidden">
+          {translate('productCategories')}
+        </h2>
         <div className="flex-row">
-          <div className="loading">{translate('loading')}</div>
+          <div className="loading" role="status" aria-live="polite">
+            {translate('loading')}
+          </div>
         </div>
-      </div>
+      </section>
     );
   }
 
   if (error) {
     return (
-      <div className="home-catalog-list">
+      <section 
+        className="home-catalog-list" 
+        aria-labelledby="categories-heading"
+      >
+        <h2 id="categories-heading" className="visually-hidden">
+          {translate('productCategories')}
+        </h2>
         <div className="flex-row">
-          <div className="error">{translate('error')}: {error}</div>
+          <div className="error" role="alert" aria-live="assertive">
+            {translate('error')}: {error}
+          </div>
         </div>
-      </div>
+      </section>
     );
   }
 
   if (categories.length === 0) {
     return (
-      <div className="home-catalog-list">
+      <section 
+        className="home-catalog-list" 
+        aria-labelledby="categories-heading"
+      >
+        <h2 id="categories-heading" className="visually-hidden">
+          {translate('productCategories')}
+        </h2>
         <div className="flex-row">
-          <div className="error">{translate('noCategories')}</div>
+          <div className="error" role="status" aria-live="polite">
+            {translate('noCategories')}
+          </div>
         </div>
-      </div>
+      </section>
     );
   }
 
@@ -144,10 +219,22 @@ function Category() {
     const groupedCategories = groupCategories(categories);
     
     return (
-      <div className="home-catalog-list">
-        <div className="category-swiper-container">
+      <section 
+        className="home-catalog-list" 
+        aria-labelledby="categories-heading"
+      >
+        <h2 id="categories-heading" className="visually-hidden">
+          {translate('productCategories')}
+        </h2>
+        
+        <div 
+          className="category-swiper-container"
+          role="region"
+          aria-roledescription="carousel"
+          aria-label={translate('categoryNavigation')}
+        >
           <Swiper
-            modules={[Navigation, Pagination]}
+            modules={[Navigation, Pagination, A11y]}
             spaceBetween={20}
             slidesPerView={1}
             navigation={{
@@ -156,13 +243,33 @@ function Category() {
             }}
             pagination={{
               clickable: true,
-              el: '.category-swiper-pagination'
+              el: '.category-swiper-pagination',
+              bulletClass: 'swiper-pagination-bullet',
+              bulletActiveClass: 'swiper-pagination-bullet-active',
             }}
             speed={500}
+            a11y={{
+              enabled: true,
+              prevSlideMessage: translate('previousCategories'),
+              nextSlideMessage: translate('nextCategories'),
+              firstSlideMessage: `${translate('slide')} 1`,
+              lastSlideMessage: `${translate('slide')} ${groupedCategories.length}`,
+              paginationBulletMessage: `${translate('slide')} {{index}}`,
+            }}
+            role="list"
           >
             {groupedCategories.map((group, groupIndex) => (
-              <SwiperSlide key={groupIndex}>
-                <div className="category-grid-2x2">
+              <SwiperSlide 
+                key={groupIndex}
+                role="listitem"
+                aria-roledescription="slide"
+                aria-label={`${translate('slide')} ${groupIndex + 1} ${translate('of')} ${groupedCategories.length}`}
+              >
+                <div 
+                  className="category-grid-2x2"
+                  role="list"
+                  aria-label={`${translate('categories')} ${groupIndex * 4 + 1}-${Math.min((groupIndex + 1) * 4, categories.length)}`}
+                >
                   {group.map((category, index) => {
                     const categoryName = getCategoryName(category);
                     return (
@@ -170,16 +277,23 @@ function Category() {
                         key={category.id || index}
                         to={`/category/${category.id}`}
                         className="catalog-card"
-                        aria-label={`View ${categoryName} products`}
+                        aria-label={`${translate('viewCategory')}: ${categoryName}`}
+                        title={`${categoryName} - ${translate('viewProducts')}`}
+                        role="listitem"
                       >
-                        <div className="icon">
-                          <img 
-                            src={getCategoryIcon(category)} 
-                            alt={`${categoryName} category icon`}
-                            onError={(e) => {
-                              e.target.style.display = 'none';
-                            }}
-                          />
+                        <div className="icon" aria-hidden="true">
+                          {getCategoryIcon(category) && (
+                            <img 
+                              src={getCategoryIcon(category)} 
+                              alt=""
+                              width="80"
+                              height="80"
+                              loading="lazy"
+                              onError={(e) => {
+                                e.target.style.display = 'none';
+                              }}
+                            />
+                          )}
                         </div>
                         <span className="catalog-name">{categoryName}</span>
                       </Link>
@@ -191,52 +305,138 @@ function Category() {
           </Swiper>
 
           {/* Custom Navigation Buttons */}
-          <button className="category-button-prev category-nav" aria-label="Previous categories">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <button 
+            className="category-button-prev category-nav" 
+            aria-label={translate('previousCategories')}
+            type="button"
+          >
+            <svg 
+              width="16" 
+              height="16" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="2"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <title>{translate('previousCategories')}</title>
               <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
           </button>
-          <button className="category-button-next category-nav" aria-label="Next categories">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <button 
+            className="category-button-next category-nav" 
+            aria-label={translate('nextCategories')}
+            type="button"
+          >
+            <svg 
+              width="16" 
+              height="16" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="2"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <title>{translate('nextCategories')}</title>
               <polyline points="9 18 15 12 9 6"></polyline>
             </svg>
           </button>
 
           {/* Pagination dots */}
-          <div className="category-swiper-pagination"></div>
+          <div 
+            className="category-swiper-pagination"
+            role="tablist"
+            aria-label={translate('slideNavigation')}
+          ></div>
         </div>
-      </div>
+
+        {/* JSON-LD Structured Data for ItemList */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "name": translate('productCategories'),
+            "numberOfItems": categories.length,
+            "itemListElement": categories.map((category, index) => ({
+              "@type": "ListItem",
+              "position": index + 1,
+              "name": getCategoryName(category),
+              "url": `https://litoxgeorgia.ge/category/${category.id}`,
+              "image": getCategoryIcon(category) || undefined
+            }))
+          })}
+        </script>
+      </section>
     );
   }
 
   // Render desktop grid
   return (
-    <div className="home-catalog-list">
-      <div className="flex-row">
-        {categories.map((category, index) => {
-          const categoryName = getCategoryName(category);
-          return (
-            <Link 
-              to={`/category/${category.id}`}
-              key={category.id || index} 
-              className="catalog-card"
-              aria-label={`View ${categoryName} products`}
-            >
-              <div className="icon">
-                <img 
-                  src={getCategoryIcon(category)} 
-                  alt={`${categoryName} category icon`}
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                  }}
-                />
-              </div>
-              <span className="catalog-name">{categoryName}</span>
-            </Link>
-          );
+    <section 
+      className="home-catalog-list" 
+      aria-labelledby="categories-heading"
+    >
+      <h2 id="categories-heading" className="visually-hidden">
+        {translate('productCategories')}
+      </h2>
+      
+      <nav 
+        className="flex-row" 
+        aria-label={translate('categoryNavigation')}
+        role="navigation"
+      >
+        <ul role="list" style={{ display: 'contents' }}>
+          {categories.map((category, index) => {
+            const categoryName = getCategoryName(category);
+            return (
+              <li key={category.id || index} role="listitem" style={{ display: 'contents' }}>
+                <Link 
+                  to={`/category/${category.id}`}
+                  className="catalog-card"
+                  aria-label={`${translate('viewCategory')}: ${categoryName}`}
+                  title={`${categoryName} - ${translate('viewProducts')}`}
+                >
+                  <div className="icon" aria-hidden="true">
+                    {getCategoryIcon(category) && (
+                      <img 
+                        src={getCategoryIcon(category)} 
+                        alt=""
+                        width="80"
+                        height="80"
+                        loading={index < 4 ? 'eager' : 'lazy'}
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                        }}
+                      />
+                    )}
+                  </div>
+                  <span className="catalog-name">{categoryName}</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+
+      {/* JSON-LD Structured Data for ItemList */}
+      <script type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          "name": translate('productCategories'),
+          "numberOfItems": categories.length,
+          "itemListElement": categories.map((category, index) => ({
+            "@type": "ListItem",
+            "position": index + 1,
+            "name": getCategoryName(category),
+            "url": `https://litoxgeorgia.ge/category/${category.id}`,
+            "image": getCategoryIcon(category) || undefined
+          }))
         })}
-      </div>
-    </div>
+      </script>
+    </section>
   );
 }
 

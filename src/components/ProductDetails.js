@@ -397,6 +397,36 @@ function ProductDetails() {
         ka: 'ასევე იხილეთ',
         en: 'See Also',
         ru: 'Смотрите також'
+      },
+      viewProduct: {
+        ka: 'ნახე პროდუქტი',
+        en: 'View product',
+        ru: 'Посмотреть продукт'
+      },
+      downloadDocument: {
+        ka: 'ჩამოტვირთე დოკუმენტი',
+        en: 'Download document',
+        ru: 'Скачать документ'
+      },
+      previousSlide: {
+        ka: 'წინა სლაიდი',
+        en: 'Previous slide',
+        ru: 'Предыдущий слайд'
+      },
+      nextSlide: {
+        ka: 'შემდეგი სლაიდი',
+        en: 'Next slide',
+        ru: 'Следующий слайд'
+      },
+      productFeatures: {
+        ka: 'პროდუქტის მახასიათებლები',
+        en: 'Product features',
+        ru: 'Характеристики продукта'
+      },
+      relatedProducts: {
+        ka: 'მსგავსი პროდუქტები',
+        en: 'Related products',
+        ru: 'Похожие продукты'
       }
     };
 
@@ -410,24 +440,25 @@ function ProductDetails() {
         style={{
           background: 'linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 40%, rgba(92, 64, 51) 100%)'
         }}
+        aria-label={translate('loading')}
       >
         <div className="breadcrumbs-wrapper">
-          <div className="skeleton-breadcrumbs">
+          <div className="skeleton-breadcrumbs" aria-hidden="true">
             <div className="skeleton-breadcrumb"></div>
             <div className="skeleton-breadcrumb"></div>
             <div className="skeleton-breadcrumb"></div>
           </div>
         </div>
 
-        <div className="skeleton-product-image"></div>
+        <div className="skeleton-product-image" aria-hidden="true"></div>
 
         <div className="container">
-          <div className="skeleton-title"></div>
-          <div className="skeleton-description"></div>
+          <div className="skeleton-title" aria-hidden="true"></div>
+          <div className="skeleton-description" aria-hidden="true"></div>
         </div>
       </section>
 
-      <section className="product-tabs-section">
+      <section className="product-tabs-section" aria-hidden="true">
         <div className="container">
           <div className="tabs-header">
             <div className="skeleton-tabs">
@@ -455,7 +486,7 @@ function ProductDetails() {
         </div>
       </section>
 
-      <div className="category-page-products">
+      <div className="category-page-products" aria-hidden="true">
         <div className="category-slider-section">
           <div className="category-products-header">
             <div className="skeleton-title" style={{ width: '200px', height: '36px' }}></div>
@@ -485,15 +516,21 @@ function ProductDetails() {
     return (
       <div className="product-details-container">
         <div className="container">
-          <div className="error">{translate('error')}: {error || translate('productNotFound')}</div>
+          <div className="error" role="alert" aria-live="assertive">
+            {translate('error')}: {error || translate('productNotFound')}
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="product-details-container">
-      <section 
+    <article className="product-details-container" itemScope itemType="https://schema.org/Product">
+      <meta itemProp="name" content={product.title} />
+      <meta itemProp="description" content={product.description || `${product.title} from Litox Georgia`} />
+      {product.iconImageLink && <meta itemProp="image" content={product.iconImageLink} />}
+      
+      <header 
         className="product-hero"
         style={{
           backgroundImage: product.bannerImageLink 
@@ -503,42 +540,72 @@ function ProductDetails() {
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat'
         }}
+        role="banner"
       >
-        <div className="breadcrumbs-wrapper">
+        <nav className="breadcrumbs-wrapper" aria-label="Breadcrumb">
           <ul className="product-detail-breadcrumbs">
-            <li><Link to="/">{translate('home')}</Link></li>
-            <li><Link to="/products">{translate('products')}</Link></li>
-            {category && <li><Link to={`/category/${categoryId}`}>{category.title}</Link></li>}
-            <li><span>{product.title}</span></li>
+            <li>
+              <Link to="/" aria-label={translate('home')}>
+                {translate('home')}
+              </Link>
+            </li>
+            <li>
+              <Link to="/products" aria-label={translate('products')}>
+                {translate('products')}
+              </Link>
+            </li>
+            {category && (
+              <li>
+                <Link 
+                  to={`/category/${categoryId}`}
+                  aria-label={`${translate('products')}: ${category.title}`}
+                >
+                  {category.title}
+                </Link>
+              </li>
+            )}
+            <li>
+              <span aria-current="page">{product.title}</span>
+            </li>
           </ul>
-        </div>
+        </nav>
 
         <img 
           src={getProductImage()} 
           alt={product.title} 
           className="product-small-img"
           loading="eager"
+          itemProp="image"
           onError={(e) => {
             e.target.src = '/prod.webp';
           }}
         />
 
         <div className="container">
-          <h1>{product.title}</h1>
-          {product.description && <div className="preview-text">{product.description}</div>}
+          <h1 itemProp="name">{product.title}</h1>
+          {product.description && (
+            <div className="preview-text" itemProp="description">
+              {product.description}
+            </div>
+          )}
         </div>
 
         {product.keywrods && product.keywrods.length > 0 && (
-          <div className="features-overlay">
+          <section 
+            className="features-overlay"
+            aria-label={translate('productFeatures')}
+          >
             <div className="container">
-              <div className="flex">
+              <ul className="flex" role="list">
                 {product.keywrods.map((keyword, index) => (
                   <React.Fragment key={keyword.id}>
-                    <div className="col">
+                    <li className="col">
                       {keyword.imageLink && (
                         <img 
                           src={keyword.imageLink} 
-                          alt={keyword.name}
+                          alt=""
+                          role="presentation"
+                          aria-hidden="true"
                           style={{ 
                             width: '24px', 
                             height: '24px', 
@@ -551,48 +618,72 @@ function ProductDetails() {
                         />
                       )}
                       <span>{keyword.name}</span>
-                    </div>
-                    {index < product.keywrods.length - 1 && <div className="razd"></div>}
+                    </li>
+                    {index < product.keywrods.length - 1 && (
+                      <li className="razd" aria-hidden="true"></li>
+                    )}
                   </React.Fragment>
                 ))}
-              </div>
+              </ul>
             </div>
-          </div>
+          </section>
         )}
-      </section>
+      </header>
 
       <section className="product-tabs-section">
         <div className="container">
-          <div className="tabs-header">
-            <ul className="tab-list">
-              <li className={activeTab === 'application' ? 'active' : ''}>
-                <button onClick={() => setActiveTab('application')}>
+          <nav className="tabs-header" aria-label="Product information tabs">
+            <ul className="tab-list" role="tablist">
+              <li role="presentation" className={activeTab === 'application' ? 'active' : ''}>
+                <button 
+                  onClick={() => setActiveTab('application')}
+                  role="tab"
+                  aria-selected={activeTab === 'application'}
+                  aria-controls="application-panel"
+                  id="application-tab"
+                >
                   {translate('application')}
                 </button>
               </li>
-              <li className={activeTab === 'specifications' ? 'active' : ''}>
-                <button onClick={() => setActiveTab('specifications')}>
+              <li role="presentation" className={activeTab === 'specifications' ? 'active' : ''}>
+                <button 
+                  onClick={() => setActiveTab('specifications')}
+                  role="tab"
+                  aria-selected={activeTab === 'specifications'}
+                  aria-controls="specifications-panel"
+                  id="specifications-tab"
+                >
                   {translate('specifications')}
                 </button>
               </li>
-              <li className={activeTab === 'documents' ? 'active' : ''}>
-                <button onClick={() => setActiveTab('documents')}>
+              <li role="presentation" className={activeTab === 'documents' ? 'active' : ''}>
+                <button 
+                  onClick={() => setActiveTab('documents')}
+                  role="tab"
+                  aria-selected={activeTab === 'documents'}
+                  aria-controls="documents-panel"
+                  id="documents-tab"
+                >
                   {translate('documents')}
                 </button>
               </li>
             </ul>
-          </div>
+          </nav>
 
           <div className="tab-content">
-            {/* ✅ Application Tab - WITH FORMATTED TEXT */}
+            {/* Application Tab */}
             {activeTab === 'application' && (
-              <div className="tab-pane active">
+              <div 
+                className="tab-pane active"
+                role="tabpanel"
+                id="application-panel"
+                aria-labelledby="application-tab"
+              >
                 {product.applicationTexts && product.applicationTexts.length > 0 ? (
                   product.applicationTexts.map((app, index) => (
-                    <div key={index} className={`content-row ${index % 2 === 1 ? 'reverse' : ''}`}>
+                    <article key={index} className={`content-row ${index % 2 === 1 ? 'reverse' : ''}`}>
                       <div className="content-text">
                         <h2>{app.title}</h2>
-                        {/* ✅ Render formatted HTML from backend */}
                         <div 
                           className="formatted-content"
                           dangerouslySetInnerHTML={{ __html: app.text }}
@@ -600,7 +691,7 @@ function ProductDetails() {
                       </div>
                       {app.image && (
                         isMobile ? (
-                          <div className="content-image">
+                          <figure className="content-image">
                             <img 
                               src={app.image} 
                               alt={app.title}
@@ -609,7 +700,7 @@ function ProductDetails() {
                                 e.target.src = '/prod.webp';
                               }}
                             />
-                          </div>
+                          </figure>
                         ) : (
                           <Parallax
                             bgImage={app.image}
@@ -618,12 +709,14 @@ function ProductDetails() {
                               objectFit: 'cover',
                               objectPosition: index % 2 === 0 ? 'left center' : 'right center',
                             }}
+                            role="img"
+                            aria-label={app.title}
                           >
                             <div className="content-image-parallax" />
                           </Parallax>
                         )
                       )}
-                    </div>
+                    </article>
                   ))
                 ) : (
                   <p>No application information available.</p>
@@ -631,15 +724,21 @@ function ProductDetails() {
               </div>
             )}
 
+            {/* Specifications Tab */}
             {activeTab === 'specifications' && (
-              <div className="tab-pane active">
+              <div 
+                className="tab-pane active"
+                role="tabpanel"
+                id="specifications-panel"
+                aria-labelledby="specifications-tab"
+              >
                 <div className="specifications-table">
                   {product.params && Object.keys(product.params).length > 0 ? (
-                    <table>
+                    <table role="table" aria-label={translate('specifications')}>
                       <tbody>
                         {Object.entries(product.params).map(([key, value]) => (
                           <tr key={key}>
-                            <td>{key}</td>
+                            <th scope="row">{key}</th>
                             <td>{value}</td>
                           </tr>
                         ))}
@@ -652,23 +751,34 @@ function ProductDetails() {
               </div>
             )}
 
+            {/* Documents Tab */}
             {activeTab === 'documents' && (
-              <div className="tab-pane active">
+              <div 
+                className="tab-pane active"
+                role="tabpanel"
+                id="documents-panel"
+                aria-labelledby="documents-tab"
+              >
                 {product.documentLinks && product.documentLinks.length > 0 ? (
-                  <div className="documents-list">
+                  <ul className="documents-list" role="list">
                     {product.documentLinks.map((doc, index) => {
                       const filename = doc.link.split('/').pop();
                       const displayName = decodeURIComponent(filename).replace(/\.[^/.]+$/, '');
                       
                       return (
-                        <div key={index} className="document-item">
-                          <a href={doc.link} target="_blank" rel="noopener noreferrer">
+                        <li key={index} className="document-item">
+                          <a 
+                            href={doc.link} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            aria-label={`${translate('downloadDocument')}: ${product.title} - ${displayName}`}
+                          >
                             {product.title} - {displayName}
                           </a>
-                        </div>
+                        </li>
                       );
                     })}
-                  </div>
+                  </ul>
                 ) : (
                   <p>No documents available.</p>
                 )}
@@ -679,13 +789,13 @@ function ProductDetails() {
       </section>
 
       {relatedProducts.length > 0 && (
-        <div className="category-page-products">
-          <div className="category-slider-section">
-            <div className="category-products-header">
-              <h2 className="category-products-title">
+        <aside className="category-page-products" aria-labelledby="related-products-heading">
+          <section className="category-slider-section">
+            <header className="category-products-header">
+              <h2 id="related-products-heading" className="category-products-title">
                 {translate('seeAlso')}
               </h2>
-            </div>
+            </header>
 
             <div className="category-products-carousel-container">
               <Swiper
@@ -724,12 +834,17 @@ function ProductDetails() {
                     spaceBetween: 20
                   }
                 }}
+                aria-label={translate('relatedProducts')}
               >
                 {relatedProducts.map((relatedProduct, index) => (
                   <SwiperSlide key={`${relatedProduct.id}-${index}`}>
-                    <div className="category-product-item">
-                      <Link to={`/products/${categoryId}/${relatedProduct.id}`} className="category-product-card">
-                        <span className="category-product-img-wrapper">
+                    <article className="category-product-item">
+                      <Link 
+                        to={`/products/${categoryId}/${relatedProduct.id}`} 
+                        className="category-product-card"
+                        aria-label={`${translate('viewProduct')}: ${relatedProduct.title}`}
+                      >
+                        <figure className="category-product-img-wrapper">
                           <img 
                             src={relatedProduct.iconImageLink || relatedProduct.imageLink || '/prod.webp'} 
                             alt={relatedProduct.title}
@@ -738,9 +853,9 @@ function ProductDetails() {
                               e.target.src = '/prod.webp';
                             }}
                           />
-                        </span>
+                        </figure>
                       </Link>
-                      <span 
+                      <h3 
                         className="category-product-name" 
                         style={{ 
                           maxWidth: '270px', 
@@ -754,33 +869,49 @@ function ProductDetails() {
                         }}
                       >
                         {relatedProduct.title}
-                      </span>
-                    </div>
+                      </h3>
+                    </article>
                   </SwiperSlide>
                 ))}
               </Swiper>
 
               <button 
                 className="swiper-button-prev-custom-related category-products-nav"
-                aria-label="Previous"
+                aria-label={translate('previousSlide')}
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <svg 
+                  width="20" 
+                  height="20" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="1.5"
+                  aria-hidden="true"
+                >
                   <polyline points="15 18 9 12 15 6"></polyline>
                 </svg>
               </button>
               <button 
                 className="swiper-button-next-custom-related category-products-nav"
-                aria-label="Next"
+                aria-label={translate('nextSlide')}
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <svg 
+                  width="20" 
+                  height="20" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="1.5"
+                  aria-hidden="true"
+                >
                   <polyline points="9 18 15 12 9 6"></polyline>
                 </svg>
               </button>
             </div>
-          </div>
-        </div>
+          </section>
+        </aside>
       )}
-    </div>
+    </article>
   );
 }
 

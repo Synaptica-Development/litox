@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import '../styles/Landing.css';
 
 const API_BASE_URL = 'https://api.litox.ge';
@@ -100,17 +100,26 @@ function Landing() {
     updateMetaTag('link[rel="canonical"]', 'rel', 'canonical', 'https://litoxgeorgia.ge');
 
     // Hreflang tags for multilingual SEO
-    updateMetaTag('link[rel="alternate"][hreflang="ka"]', 'rel', 'alternate', 'https://litoxgeorgia.ge');
-    document.querySelector('link[rel="alternate"][hreflang="ka"]')?.setAttribute('hreflang', 'ka');
-    
-    updateMetaTag('link[rel="alternate"][hreflang="en"]', 'rel', 'alternate', 'https://litoxgeorgia.ge/en');
-    document.querySelector('link[rel="alternate"][hreflang="en"]')?.setAttribute('hreflang', 'en');
-    
-    updateMetaTag('link[rel="alternate"][hreflang="ru"]', 'rel', 'alternate', 'https://litoxgeorgia.ge/ru');
-    document.querySelector('link[rel="alternate"][hreflang="ru"]')?.setAttribute('hreflang', 'ru');
+    const baseUrl = 'https://litoxgeorgia.ge';
+    const languages = [
+      { lang: 'ka', url: `${baseUrl}` },
+      { lang: 'en', url: `${baseUrl}/en` },
+      { lang: 'ru', url: `${baseUrl}/ru` },
+      { lang: 'x-default', url: `${baseUrl}` }
+    ];
 
-    updateMetaTag('link[rel="alternate"][hreflang="x-default"]', 'rel', 'alternate', 'https://litoxgeorgia.ge');
-    document.querySelector('link[rel="alternate"][hreflang="x-default"]')?.setAttribute('hreflang', 'x-default');
+    languages.forEach(({ lang, url }) => {
+      let link = document.querySelector(`link[hreflang="${lang}"]`);
+      if (!link) {
+        link = document.createElement('link');
+        link.rel = 'alternate';
+        link.hreflang = lang;
+        link.href = url;
+        document.head.appendChild(link);
+      } else {
+        link.href = url;
+      }
+    });
 
     // Robots meta
     updateMetaTag('meta[name="robots"]', null, 'robots', 'index, follow, max-image-preview:large');
@@ -256,13 +265,18 @@ function Landing() {
     navigate(`/product/${productID}`);
   };
 
-  // Translation function for button text
+  // Translation function for button text and aria labels
   const translate = (key) => {
     const translations = {
       moreDetailed: {
         ka: 'დეტალურად',
-        en: 'MORE DETAILED',
-        ru: 'ПОДРОБНЕЕ'
+        en: 'More Detailed',
+        ru: 'Подробнее'
+      },
+      viewProduct: {
+        ka: 'პროდუქტის ნახვა',
+        en: 'View Product',
+        ru: 'Посмотреть продукт'
       },
       loading: {
         ka: 'იტვირთება...',
@@ -273,6 +287,36 @@ function Landing() {
         ka: 'ბანერები არ არის',
         en: 'No banners available',
         ru: 'Баннеры недоступны'
+      },
+      mainCarousel: {
+        ka: 'Litox Georgia - ძირითადი სლაიდერი',
+        en: 'Litox Georgia - Main Carousel',
+        ru: 'Litox Georgia - Основной слайдер'
+      },
+      previousSlide: {
+        ka: 'წინა სლაიდი',
+        en: 'Previous slide',
+        ru: 'Предыдущий слайд'
+      },
+      nextSlide: {
+        ka: 'შემდეგი სლაიდი',
+        en: 'Next slide',
+        ru: 'Следующий слайд'
+      },
+      slideOf: {
+        ka: 'სლაიდი {current} {total}-დან',
+        en: 'Slide {current} of {total}',
+        ru: 'Слайд {current} из {total}'
+      },
+      goToSlide: {
+        ka: 'გადადით სლაიდზე {number}',
+        en: 'Go to slide {number}',
+        ru: 'Перейти к слайду {number}'
+      },
+      carouselNavigation: {
+        ka: 'სლაიდერის ნავიგაცია',
+        en: 'Carousel navigation',
+        ru: 'Навигация по слайдеру'
       }
     };
     return translations[key]?.[language] || translations[key]?.['en'] || key;
@@ -280,123 +324,199 @@ function Landing() {
 
   if (loading) {
     return (
-      <div className="intro-slider">
-        <div className="carousel-container">
-          <div className="landing-skeleton-container">
-            <div className="landing-skeleton-image"></div>
-            
-            <div className="landing-skeleton-text-wrapper">
-              <div className="landing-skeleton-text"></div>
-              <div className="landing-skeleton-button"></div>
-            </div>
-
-            <div className="landing-skeleton-controls">
-              <div className="landing-skeleton-arrow"></div>
-              <div className="landing-skeleton-dots">
-                <div className="landing-skeleton-dot"></div>
-                <div className="landing-skeleton-dot"></div>
-                <div className="landing-skeleton-dot"></div>
+      <main role="main" aria-labelledby="main-carousel-heading" aria-busy="true">
+        <section className="intro-slider" aria-label={translate('mainCarousel')}>
+          <div className="carousel-container">
+            <h1 id="main-carousel-heading" className="visually-hidden">{translate('mainCarousel')}</h1>
+            <div className="landing-skeleton-container" aria-live="polite" aria-label={translate('loading')}>
+              <div className="landing-skeleton-image" aria-hidden="true"></div>
+              
+              <div className="landing-skeleton-text-wrapper">
+                <div className="landing-skeleton-text" aria-hidden="true"></div>
+                <div className="landing-skeleton-button" aria-hidden="true"></div>
               </div>
-              <div className="landing-skeleton-arrow"></div>
+
+              <div className="landing-skeleton-controls">
+                <div className="landing-skeleton-arrow" aria-hidden="true"></div>
+                <div className="landing-skeleton-dots" aria-hidden="true">
+                  <div className="landing-skeleton-dot" aria-hidden="true"></div>
+                  <div className="landing-skeleton-dot" aria-hidden="true"></div>
+                  <div className="landing-skeleton-dot" aria-hidden="true"></div>
+                </div>
+                <div className="landing-skeleton-arrow" aria-hidden="true"></div>
+              </div>
             </div>
+            <span className="visually-hidden" role="status">{translate('loading')}</span>
           </div>
-        </div>
-      </div>
+        </section>
+      </main>
     );
   }
 
   if (images.length === 0) {
     return (
-      <div className="intro-slider">
-        <div className="carousel-container">
-          <div className="error">{translate('noBanners')}</div>
-        </div>
-      </div>
+      <main role="main" aria-labelledby="main-carousel-heading">
+        <section className="intro-slider" aria-label={translate('mainCarousel')}>
+          <div className="carousel-container">
+            <h1 id="main-carousel-heading" className="visually-hidden">{translate('mainCarousel')}</h1>
+            <div className="error" role="alert" aria-live="assertive">{translate('noBanners')}</div>
+          </div>
+        </section>
+      </main>
     );
   }
 
   return (
-    <div className="intro-slider">
-      <div className="carousel-container">
-        <div className="carousel-wrapper">
-          <div className="carousel-track">
-            {images.map((img, index) => (
-              <div 
-                key={index} 
-                className="carousel-slide"
-                style={{
-                  opacity: index === currentSlide ? 1 : 0,
-                  zIndex: index === currentSlide ? 2 : 0,
-                  visibility: index === currentSlide ? 'visible' : 'hidden'
-                }}
-              >
-                <div className="image-wrapper">
-                  <img 
-                    src={img} 
-                    alt={banners[index]?.text || `Litox Georgia - სამშენებლო მასალები ${index + 1}`}
-                    className="carousel-image"
-                    loading={index === 0 ? 'eager' : 'lazy'}
-                    key={`${index}-${currentSlide}`}
-                  />
+    <main role="main" aria-labelledby="main-carousel-heading">
+      <section 
+        className="intro-slider" 
+        aria-roledescription="carousel" 
+        aria-label={translate('mainCarousel')}
+      >
+        <div className="carousel-container">
+          <h1 id="main-carousel-heading" className="visually-hidden">{translate('mainCarousel')}</h1>
+          
+          <div className="carousel-wrapper">
+            <div 
+              className="carousel-track" 
+              role="group"
+              aria-roledescription="slide container"
+              aria-live="polite"
+              aria-atomic="false"
+            >
+              {images.map((img, index) => (
+                <div 
+                  key={index} 
+                  className="carousel-slide"
+                  style={{
+                    opacity: index === currentSlide ? 1 : 0,
+                    zIndex: index === currentSlide ? 2 : 0,
+                    visibility: index === currentSlide ? 'visible' : 'hidden'
+                  }}
+                  role="group"
+                  aria-roledescription="slide"
+                  aria-hidden={index !== currentSlide}
+                  aria-label={translate('slideOf')
+                    .replace('{current}', index + 1)
+                    .replace('{total}', images.length)}
+                >
+                  <div className="image-wrapper">
+                    <img 
+                      src={img} 
+                      alt={banners[index]?.text || 
+                        (language === 'ka' ? `Litox Georgia - სამშენებლო მასალები ${index + 1}` :
+                         language === 'ru' ? `Litox Georgia - строительные материалы ${index + 1}` :
+                         `Litox Georgia - construction materials ${index + 1}`)}
+                      className="carousel-image"
+                      loading={index === 0 ? 'eager' : 'lazy'}
+                      width="1200"
+                      height="600"
+                      fetchpriority={index === 0 ? 'high' : 'auto'}
+                      key={`${index}-${currentSlide}`}
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+
+            <div className="intro-slide-text" aria-live="polite" aria-atomic="true">
+              {banners[currentSlide]?.text && (
+                <p className="banner-text">{banners[currentSlide].text}</p>
+              )}
+              {/* Only show button if banner has productID - Using React Router Link for SPA navigation with SEO-friendly href */}
+              {banners[currentSlide]?.productID && (
+                <Link 
+                  to={`/product/${banners[currentSlide].productID}`}
+                  className="default-btn"
+                  aria-label={`${translate('viewProduct')}: ${banners[currentSlide]?.text || translate('moreDetailed')}`}
+                  title={`${translate('viewProduct')}: ${banners[currentSlide]?.text || ''}`}
+                >
+                  {translate('moreDetailed')}
+                </Link>
+              )}
+            </div>
           </div>
 
-          <div className="intro-slide-text">
-            {banners[currentSlide]?.text && (
-              <p className="banner-text">{banners[currentSlide].text}</p>
-            )}
-            {/* Only show button if banner has productID - Using proper <a> tag with href for SEO */}
-            {banners[currentSlide]?.productID && (
-              <a 
-                href={`/product/${banners[currentSlide].productID}`}
-                className="default-btn"
-                onClick={(e) => handleProductClick(e, banners[currentSlide].productID)}
-                aria-label={`View product details: ${banners[currentSlide]?.text || 'Product information'}`}
-              >
-                {translate('moreDetailed')}
-              </a>
-            )}
-          </div>
-        </div>
-
-        <div className="carousel-controls">
-          <button 
-            className="arrow-btn prev-btn" 
-            onClick={prevSlide}
-            aria-label="Previous slide"
+          <nav 
+            className="carousel-controls" 
+            aria-label={translate('carouselNavigation')}
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-          </button>
-
-          <div className="numbered-dots">
-            {images.map((_, index) => (
-              <button
-                key={index}
-                className={`number-dot ${currentSlide === index ? 'active' : ''}`}
-                onClick={() => goToSlide(index)}
-                aria-label={`Go to slide ${index + 1}`}
+            <button 
+              className="arrow-btn prev-btn" 
+              onClick={prevSlide}
+              aria-label={translate('previousSlide')}
+              aria-controls="main-carousel-heading"
+              disabled={images.length <= 1}
+              type="button"
+            >
+              <svg 
+                width="20" 
+                height="20" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                aria-hidden="true"
+                focusable="false"
               >
-                {index + 1}
-              </button>
-            ))}
-          </div>
+                <title>{translate('previousSlide')}</title>
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
 
-          <button 
-            className="arrow-btn next-btn" 
-            onClick={nextSlide}
-            aria-label="Next slide"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-          </button>
+            <div 
+              className="numbered-dots" 
+              role="tablist"
+              aria-label={translate('carouselNavigation')}
+            >
+              {images.map((_, index) => (
+                <button
+                  key={index}
+                  className={`number-dot ${currentSlide === index ? 'active' : ''}`}
+                  onClick={() => goToSlide(index)}
+                  aria-label={translate('goToSlide').replace('{number}', index + 1)}
+                  role="tab"
+                  aria-selected={currentSlide === index}
+                  aria-controls="main-carousel-heading"
+                  tabIndex={currentSlide === index ? 0 : -1}
+                  type="button"
+                >
+                  {index + 1}
+                  <span className="visually-hidden">
+                    {translate('slideOf')
+                      .replace('{current}', index + 1)
+                      .replace('{total}', images.length)}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            <button 
+              className="arrow-btn next-btn" 
+              onClick={nextSlide}
+              aria-label={translate('nextSlide')}
+              aria-controls="main-carousel-heading"
+              disabled={images.length <= 1}
+              type="button"
+            >
+              <svg 
+                width="20" 
+                height="20" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                aria-hidden="true"
+                focusable="false"
+              >
+                <title>{translate('nextSlide')}</title>
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+          </nav>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }
 

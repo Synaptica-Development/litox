@@ -298,7 +298,20 @@ function AllProducts() {
       error: { ka: 'შეცდომა პროდუქტების ჩატვირთვისას', en: 'Error loading products', ru: 'Ошибка загрузки продуктов' },
       noProducts: { ka: 'პროდუქტები არ არის ხელმისაწვდომი', en: 'No products available', ru: 'Продукты недоступны' },
       previous: { ka: 'წინა', en: 'Previous', ru: 'Предыдущая' },
-      next: { ka: 'შემდეგი', en: 'Next', ru: 'Следующая' }
+      next: { ka: 'შემდეგი', en: 'Next', ru: 'Следующая' },
+      page: { ka: 'გვერდი', en: 'Page', ru: 'Страница' },
+      of: { ka: '-დან', en: 'of', ru: 'из' },
+      viewProduct: { ka: 'პროდუქტის ნახვა', en: 'View product', ru: 'Посмотреть продукт' },
+      filterBy: { ka: 'ფილტრი კატეგორიის მიხედვით', en: 'Filter by category', ru: 'Фильтр по категории' },
+      showing: { ka: 'ნაჩვენებია', en: 'Showing', ru: 'Показано' },
+      productsPage: { ka: 'პროდუქტების გვერდი', en: 'Products page', ru: 'Страница продуктов' },
+      productList: { ka: 'პროდუქტების სია', en: 'Product list', ru: 'Список продуктов' },
+      categoryFilters: { ka: 'კატეგორიის ფილტრები', en: 'Category filters', ru: 'Фильтры категорий' },
+      pagination: { ka: 'გვერდების ნავიგაცია', en: 'Pagination', ru: 'Пагинация' },
+      goToPage: { ka: 'გადადით გვერდზე', en: 'Go to page', ru: 'Перейти на страницу' },
+      currentPage: { ka: 'მიმდინარე გვერდი', en: 'Current page', ru: 'Текущая страница' },
+      returnHome: { ka: 'დაბრუნება მთავარ გვერდზე', en: 'Return to homepage', ru: 'Вернуться на главную' },
+      breadcrumbNav: { ka: 'ნავიგაციის ბილიკი', en: 'Breadcrumb navigation', ru: 'Навигационная цепочка' }
     };
     return translations[key]?.[language] || translations[key]?.['en'] || key;
   }, [language]);
@@ -332,7 +345,7 @@ function AllProducts() {
   }, [selectedCategory, categories, translate]);
 
   const SkeletonCard = useMemo(() => () => (
-    <div className="all-products-page-card all-products-page-skeleton">
+    <div className="all-products-page-card all-products-page-skeleton" aria-hidden="true">
       <div className="all-products-page-image all-products-page-skeleton-image">
         <div className="all-products-page-skeleton-shimmer"></div>
       </div>
@@ -371,7 +384,9 @@ function AllProducts() {
         className="all-products-page-pagination-btn all-products-page-pagination-arrow" 
         onClick={() => handlePageChange(currentPage - 1)} 
         disabled={currentPage === 1}
-        aria-label={translate('previous')}
+        aria-label={`${translate('previous')} ${translate('page')}`}
+        aria-disabled={currentPage === 1}
+        type="button"
       >
         {translate('previous')}
       </button>
@@ -383,7 +398,8 @@ function AllProducts() {
           key={1} 
           className="all-products-page-pagination-btn" 
           onClick={() => handlePageChange(1)}
-          aria-label="Go to page 1"
+          aria-label={`${translate('goToPage')} 1`}
+          type="button"
         >
           1
         </button>
@@ -399,8 +415,9 @@ function AllProducts() {
           key={i} 
           className={`all-products-page-pagination-btn ${currentPage === i ? 'active' : ''}`} 
           onClick={() => handlePageChange(i)}
-          aria-label={`Go to page ${i}`}
+          aria-label={`${translate('goToPage')} ${i}`}
           aria-current={currentPage === i ? 'page' : undefined}
+          type="button"
         >
           {i}
         </button>
@@ -416,7 +433,8 @@ function AllProducts() {
           key={totalPages} 
           className="all-products-page-pagination-btn" 
           onClick={() => handlePageChange(totalPages)}
-          aria-label={`Go to page ${totalPages}`}
+          aria-label={`${translate('goToPage')} ${totalPages}`}
+          type="button"
         >
           {totalPages}
         </button>
@@ -429,52 +447,112 @@ function AllProducts() {
         className="all-products-page-pagination-btn all-products-page-pagination-arrow" 
         onClick={() => handlePageChange(currentPage + 1)} 
         disabled={currentPage === totalPages}
-        aria-label={translate('next')}
+        aria-label={`${translate('next')} ${translate('page')}`}
+        aria-disabled={currentPage === totalPages}
+        type="button"
       >
         {translate('next')}
       </button>
     );
 
-    return <div className="all-products-page-pagination">{pages}</div>;
+    return (
+      <nav className="all-products-page-pagination" aria-label={translate('pagination')}>
+        <div className="visually-hidden" role="status" aria-live="polite">
+          {translate('page')} {currentPage} {translate('of')} {totalPages}
+        </div>
+        {pages}
+      </nav>
+    );
   }, [totalPages, currentPage, handlePageChange, translate]);
 
   if (error) {
     return (
-      <div className="all-products-page-container">
+      <main className="all-products-page-container" role="main">
         <div className="container">
-          <div className="all-products-page-error">{translate('error')}: {error}</div>
-          <Link to="/">← {translate('home')}</Link>
+          <div className="all-products-page-error" role="alert" aria-live="assertive">
+            {translate('error')}: {error}
+          </div>
+          <Link 
+            to="/"
+            aria-label={translate('returnHome')}
+            title={translate('home')}
+          >
+            ← {translate('home')}
+          </Link>
         </div>
-      </div>
+      </main>
     );
   }
 
   return (
-    <>
-      <section className="products-hero2" style={{ backgroundImage: `url(${background})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
+    <main role="main" aria-labelledby="page-title">
+      <section 
+        className="products-hero2" 
+        style={{ 
+          backgroundImage: `url(${background})`, 
+          backgroundSize: 'cover', 
+          backgroundPosition: 'center', 
+          backgroundRepeat: 'no-repeat' 
+        }}
+        aria-labelledby="page-title"
+      >
         <div className="container2">
-          <ul className="breadcrumbs">
-            <li><Link to="/">{translate('home')}</Link></li>
-            <li><span>{translate('products')}</span></li>
-          </ul>
-          <h1>{getPageTitle()}</h1>
+          <nav className="breadcrumbs" aria-label={translate('breadcrumbNav')}>
+            <ol role="list">
+              <li role="listitem">
+                <Link 
+                  to="/"
+                  aria-label={translate('home')}
+                  title={translate('home')}
+                >
+                  {translate('home')}
+                </Link>
+              </li>
+              <li role="listitem" aria-current="page">
+                <span>{translate('products')}</span>
+              </li>
+            </ol>
+          </nav>
+          <h1 id="page-title">{getPageTitle()}</h1>
         </div>
       </section>
 
-      <div className="all-products-page-section">
+      <section className="all-products-page-section" aria-labelledby="products-section-heading">
+        <h2 id="products-section-heading" className="visually-hidden">
+          {translate('productList')}
+        </h2>
         <div className="container">
           {loading ? (
-            <div className="all-products-page-filter-wrapper">
-              {[...Array(4)].map((_, i) => <div key={i} className="all-products-page-filter-btn skeleton all-products-page-skeleton-filter"></div>)}
-            </div>
+            <nav 
+              className="all-products-page-filter-wrapper" 
+              aria-label={translate('categoryFilters')}
+              aria-busy="true"
+            >
+              {[...Array(4)].map((_, i) => (
+                <div 
+                  key={i} 
+                  className="all-products-page-filter-btn skeleton all-products-page-skeleton-filter"
+                  aria-hidden="true"
+                ></div>
+              ))}
+              <span className="visually-hidden" role="status" aria-live="polite">
+                {translate('loading')}
+              </span>
+            </nav>
           ) : (
-            <div className="all-products-page-filter-wrapper">
+            <nav 
+              className="all-products-page-filter-wrapper" 
+              aria-label={translate('categoryFilters')}
+              role="navigation"
+            >
               <button 
                 className={`all-products-page-filter-btn ${selectedCategory === 'all' ? 'active' : ''}`} 
                 onClick={() => handleCategoryFilter('all')}
-                aria-label={`Filter all products (${allProducts.length})`}
+                aria-label={`${translate('filterBy')} ${translate('allProducts')} (${allProducts.length} ${translate('products').toLowerCase()})`}
+                aria-pressed={selectedCategory === 'all'}
+                type="button"
               >
-                {translate('allProducts')} ({allProducts.length}) {loadingBackground && ' ⟳'}
+                {translate('allProducts')} ({allProducts.length}) {loadingBackground && <span aria-hidden="true"> ⟳</span>}
               </button>
               {categories.map((category) => {
                 const count = allProducts.filter(p => p.categoryId === category.id).length;
@@ -483,50 +561,80 @@ function AllProducts() {
                     key={category.id} 
                     className={`all-products-page-filter-btn ${selectedCategory === category.id ? 'active' : ''}`} 
                     onClick={() => handleCategoryFilter(category.id)}
-                    aria-label={`Filter ${category.title} products${count > 0 ? ` (${count})` : ''}`}
+                    aria-label={`${translate('filterBy')} ${category.title}${count > 0 ? ` (${count} ${translate('products').toLowerCase()})` : ''}`}
+                    aria-pressed={selectedCategory === category.id}
+                    type="button"
                   >
                     {category.title} {count > 0 ? `(${count})` : ''}
                   </button>
                 );
               })}
-            </div>
+            </nav>
           )}
 
           {loading ? (
-            <div className="all-products-page-grid">
-              {[...Array(16)].map((_, index) => <SkeletonCard key={index} />)}
-            </div>
+            <>
+              <div className="visually-hidden" role="status" aria-live="polite" aria-busy="true">
+                {translate('loading')}
+              </div>
+              <div className="all-products-page-grid" aria-busy="true">
+                {[...Array(16)].map((_, index) => <SkeletonCard key={index} />)}
+              </div>
+            </>
           ) : filteredProducts.length === 0 ? (
-            <div className="all-products-page-error">{translate('noProducts')}</div>
+            <div className="all-products-page-error" role="status" aria-live="polite">
+              {translate('noProducts')}
+            </div>
           ) : (
             <>
-              <div className="all-products-page-grid">
+              <div className="visually-hidden" role="status" aria-live="polite">
+                {translate('showing')} {startIndex + 1}-{Math.min(endIndex, filteredProducts.length)} {translate('of')} {filteredProducts.length} {translate('products').toLowerCase()}
+              </div>
+              <div 
+                className="all-products-page-grid"
+                role="list"
+                aria-label={`${getPageTitle()} - ${filteredProducts.length} ${translate('products').toLowerCase()}`}
+              >
                 {currentProducts.map((product, index) => {
                   const productName = getProductName(product);
                   const categoryName = product.categoryName || '';
                   return (
-                    <Link 
-                      key={product.id || index} 
-                      to={`/products/${product.categoryId}/${product.id}`} 
+                    <article 
+                      key={product.id || index}
                       className="all-products-page-card"
-                      aria-label={`View ${productName}${categoryName ? ` in ${categoryName}` : ''} details`}
+                      role="listitem"
                     >
-                      <div className="all-products-page-image">
-                        <img 
-                          src={getProductImage(product)} 
-                          alt={`${productName}${categoryName ? ` - ${categoryName}` : ''}`} 
-                          loading="lazy" 
-                          onError={(e) => { e.target.src = `${process.env.PUBLIC_URL}/prod.webp`; }} 
-                        />
-                      </div>
-                      <div className="all-products-page-info">
-                        <h3 className="all-products-page-name">{productName}</h3>
-                        {categoryName && (
-                          <p className="all-products-page-category">{categoryName}</p>
-                        )}
-                        <img src={arrow} alt="" className="all-products-page-arrow" aria-hidden="true" />
-                      </div>
-                    </Link>
+                      <Link 
+                        to={`/products/${product.categoryId}/${product.id}`} 
+                        aria-label={`${translate('viewProduct')}: ${productName}${categoryName ? ` - ${categoryName}` : ''}`}
+                        title={`${productName}${categoryName ? ` - ${categoryName}` : ''}`}
+                      >
+                        <div className="all-products-page-image">
+                          <img 
+                            src={getProductImage(product)} 
+                            alt={productName}
+                            width="300"
+                            height="300"
+                            loading={index < 8 ? 'eager' : 'lazy'}
+                            onError={(e) => { e.target.src = `${process.env.PUBLIC_URL}/prod.webp`; }} 
+                          />
+                        </div>
+                        <div className="all-products-page-info">
+                          <h3 className="all-products-page-name">{productName}</h3>
+                          {categoryName && (
+                            <p className="all-products-page-category">{categoryName}</p>
+                          )}
+                          <img 
+                            src={arrow} 
+                            alt="" 
+                            className="all-products-page-arrow" 
+                            aria-hidden="true"
+                            width="20"
+                            height="20"
+                          />
+                        </div>
+                      </Link>
+                    </article>
                   );
                 })}
               </div>
@@ -534,8 +642,42 @@ function AllProducts() {
             </>
           )}
         </div>
-      </div>
-    </>
+      </section>
+
+      {/* JSON-LD Structured Data for Product Listing */}
+      {!loading && filteredProducts.length > 0 && (
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            "name": getPageTitle(),
+            "description": SEO_META_DATA[language][selectedCategory === 'all' ? 'allProducts' : 'category'].description,
+            "url": selectedCategory === 'all' 
+              ? 'https://litoxgeorgia.ge/products' 
+              : `https://litoxgeorgia.ge/products?category=${selectedCategory}`,
+            "mainEntity": {
+              "@type": "ItemList",
+              "numberOfItems": filteredProducts.length,
+              "itemListElement": currentProducts.map((product, index) => ({
+                "@type": "ListItem",
+                "position": startIndex + index + 1,
+                "item": {
+                  "@type": "Product",
+                  "name": getProductName(product),
+                  "image": getProductImage(product),
+                  "url": `https://litoxgeorgia.ge/products/${product.categoryId}/${product.id}`,
+                  "category": product.categoryName || undefined,
+                  "brand": {
+                    "@type": "Brand",
+                    "name": "Litox Georgia"
+                  }
+                }
+              }))
+            }
+          })}
+        </script>
+      )}
+    </main>
   );
 }
 

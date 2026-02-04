@@ -127,6 +127,31 @@ function Contacts() {
         ka: 'ელ-ფოსტა',
         en: 'EMAIL',
         ru: 'ЭЛЕКТРОННАЯ ПОЧТА'
+      },
+      callUs: {
+        ka: 'დაგვირეკეთ ნომერზე',
+        en: 'Call us at',
+        ru: 'Позвоните нам по номеру'
+      },
+      emailUs: {
+        ka: 'მოგვწერეთ მეილზე',
+        en: 'Email us at',
+        ru: 'Напишите нам на'
+      },
+      viewOnMap: {
+        ka: 'ნახეთ რუკაზე',
+        en: 'View on map',
+        ru: 'Посмотреть на карте'
+      },
+      companyLocation: {
+        ka: 'კომპანიის მდებარეობა',
+        en: 'Company location',
+        ru: 'Местоположение компании'
+      },
+      contactInformation: {
+        ka: 'საკონტაქტო ინფორმაცია',
+        en: 'Contact information',
+        ru: 'Контактная информация'
       }
     };
     return translations[key]?.[language] || translations[key]?.['en'] || key;
@@ -135,51 +160,90 @@ function Contacts() {
   return (
     <div className="contact-page">
       <div className="container">
-        <ul className="breadcrumbs">
-          <li><Link to="/">{translate('main')}</Link></li>
-          <li><span>{translate('contacts')}</span></li>
-        </ul>
+        <nav aria-label="Breadcrumb">
+          <ul className="breadcrumbs">
+            <li>
+              <Link to="/" aria-label={translate('main')}>
+                {translate('main')}
+              </Link>
+            </li>
+            <li>
+              <span aria-current="page">{translate('contacts')}</span>
+            </li>
+          </ul>
+        </nav>
         <h1>{translate('contacts')}</h1>
       </div>
 
-      <div className="contacts__company-info">
+      <main className="contacts__company-info">
         <div className="container">
           <h2 className="contact-heading">{translate('address')}</h2>
           
           <div className="contact-layout">
             {/* Left side - Contact Info */}
-            <div className="contact-info-box">
-              <div className="info-item">
-                <div className="info-label">{translate('location')}</div>
+            <section 
+              className="contact-info-box"
+              aria-label={translate('contactInformation')}
+            >
+              <article className="info-item">
+                <h3 className="info-label">{translate('location')}</h3>
                 <div className="info-content">
-                  <img src={loc} alt="location" width="20" />
-                  <address>{translate('address')}</address>
+                  <img 
+                    src={loc} 
+                    alt="" 
+                    width="20" 
+                    aria-hidden="true"
+                    role="presentation"
+                  />
+                  <address>
+                    <a 
+                      href="https://www.google.com/maps/search/?api=1&query=41.7189,44.7833"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${translate('viewOnMap')}: ${translate('address')}`}
+                    >
+                      {translate('address')}
+                    </a>
+                  </address>
                 </div>
-              </div>
+              </article>
 
-              <div className="info-item">
-                <div className="info-label">{translate('phone')}</div>
+              <article className="info-item">
+                <h3 className="info-label">{translate('phone')}</h3>
                 <div className="info-content">
-                  <span className="icon">📞</span>
+                  <span className="icon" aria-hidden="true" role="presentation">📞</span>
                   <div className="phone-list">
-                    <a href="tel:+995598347784">+995 598 34 77 84</a>
+                    <a 
+                      href="tel:+995598347784"
+                      aria-label={`${translate('callUs')} +995 598 34 77 84`}
+                    >
+                      +995 598 34 77 84
+                    </a>
                   </div>
                 </div>
-              </div>
+              </article>
 
-              <div className="info-item">
-                <div className="info-label">{translate('email')}</div>
+              <article className="info-item">
+                <h3 className="info-label">{translate('email')}</h3>
                 <div className="info-content">
-                  <span className="icon">✉️</span>
+                  <span className="icon" aria-hidden="true" role="presentation">✉️</span>
                   <div className="email-list">
-                    <a href="mailto:info@litox.ge">info@litox.ge</a>
+                    <a 
+                      href="mailto:info@litox.ge"
+                      aria-label={`${translate('emailUs')} info@litox.ge`}
+                    >
+                      info@litox.ge
+                    </a>
                   </div>
                 </div>
-              </div>
-            </div>
+              </article>
+            </section>
 
             {/* Right side - Google Maps */}
-            <div className="contact-map-box">
+            <section 
+              className="contact-map-box"
+              aria-label={translate('companyLocation')}
+            >
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2977.234567!2d44.7833!3d41.7189!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDQzJzA4LjAiTiA0NMKwNDYnNTkuOSJF!5e0!3m2!1sen!2sge!4v1234567890&markers=color:red%7C41.7189,44.7833"
                 width="100%"
@@ -188,12 +252,13 @@ function Contacts() {
                 allowFullScreen=""
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="Company Location"
+                title={translate('companyLocation')}
+                aria-label={`${translate('companyLocation')}: ${translate('address')}`}
               ></iframe>
-            </div>
+            </section>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

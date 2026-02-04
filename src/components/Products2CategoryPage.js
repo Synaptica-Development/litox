@@ -119,6 +119,41 @@ function Products2CategoryPage() {
         ka: 'შეცდომა დატვირთვისას',
         en: 'Error loading',
         ru: 'Ошибка загрузки'
+      },
+      viewProduct: {
+        ka: 'ნახე პროდუქტი',
+        en: 'View product',
+        ru: 'Посмотреть продукт'
+      },
+      page: {
+        ka: 'გვერდი',
+        en: 'Page',
+        ru: 'Страница'
+      },
+      currentPage: {
+        ka: 'მიმდინარე გვერდი',
+        en: 'Current page',
+        ru: 'Текущая страница'
+      },
+      goToPage: {
+        ka: 'გადადი გვერდზე',
+        en: 'Go to page',
+        ru: 'Перейти на страницу'
+      },
+      loading: {
+        ka: 'იტვირთება...',
+        en: 'Loading...',
+        ru: 'Загрузка...'
+      },
+      backToCategories: {
+        ka: 'უკან კატეგორიებზე',
+        en: 'Back to categories',
+        ru: 'Назад к категориям'
+      },
+      productsIn: {
+        ka: 'პროდუქტები კატეგორიაში',
+        en: 'Products in',
+        ru: 'Продукты в'
       }
     };
     return translations[key]?.[language] || translations[key]?.['ka'] || key;
@@ -135,7 +170,7 @@ function Products2CategoryPage() {
 
   // Skeleton loader
   const SkeletonCard = () => (
-    <div className="product-card skeleton">
+    <div className="product-card skeleton" aria-hidden="true">
       <div className="product-image-wrapper">
         <div className="product-image skeleton-img">
           <div className="skeleton-shimmer"></div>
@@ -176,7 +211,8 @@ function Products2CategoryPage() {
         className="pagination-btn pagination-arrow"
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        aria-label={translate('previous')}
+        aria-label={`${translate('previous')} ${translate('page')}`}
+        aria-disabled={currentPage === 1}
       >
         {translate('previous')}
       </button>
@@ -188,13 +224,17 @@ function Products2CategoryPage() {
           key={1}
           className="pagination-btn"
           onClick={() => handlePageChange(1)}
-          aria-label="Page 1"
+          aria-label={`${translate('goToPage')} 1`}
         >
           1
         </button>
       );
       if (startPage > 2) {
-        pages.push(<span key="dots1" className="pagination-dots">...</span>);
+        pages.push(
+          <span key="dots1" className="pagination-dots" aria-hidden="true">
+            ...
+          </span>
+        );
       }
     }
 
@@ -204,7 +244,7 @@ function Products2CategoryPage() {
           key={i}
           className={`pagination-btn ${currentPage === i ? 'active' : ''}`}
           onClick={() => handlePageChange(i)}
-          aria-label={`Page ${i}`}
+          aria-label={currentPage === i ? `${translate('currentPage')} ${i}` : `${translate('goToPage')} ${i}`}
           aria-current={currentPage === i ? 'page' : undefined}
         >
           {i}
@@ -214,14 +254,18 @@ function Products2CategoryPage() {
 
     if (endPage < totalPages) {
       if (endPage < totalPages - 1) {
-        pages.push(<span key="dots2" className="pagination-dots">...</span>);
+        pages.push(
+          <span key="dots2" className="pagination-dots" aria-hidden="true">
+            ...
+          </span>
+        );
       }
       pages.push(
         <button
           key={totalPages}
           className="pagination-btn"
           onClick={() => handlePageChange(totalPages)}
-          aria-label={`Page ${totalPages}`}
+          aria-label={`${translate('goToPage')} ${totalPages}`}
         >
           {totalPages}
         </button>
@@ -234,23 +278,32 @@ function Products2CategoryPage() {
         className="pagination-btn pagination-arrow"
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        aria-label={translate('next')}
+        aria-label={`${translate('next')} ${translate('page')}`}
+        aria-disabled={currentPage === totalPages}
       >
         {translate('next')}
       </button>
     );
 
-    return <div className="pagination">{pages}</div>;
+    return (
+      <nav className="pagination" role="navigation" aria-label={translate('page')}>
+        {pages}
+      </nav>
+    );
   };
 
   if (error) {
     return (
       <div className="category-page-container">
         <div className="container">
-          <div className="error-message">
+          <div className="error-message" role="alert" aria-live="assertive">
             {translate('loadingError')}: {error}
           </div>
-          <Link to="/products2" className="back-link">
+          <Link 
+            to="/products2" 
+            className="back-link"
+            aria-label={translate('backToCategories')}
+          >
             ← {translate('categories')}
           </Link>
         </div>
@@ -262,11 +315,16 @@ function Products2CategoryPage() {
     <div className="category-page">
       {/* Hero Section with Category Banner */}
       {loading ? (
-        <section className="category-hero skeleton">
+        <section 
+          className="category-hero skeleton" 
+          aria-hidden="true"
+          role="status"
+          aria-label={translate('loading')}
+        >
           <div className="skeleton-shimmer"></div>
         </section>
       ) : category ? (
-        <section 
+        <header 
           className="category-hero"
           style={{
             backgroundImage: `url(${category.bannerLink})`,
@@ -274,57 +332,82 @@ function Products2CategoryPage() {
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat'
           }}
+          role="banner"
         >
           <div className="category-hero-content">
-            <ul className="breadcrumbs">
-              <li><Link to="/">{translate('home')}</Link></li>
-              <li><Link to="/products2">{translate('categories')}</Link></li>
-              <li><span>{category.title}</span></li>
-            </ul>
+            <nav aria-label="Breadcrumb">
+              <ul className="breadcrumbs">
+                <li>
+                  <Link to="/" aria-label={translate('home')}>
+                    {translate('home')}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/products2" aria-label={translate('categories')}>
+                    {translate('categories')}
+                  </Link>
+                </li>
+                <li>
+                  <span aria-current="page">{category.title}</span>
+                </li>
+              </ul>
+            </nav>
             <h1>{category.title}</h1>
           </div>
-        </section>
+        </header>
       ) : null}
 
       {/* Products Section */}
-      <section className="category-products-section">
+      <main 
+        className="category-products-section"
+        aria-label={category ? `${translate('productsIn')} ${category.title}` : translate('productsIn')}
+      >
         <div className="container">
           {loading ? (
-            <div className="products-grid">
+            <div 
+              className="products-grid" 
+              role="status" 
+              aria-live="polite"
+              aria-label={translate('loading')}
+            >
               {[...Array(12)].map((_, index) => (
                 <SkeletonCard key={index} />
               ))}
             </div>
           ) : products.length === 0 ? (
-            <div className="no-products">{translate('noProducts')}</div>
+            <div className="no-products" role="alert">
+              {translate('noProducts')}
+            </div>
           ) : (
             <>
-              <div className="products-grid">
+              <div className="products-grid" role="list">
                 {currentProducts.map((product) => (
-                  <Link
-                    key={product.id}
-                    to={`/products/${categoryId}/${product.id}`}
-                    className="product-card"
-                  >
-                    <div className="product-image-wrapper">
-                      <div className="product-image">
-                        <img
-                          src={getProductImage(product)}
-                          alt={getProductName(product)}
-                          loading="lazy"
-                          onError={(e) => {
-                            e.target.src = `${process.env.PUBLIC_URL}/prod.webp`;
-                          }}
-                        />
-                      </div>
-                      <div className="product-info">
-                        <h3 className="product-name">{getProductName(product)}</h3>
-                        <div className="product-arrow">
-                          <img src={arrow} alt="" />
+                  <article key={product.id} role="listitem">
+                    <Link
+                      to={`/products/${categoryId}/${product.id}`}
+                      className="product-card"
+                      aria-label={`${translate('viewProduct')}: ${getProductName(product)}`}
+                    >
+                      <div className="product-image-wrapper">
+                        <figure className="product-image">
+                          <img
+                            src={getProductImage(product)}
+                            alt={getProductName(product)}
+                            loading="lazy"
+                            onError={(e) => {
+                              e.target.src = `${process.env.PUBLIC_URL}/prod.webp`;
+                            }}
+                          />
+                        </figure>
+                        <div className="product-info">
+                          <h2 className="product-name">{getProductName(product)}</h2>
+                          <div className="product-arrow" aria-hidden="true">
+                            <img src={arrow} alt="" role="presentation" />
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </Link>
+                    </Link>
+                  </article>
                 ))}
               </div>
               
@@ -332,7 +415,7 @@ function Products2CategoryPage() {
             </>
           )}
         </div>
-      </section>
+      </main>
     </div>
   );
 }

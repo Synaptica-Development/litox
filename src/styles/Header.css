@@ -816,12 +816,6 @@ header {
   transition: stroke 0.3s ease;
 }
 
-/* Mobile Search Button - KEEP AS IS */
-.mobile-search-item {
-  border-top: 2px solid rgba(171, 163, 158, 0.3);
-  margin-top: 10px;
-  padding-top: 10px;
-}
 
 .mobile-search-btn {
   display: flex !important;
@@ -1180,4 +1174,306 @@ header {
   .search-result-item {
     padding: 15px 60px 15px 15px;
   }
+}
+
+
+
+
+
+
+
+/* ===================================================================
+   EXACT FIX FOR HORIZONTAL NAVIGATION
+   =================================================================== */
+/* The nav itself is NOT flex, the UL inside is! */
+nav.primary-menu {
+  display: block !important;
+}
+
+/* The UL inside nav.primary-menu needs to be flex row */
+nav.primary-menu > ul {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 20px !important;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* List items should be inline */
+nav.primary-menu > ul > li {
+  display: inline-block !important;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Remove ALL bullets */
+nav.primary-menu ul,
+nav.primary-menu li {
+  list-style: none !important;
+  list-style-type: none !important;
+}
+
+nav.primary-menu ul::before,
+nav.primary-menu li::before,
+nav.primary-menu ul::marker,
+nav.primary-menu li::marker {
+  content: none !important;
+  display: none !important;
+}
+
+/* Link styling */
+nav.primary-menu > ul > li > a {
+  color: #ffffff !important;
+  text-decoration: none !important;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+  padding: 5px 0;
+  display: block;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+nav.primary-menu > ul > li > a:hover {
+  color: #ef6f2e !important;
+}
+
+/* Dropdown stays vertical */
+nav.primary-menu ul.dropdown {
+  display: block !important;
+  flex-direction: column !important;
+}
+
+nav.primary-menu ul.dropdown li {
+  display: block !important;
+  width: 100%;
+}
+
+/* ===================================================================
+   HIDE PRIMARY MENU BUT KEEP LANGUAGE SWITCHER ON TABLETS
+   =================================================================== */
+
+/* Hide primary menu on tablets and below (when sidebar menu button appears) */
+/* BUT keep the desktop language switcher visible */
+@media (max-width: 1240px) {
+  /* Hide primary navigation menu */
+  nav.primary-menu,
+  .primary-menu {
+    display: none !important;
+  }
+  
+  nav.primary-menu > ul {
+    display: none !important;
+  }
+  
+  /* KEEP desktop language switcher visible on tablets/smaller laptops */
+  .lang.desktop-only,
+  ul.lang.desktop-only {
+    display: flex !important;
+  }
+}
+
+/* Hide language switcher ONLY on mobile phones (768px and below) */
+@media (max-width: 768px) {
+  .lang.desktop-only,
+  ul.lang.desktop-only {
+    display: none !important;
+  }
+}
+
+/* Make sure everything is visible on larger screens */
+@media (min-width: 1241px) {
+  /* Show primary navigation */
+  nav.primary-menu {
+    display: block !important;
+  }
+  
+  nav.primary-menu > ul {
+    display: flex !important;
+    flex-direction: row !important;
+  }
+  
+  /* Show desktop language switcher */
+  .lang.desktop-only,
+  ul.lang.desktop-only {
+    display: flex !important;
+  }
+}
+
+
+/* Mobile Language Switcher - Horizontal Row Fix */
+
+.mobile-nav__item.mobile-lang [role="group"] {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 15px !important;
+}
+
+
+
+/* Make burger menu button have transparent background */
+
+.open-menu,
+.small-menu-trigger,
+button.open-menu,
+button.small-menu-trigger {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+}
+
+/* Keep transparent on hover */
+.open-menu:hover,
+.small-menu-trigger:hover,
+button.open-menu:hover,
+button.small-menu-trigger:hover {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Keep transparent on focus/active */
+.open-menu:focus,
+.open-menu:active,
+.small-menu-trigger:focus,
+.small-menu-trigger:active {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+
+
+/* ===================================================================
+   DROPDOWN MENU FIX FOR PRODUCTS CATEGORIES
+   Add this to your Header.css file
+   =================================================================== */
+
+/* Ensure the parent li has position relative for dropdown positioning */
+nav.primary-menu > ul > li {
+  position: relative !important;
+  display: inline-block !important;
+  line-height: 60px !important;
+}
+
+/* Dropdown menu styling - FIXED VERSION */
+nav.primary-menu ul.dropdown,
+.primary-menu .dropdown {
+  position: absolute !important;
+  top: 100% !important;
+  left: 0 !important;
+  background: rgba(38, 35, 34, 0.98) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  min-width: 220px !important;
+  list-style: none !important;
+  padding: 15px 0 !important;
+  margin: 0 !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transform: translateY(-10px) !important;
+  transition: all 0.3s ease !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+  border: 1px solid #aba39e !important;
+  z-index: 1000 !important;
+  display: block !important;
+  flex-direction: column !important;
+}
+
+/* Show dropdown on hover */
+nav.primary-menu > ul > li:hover > ul.dropdown,
+nav.primary-menu > ul > li:hover > .dropdown,
+.primary-menu > ul > li:hover .dropdown {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) !important;
+  display: block !important;
+}
+
+/* Dropdown list items */
+nav.primary-menu ul.dropdown li,
+.primary-menu .dropdown li {
+  display: block !important;
+  width: 100% !important;
+  line-height: normal !important;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Dropdown links */
+nav.primary-menu ul.dropdown li a,
+.primary-menu .dropdown li a {
+  color: #ffffff !important;
+  text-decoration: none !important;
+  padding: 10px 20px !important;
+  display: block !important;
+  font-size: 14px !important;
+  transition: all 0.3s ease !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.3px !important;
+}
+
+/* Dropdown link hover */
+nav.primary-menu ul.dropdown li a:hover,
+.primary-menu .dropdown li a:hover {
+  background: rgba(239, 111, 46, 0.2) !important;
+  color: #ef6f2e !important;
+}
+
+/* Remove any conflicting styles */
+nav.primary-menu ul.dropdown::before,
+nav.primary-menu ul.dropdown li::before,
+.primary-menu .dropdown::before,
+.primary-menu .dropdown li::before {
+  display: none !important;
+  content: none !important;
+}
+
+/* Ensure dropdown stays visible when hovering over it */
+nav.primary-menu ul.dropdown:hover,
+.primary-menu .dropdown:hover {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) !important;
+}
+
+/* Add slight delay before hiding dropdown */
+nav.primary-menu > ul > li {
+  transition: all 0.3s ease !important;
+}
+
+/* ===================================================================
+   ALTERNATIVE FIX IF ABOVE DOESN'T WORK
+   =================================================================== */
+
+/* Force show dropdown with more specific selectors */
+header nav.primary-menu > ul > li:hover > ul[role="list"],
+header nav.primary-menu > ul > li:hover > ul.dropdown,
+header .primary-menu > ul > li:hover .dropdown {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) !important;
+  display: block !important;
+}
+
+/* Ensure parent link has hover trigger area */
+header nav.primary-menu > ul > li > a[aria-haspopup="true"] {
+  display: block !important;
+  position: relative !important;
+}
+
+/* Add padding-bottom to create hover bridge */
+header nav.primary-menu > ul > li:hover::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: -10px !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 10px !important;
+  display: block !important;
 }

@@ -231,6 +231,26 @@ function CategoryPage() {
         ka: 'პროდუქტი',
         en: 'Products',
         ru: 'Продуктов'
+      },
+      viewProduct: {
+        ka: 'ნახე პროდუქტი',
+        en: 'View product',
+        ru: 'Посмотреть продукт'
+      },
+      page: {
+        ka: 'გვერდი',
+        en: 'Page',
+        ru: 'Страница'
+      },
+      currentPage: {
+        ka: 'მიმდინარე გვერდი',
+        en: 'Current page',
+        ru: 'Текущая страница'
+      },
+      goToPage: {
+        ka: 'გადადი გვერდზე',
+        en: 'Go to page',
+        ru: 'Перейти на страницу'
       }
     };
     return translations[key]?.[language] || translations[key]?.['en'] || key;
@@ -275,6 +295,8 @@ function CategoryPage() {
         className="pagination-btn pagination-arrow"
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
+        aria-label={`${translate('previous')} ${translate('page')}`}
+        aria-disabled={currentPage === 1}
       >
         {translate('previous')}
       </button>
@@ -287,12 +309,17 @@ function CategoryPage() {
           key={1}
           className="pagination-btn"
           onClick={() => handlePageChange(1)}
+          aria-label={`${translate('goToPage')} 1`}
         >
           1
         </button>
       );
       if (startPage > 2) {
-        pages.push(<span key="dots1" className="pagination-dots">...</span>);
+        pages.push(
+          <span key="dots1" className="pagination-dots" aria-hidden="true">
+            ...
+          </span>
+        );
       }
     }
 
@@ -303,6 +330,8 @@ function CategoryPage() {
           key={i}
           className={`pagination-btn ${currentPage === i ? 'active' : ''}`}
           onClick={() => handlePageChange(i)}
+          aria-label={currentPage === i ? `${translate('currentPage')} ${i}` : `${translate('goToPage')} ${i}`}
+          aria-current={currentPage === i ? 'page' : undefined}
         >
           {i}
         </button>
@@ -312,13 +341,18 @@ function CategoryPage() {
     // Last page
     if (endPage < totalPages) {
       if (endPage < totalPages - 1) {
-        pages.push(<span key="dots2" className="pagination-dots">...</span>);
+        pages.push(
+          <span key="dots2" className="pagination-dots" aria-hidden="true">
+            ...
+          </span>
+        );
       }
       pages.push(
         <button
           key={totalPages}
           className="pagination-btn"
           onClick={() => handlePageChange(totalPages)}
+          aria-label={`${translate('goToPage')} ${totalPages}`}
         >
           {totalPages}
         </button>
@@ -332,19 +366,27 @@ function CategoryPage() {
         className="pagination-btn pagination-arrow"
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
+        aria-label={`${translate('next')} ${translate('page')}`}
+        aria-disabled={currentPage === totalPages}
       >
         {translate('next')}
       </button>
     );
 
-    return <div className="pagination">{pages}</div>;
+    return (
+      <nav className="pagination" role="navigation" aria-label={translate('page')}>
+        {pages}
+      </nav>
+    );
   }, [totalPages, currentPage, handlePageChange, translate]);
 
   // Memoized loading component
   const loadingComponent = useMemo(() => (
     <div className="category-page-container">
       <div className="container">
-        <div className="loading">{translate('loading')}</div>
+        <div className="loading" role="status" aria-live="polite">
+          {translate('loading')}
+        </div>
       </div>
     </div>
   ), [translate]);
@@ -357,7 +399,9 @@ function CategoryPage() {
     return (
       <div className="category-page-container">
         <div className="container">
-          <div className="error">{translate('error')}: {error}</div>
+          <div className="error" role="alert" aria-live="assertive">
+            {translate('error')}: {error}
+          </div>
         </div>
       </div>
     );
@@ -374,47 +418,69 @@ function CategoryPage() {
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat'
         }}
+        aria-label={`${category?.title} ${translate('products')}`}
       >
-        <ul className="breadcrumbs">
-          <li><Link to="/">{translate('home')}</Link></li>
-          <li><Link to="/products">{translate('products')}</Link></li>
-          <li><span>{category?.title}</span></li>
-        </ul>
+        <nav aria-label="Breadcrumb">
+          <ul className="breadcrumbs">
+            <li>
+              <Link to="/" aria-label={translate('home')}>
+                {translate('home')}
+              </Link>
+            </li>
+            <li>
+              <Link to="/products" aria-label={translate('products')}>
+                {translate('products')}
+              </Link>
+            </li>
+            <li>
+              <span aria-current="page">{category?.title}</span>
+            </li>
+          </ul>
+        </nav>
         <div className="container2">
           <h1>{category?.title}</h1>
-          <p className="products-count">{products.length} {translate('productsCount')}</p>
+          <p className="products-count" aria-label={`${products.length} ${translate('productsCount')}`}>
+            {products.length} {translate('productsCount')}
+          </p>
         </div>
       </section>
 
       {/* Products Section */}
-      <div className="category-products-section">
+      <main className="category-products-section">
         <div className="container">
           {/* Products Grid */}
           {products.length === 0 ? (
-            <div className="error">{translate('noProducts')}</div>
+            <div className="error" role="alert">
+              {translate('noProducts')}
+            </div>
           ) : (
             <>
-              <div className="category-products-grid">
+              <div className="category-products-grid" role="list">
                 {currentProducts.map((product, index) => (
-                  <Link 
-                    key={product.id || index} 
-                    to={`/products/${product.categoryId}/${product.id}`} 
-                    className="category-product-card"
+                  <article 
+                    key={product.id || index}
+                    role="listitem"
                   >
-                    <div className="category-product-image">
-                      <img 
-                        src={getProductImage(product)} 
-                        alt={getProductName(product)}
-                        loading="lazy"
-                        onError={(e) => {
-                          e.target.src = process.env.PUBLIC_URL + '/prod.webp';
-                        }}
-                      />
-                    </div>
-                    <div className="category-product-info">
-                      <h3 className="category-product-name">{getProductName(product)}</h3>
-                    </div>
-                  </Link>
+                    <Link 
+                      to={`/products/${product.categoryId}/${product.id}`} 
+                      className="category-product-card"
+                      aria-label={`${translate('viewProduct')}: ${getProductName(product)}`}
+                    >
+                      <div className="category-product-image">
+                        <img 
+                          src={getProductImage(product)} 
+                          alt={getProductName(product)}
+                          loading="lazy"
+                          onError={(e) => {
+                            e.target.src = process.env.PUBLIC_URL + '/prod.webp';
+                          }}
+                        />
+                      </div>
+                      <div className="category-product-info">
+                        <h3 className="category-product-name">{getProductName(product)}</h3>
+                      </div>
+                    </Link>
+                  </article>
                 ))}
               </div>
               
@@ -423,7 +489,7 @@ function CategoryPage() {
             </>
           )}
         </div>
-      </div>
+      </main>
     </>
   );
 }

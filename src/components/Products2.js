@@ -140,6 +140,21 @@ function Products2() {
         ka: 'შეცდომა კატეგორიების ჩატვირთვისას',
         en: 'Error loading categories',
         ru: 'Ошибка загрузки категорий'
+      },
+      viewCategory: {
+        ka: 'ნახე კატეგორია',
+        en: 'View category',
+        ru: 'Посмотреть категорию'
+      },
+      productsBackground: {
+        ka: 'სამშენებლო მასალები',
+        en: 'Construction materials',
+        ru: 'Строительные материалы'
+      },
+      loadingCategories: {
+        ka: 'იტვირთება კატეგორიები',
+        en: 'Loading categories',
+        ru: 'Загрузка категорий'
       }
     };
     return translations[key]?.[language] || translations[key]?.['ka'] || key;
@@ -147,7 +162,7 @@ function Products2() {
 
   // Skeleton loader - memoized
   const SkeletonCard = useMemo(() => () => (
-    <div className="category-card skeleton">
+    <div className="category-card skeleton" aria-hidden="true">
       <div className="category-image-wrapper">
         <div className="category-banner skeleton-img">
           <div className="skeleton-shimmer"></div>
@@ -162,61 +177,79 @@ function Products2() {
   return (
     <div className="products2-page">
       {/* Hero Section */}
-      <section className="products2-hero">
+      <header className="products2-hero" role="banner">
         <picture>
           <source media="(max-width: 768px)" srcSet={mobileBackground} />
-          <img src={desktopBackground} alt="Litox Georgia Products - Construction Materials" loading="eager" />
+          <img 
+            src={desktopBackground} 
+            alt={`Litox Georgia ${translate('productsBackground')}`}
+            loading="eager" 
+          />
         </picture>
         <div className="products2-hero-content">
           <h1>{translate('title')}</h1>
         </div>
-      </section>
+      </header>
 
       {/* Categories Section */}
-      <section className="categories-section">
+      <main className="categories-section">
         <div className="container">
           {loading ? (
-            <div className="categories-grid">
+            <div 
+              className="categories-grid" 
+              role="status" 
+              aria-live="polite" 
+              aria-label={translate('loadingCategories')}
+            >
               {[...Array(6)].map((_, index) => (
                 <SkeletonCard key={index} />
               ))}
             </div>
           ) : error ? (
-            <div className="error-message">{translate('error')}: {error}</div>
-          ) : (
-            <div className="categories-grid">
-              {categories.map((category) => (
-                <Link
-                  key={category.id}
-                  to={`/products2/category/${category.id}`}
-                  className="category-card"
-                  aria-label={`View ${category.title} products`}
-                >
-                  <div className="category-image-wrapper">
-                    <div className="category-banner">
-                      <img
-                        src={category.bannerLink}
-                        alt={`${category.title} category`}
-                        loading="lazy"
-                        onError={(e) => {
-                          e.target.src = process.env.PUBLIC_URL + '/prod.webp';
-                        }}
-                      />
-                    </div>
-                    <div className="category-info">
-                      <h3 className="category-title">{category.title}</h3>
-                      <p className="category-subtitle">{translate('subtitle')}</p>
-                      <div className="category-arrow" aria-hidden="true">
-                        <img src={arrow} alt="" />
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
+            <div 
+              className="error-message" 
+              role="alert" 
+              aria-live="assertive"
+            >
+              {translate('error')}: {error}
             </div>
+          ) : (
+            <nav aria-label={translate('title')}>
+              <ul className="categories-grid" role="list">
+                {categories.map((category) => (
+                  <li key={category.id} role="listitem">
+                    <Link
+                      to={`/products2/category/${category.id}`}
+                      className="category-card"
+                      aria-label={`${translate('viewCategory')}: ${category.title}`}
+                    >
+                      <article className="category-image-wrapper">
+                        <figure className="category-banner">
+                          <img
+                            src={category.bannerLink}
+                            alt={category.title}
+                            loading="lazy"
+                            onError={(e) => {
+                              e.target.src = process.env.PUBLIC_URL + '/prod.webp';
+                            }}
+                          />
+                        </figure>
+                        <div className="category-info">
+                          <h2 className="category-title">{category.title}</h2>
+                          <p className="category-subtitle">{translate('subtitle')}</p>
+                          <div className="category-arrow" aria-hidden="true">
+                            <img src={arrow} alt="" role="presentation" />
+                          </div>
+                        </div>
+                      </article>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           )}
         </div>
-      </section>
+      </main>
     </div>
   );
 }
