@@ -86,6 +86,16 @@ function AllProducts() {
   const PRODUCTS_PER_PAGE = 16;
   const INITIAL_CATEGORIES_TO_LOAD = 3;
 
+  // Get hero background image based on selected category
+  const getHeroBackground = useCallback(() => {
+    if (selectedCategory === 'all') {
+      return background; // Default background for "All Products"
+    }
+    
+    const category = categories.find(cat => cat.id === selectedCategory);
+    return category?.bannerLink || background; // Use category banner or fallback to default
+  }, [selectedCategory, categories]);
+
   // SEO: Update meta tags - WITH CLEANUP
   useEffect(() => {
     const seoData = SEO_META_DATA[language] || SEO_META_DATA['ka'];
@@ -498,7 +508,7 @@ function AllProducts() {
       <section 
         className="products-hero2" 
         style={{ 
-          backgroundImage: `url(${background})`, 
+          backgroundImage: `url(${getHeroBackground()})`, 
           backgroundSize: 'cover', 
           backgroundPosition: 'center', 
           backgroundRepeat: 'no-repeat' 
