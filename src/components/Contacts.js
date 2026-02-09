@@ -78,7 +78,7 @@ function Contacts() {
     };
 
     window.addEventListener('storage', handleStorageChange);
-    
+
     // Also check on mount and when component updates
     const currentLang = localStorage.getItem('language') || 'ka';
     if (currentLang !== language) {
@@ -178,25 +178,25 @@ function Contacts() {
       <main className="contacts__company-info">
         <div className="container">
           <h2 className="contact-heading">{translate('address')}</h2>
-          
+
           <div className="contact-layout">
             {/* Left side - Contact Info */}
-            <section 
+            <section
               className="contact-info-box"
               aria-label={translate('contactInformation')}
             >
               <article className="info-item">
                 <h3 className="info-label">{translate('location')}</h3>
                 <div className="info-content">
-                  <img 
-                    src={loc} 
-                    alt="" 
-                    width="20" 
+                  <img
+                    src={loc}
+                    alt=""
+                    width="20"
                     aria-hidden="true"
                     role="presentation"
                   />
                   <address>
-                    <a 
+                    <a
                       href="https://www.google.com/maps/search/?api=1&query=41.7189,44.7833"
                       target="_blank"
                       rel="noopener noreferrer"
@@ -213,7 +213,7 @@ function Contacts() {
                 <div className="info-content">
                   <span className="icon" aria-hidden="true" role="presentation">📞</span>
                   <div className="phone-list">
-                    <a 
+                    <a
                       href="tel:+995598347784"
                       aria-label={`${translate('callUs')} +995 598 34 77 84`}
                     >
@@ -228,7 +228,7 @@ function Contacts() {
                 <div className="info-content">
                   <span className="icon" aria-hidden="true" role="presentation">✉️</span>
                   <div className="email-list">
-                    <a 
+                    <a
                       href="mailto:info@litox.ge"
                       aria-label={`${translate('emailUs')} info@litox.ge`}
                     >
@@ -240,12 +240,12 @@ function Contacts() {
             </section>
 
             {/* Right side - Google Maps */}
-            <section 
+            <section
               className="contact-map-box"
               aria-label={translate('companyLocation')}
             >
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2977.234567!2d44.7833!3d41.7189!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDQzJzA4LjAiTiA0NMKwNDYnNTkuOSJF!5e0!3m2!1sen!2sge!4v1234567890&markers=color:red%7C41.7189,44.7833"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2380.1234567890123!2d44.78123456789012!3d41.71890123456789!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40440a1234567890%3A0xabcdef1234567890!2s17%20Kindzmarauli%20St%2C%20Tbilisi%201037%2C%20Georgia!5e0!3m2!1sen!2sge!4v1700000000000"
                 width="100%"
                 height="100%"
                 style={{ border: 0, borderRadius: '12px' }}

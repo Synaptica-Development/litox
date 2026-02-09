@@ -44,7 +44,7 @@ function Products2CategoryPage() {
 
         const categoriesData = await categoryResponse.json();
         const currentCategory = categoriesData.find(cat => cat.id === categoryId);
-        
+
         if (!currentCategory) {
           // Redirect to products page if category not found
           navigate('/products2', { replace: true });
@@ -197,10 +197,10 @@ function Products2CategoryPage() {
 
     const pages = [];
     const maxVisiblePages = 5;
-    
+
     let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
     let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-    
+
     if (endPage - startPage < maxVisiblePages - 1) {
       startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
@@ -299,8 +299,8 @@ function Products2CategoryPage() {
           <div className="error-message" role="alert" aria-live="assertive">
             {translate('loadingError')}: {error}
           </div>
-          <Link 
-            to="/products2" 
+          <Link
+            to="/products2"
             className="back-link"
             aria-label={translate('backToCategories')}
           >
@@ -315,8 +315,8 @@ function Products2CategoryPage() {
     <div className="category-page">
       {/* Hero Section with Category Banner */}
       {loading ? (
-        <section 
-          className="category-hero skeleton" 
+        <section
+          className="category-hero skeleton"
           aria-hidden="true"
           role="status"
           aria-label={translate('loading')}
@@ -324,7 +324,7 @@ function Products2CategoryPage() {
           <div className="skeleton-shimmer"></div>
         </section>
       ) : category ? (
-        <header 
+        <section
           className="category-hero"
           style={{
             backgroundImage: `url(${category.bannerLink})`,
@@ -332,7 +332,6 @@ function Products2CategoryPage() {
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat'
           }}
-          role="banner"
         >
           <div className="category-hero-content">
             <nav aria-label="Breadcrumb">
@@ -354,19 +353,19 @@ function Products2CategoryPage() {
             </nav>
             <h1>{category.title}</h1>
           </div>
-        </header>
+        </section>
       ) : null}
 
       {/* Products Section */}
-      <main 
+      <main
         className="category-products-section"
         aria-label={category ? `${translate('productsIn')} ${category.title}` : translate('productsIn')}
       >
         <div className="container">
           {loading ? (
-            <div 
-              className="products-grid" 
-              role="status" 
+            <div
+              className="products-grid"
+              role="status"
               aria-live="polite"
               aria-label={translate('loading')}
             >
@@ -410,7 +409,7 @@ function Products2CategoryPage() {
                   </article>
                 ))}
               </div>
-              
+
               {renderPagination()}
             </>
           )}

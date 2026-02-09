@@ -177,28 +177,28 @@ function Products2() {
   return (
     <div className="products2-page">
       {/* Hero Section */}
-      <header className="products2-hero" role="banner">
+      <section className="products2-hero">
         <picture>
           <source media="(max-width: 768px)" srcSet={mobileBackground} />
-          <img 
-            src={desktopBackground} 
+          <img
+            src={desktopBackground}
             alt={`Litox Georgia ${translate('productsBackground')}`}
-            loading="eager" 
+            loading="eager"
           />
         </picture>
         <div className="products2-hero-content">
           <h1>{translate('title')}</h1>
         </div>
-      </header>
+      </section>
 
       {/* Categories Section */}
       <main className="categories-section">
         <div className="container">
           {loading ? (
-            <div 
-              className="categories-grid" 
-              role="status" 
-              aria-live="polite" 
+            <div
+              className="categories-grid"
+              role="status"
+              aria-live="polite"
               aria-label={translate('loadingCategories')}
             >
               {[...Array(6)].map((_, index) => (
@@ -206,9 +206,9 @@ function Products2() {
               ))}
             </div>
           ) : error ? (
-            <div 
-              className="error-message" 
-              role="alert" 
+            <div
+              className="error-message"
+              role="alert"
               aria-live="assertive"
             >
               {translate('error')}: {error}

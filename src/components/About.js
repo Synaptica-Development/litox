@@ -93,8 +93,8 @@ const SEOLink = ({ to, children, className, ...props }) => {
   };
 
   return (
-    <Link 
-      to={to} 
+    <Link
+      to={to}
       className={className}
       onClick={handleClick}
       {...props}
@@ -141,20 +141,20 @@ function About() {
     // Update meta tags
     updateMetaTag('meta[name="description"]', null, 'description', meta.description);
     updateMetaTag('meta[name="keywords"]', null, 'keywords', meta.keywords);
-    
+
     // Open Graph tags
     updateMetaTag('meta[property="og:title"]', 'property', 'og:title', meta.title);
     updateMetaTag('meta[property="og:description"]', 'property', 'og:description', meta.description);
     updateMetaTag('meta[property="og:type"]', 'property', 'og:type', 'website');
     updateMetaTag('meta[property="og:url"]', 'property', 'og:url', getLocalizedUrl('/about'));
     updateMetaTag('meta[property="og:image"]', 'property', 'og:image', meta.ogImage);
-    
+
     // Twitter Card tags
     updateMetaTag('meta[name="twitter:card"]', null, 'twitter:card', 'summary_large_image');
     updateMetaTag('meta[name="twitter:title"]', null, 'twitter:title', meta.title);
     updateMetaTag('meta[name="twitter:description"]', null, 'twitter:description', meta.description);
     updateMetaTag('meta[name="twitter:image"]', null, 'twitter:image', meta.ogImage);
-    
+
     // Canonical URL - use the localized URL
     updateMetaTag('link[rel="canonical"]', 'rel', 'canonical', getLocalizedUrl('/about'));
 
@@ -245,7 +245,7 @@ function About() {
     return () => {
       // Restore title - use default homepage title
       document.title = DEFAULT_TITLE;
-      
+
       // Restore lang attribute
       if (originalLang) {
         document.documentElement.lang = originalLang;
@@ -329,13 +329,13 @@ function About() {
   // Memoized content formatter
   const formatContent = useCallback((text) => {
     if (!text) return '';
-    
+
     const hasHTMLTags = /<[^>]+>/.test(text);
-    
+
     if (hasHTMLTags) {
       return text;
     }
-    
+
     return text
       .split('\n')
       .filter(line => line.trim() !== '')
@@ -365,7 +365,7 @@ function About() {
   return (
     <>
       {/* Hero Section */}
-      <section 
+      <section
         className="about-page-hero"
         style={{
           backgroundImage: `url(${background})`,
@@ -401,28 +401,28 @@ function About() {
               {/* About Litox Section */}
               {aboutData.aboutLitox && (
                 <section className="about-section" itemScope itemType="https://schema.org/AboutPage">
-                  <h2 itemProp="headline">{translate('aboutLitox')}</h2>
-                  <div 
+
+                  <div
                     className="about-text rich-text-content"
                     itemProp="text"
                     dangerouslySetInnerHTML={{ __html: formatContent(aboutData.aboutLitox) }}
                   />
                   {aboutData.imageUrl1 && (
                     <div className="about-image" itemProp="image" itemScope itemType="https://schema.org/ImageObject">
-                      <img 
-                        src={aboutData.imageUrl1} 
-                        alt="About Litox - construction materials manufacturing" 
+                      <img
+                        src={aboutData.imageUrl1}
+                        alt="About Litox - construction materials manufacturing"
                         itemProp="url"
                         loading="lazy"
                         width="800"
                         height="auto"
-                        style={{ 
-                          width: '100%', 
+                        style={{
+                          width: '100%',
                           maxWidth: '800px',
                           height: 'auto',
                           borderRadius: '8px',
                           marginTop: '20px'
-                        }} 
+                        }}
                       />
                       <meta itemProp="description" content="Litox construction materials manufacturing facility" />
                     </div>
@@ -434,27 +434,27 @@ function About() {
               {aboutData.aboutLitoxGeorgia && (
                 <section className="about-section" itemScope itemType="https://schema.org/AboutPage">
                   <h2 itemProp="headline">{translate('aboutLitoxGeorgia')}</h2>
-                  <div 
+                  <div
                     className="about-text rich-text-content"
                     itemProp="text"
                     dangerouslySetInnerHTML={{ __html: formatContent(aboutData.aboutLitoxGeorgia) }}
                   />
                   {aboutData.imageUrl2 && (
                     <div className="about-image" itemProp="image" itemScope itemType="https://schema.org/ImageObject">
-                      <img 
-                        src={aboutData.imageUrl2} 
-                        alt="Litox Georgia - Free Way LLC official representative" 
+                      <img
+                        src={aboutData.imageUrl2}
+                        alt="Litox Georgia - Free Way LLC official representative"
                         itemProp="url"
                         loading="lazy"
                         width="800"
                         height="auto"
-                        style={{ 
-                          width: '100%', 
+                        style={{
+                          width: '100%',
                           maxWidth: '800px',
                           height: 'auto',
                           borderRadius: '8px',
                           marginTop: '20px'
-                        }} 
+                        }}
                       />
                       <meta itemProp="description" content="Litox Georgia operations and distribution" />
                     </div>

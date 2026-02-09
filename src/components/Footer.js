@@ -33,7 +33,7 @@ function Footer() {
         ru: 'Позвоните нам'
       },
       mail: {
-        ka: 'ელფოსტა',
+        ka: 'მოგვწერეთ',
         en: 'Mail',
         ru: 'Почта'
       },
@@ -124,9 +124,9 @@ function Footer() {
           <h2 id="contact-heading" className="visually-hidden">
             {translate('contactInfo')}
           </h2>
-          
+
           <div className="phone">
-            <a 
+            <a
               href="tel:+995598347784"
               aria-label={`${translate('callPhone')} +995 598 34 77 84`}
               title={translate('callUs')}
@@ -134,21 +134,21 @@ function Footer() {
               598 34 77 84
             </a>
           </div>
-          
-          <nav 
-            className="flex-footer-cards" 
+
+          <nav
+            className="flex-footer-cards"
             aria-label={translate('quickLinks')}
             role="navigation"
           >
-            <Link 
+            <Link
               to="/contacts"
               aria-label={translate('whereToBuy')}
               title={translate('whereToBuy')}
             >
               <span className="img-wrapper" aria-hidden="true">
-                <img 
-                  src={img1} 
-                  alt="" 
+                <img
+                  src={img1}
+                  alt=""
                   height="37"
                   width="37"
                   loading="lazy"
@@ -156,16 +156,16 @@ function Footer() {
               </span>
               <span>{translate('whereToBuy')}</span>
             </Link>
-            
-            <a 
+
+            <a
               href="tel:+995598347784"
               aria-label={`${translate('callUs')} - ${translate('callPhone')} +995 598 34 77 84`}
               title={translate('callUs')}
             >
               <span className="img-wrapper" aria-hidden="true">
-                <img 
-                  src={img2} 
-                  alt="" 
+                <img
+                  src={img2}
+                  alt=""
                   height="33"
                   width="33"
                   loading="lazy"
@@ -173,18 +173,18 @@ function Footer() {
               </span>
               <span>{translate('callUs')}</span>
             </a>
-            
-            <a 
+
+            <a
               href="mailto:info@litox.ge"
               aria-label={`${translate('sendEmail')} info@litox.ge`}
               title={`${translate('mail')} - info@litox.ge`}
             >
               <span className="img-wrapper" aria-hidden="true">
-                <img 
-                  src={img3} 
-                  alt="" 
-                  width="62" 
-                  height="40" 
+                <img
+                  src={img3}
+                  alt=""
+                  width="62"
+                  height="40"
                   className="bad-vector"
                   loading="lazy"
                 />
@@ -199,18 +199,18 @@ function Footer() {
           <h2 id="social-heading" className="visually-hidden">
             {translate('socialMedia')}
           </h2>
-          
-          <ul 
-            className="footer-socials" 
+
+          <ul
+            className="footer-socials"
             role="list"
             aria-label={translate('followUs')}
           >
             <li role="listitem">
-              <a 
-                className="social social_fb" 
-                href={fb_link} 
-                target="_blank" 
-                rel="noopener noreferrer" 
+              <a
+                className="social social_fb"
+                href={fb_link}
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label={`${translate('visitFacebook')} (${translate('openInNewWindow')})`}
                 title="Facebook - Litox Georgia"
               >
@@ -219,11 +219,11 @@ function Footer() {
               </a>
             </li>
             <li role="listitem">
-              <a 
-                className="social social_ig" 
-                href={insta_link} 
-                target="_blank" 
-                rel="noopener noreferrer" 
+              <a
+                className="social social_ig"
+                href={insta_link}
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label={`${translate('visitInstagram')} (${translate('openInNewWindow')})`}
                 title="Instagram - Litox Georgia"
               >
@@ -232,11 +232,11 @@ function Footer() {
               </a>
             </li>
             <li role="listitem">
-              <a 
-                className="social social_tiktok" 
-                href={tiktok_link} 
-                target="_blank" 
-                rel="noopener noreferrer" 
+              <a
+                className="social social_tiktok"
+                href={tiktok_link}
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label={`${translate('visitTikTok')} (${translate('openInNewWindow')})`}
                 title="TikTok - Litox Georgia"
               >
@@ -252,11 +252,11 @@ function Footer() {
           <h2 id="legal-heading" className="visually-hidden">
             {translate('legalInfo')}
           </h2>
-          
+
           <div>
-            <a 
-              href="/catalog.pdf" 
-              target="_blank" 
+            <a
+              href="/catalog.pdf"
+              target="_blank"
               rel="noopener noreferrer"
               aria-label={`${translate('downloadCatalog')} (PDF, ${translate('openInNewWindow')})`}
               title={translate('downloadCatalog')}
@@ -265,8 +265,8 @@ function Footer() {
               {translate('downloadCatalog')}
             </a>
             &nbsp;&nbsp;&nbsp;
-            <a 
-              href="mailto:info@litox.ge" 
+            <a
+              href="mailto:info@litox.ge"
               className="mail"
               aria-label={`${translate('sendEmail')} info@litox.ge`}
               title={`${translate('mail')} - info@litox.ge`}
@@ -274,10 +274,10 @@ function Footer() {
               info@litox.ge
             </a>
           </div>
-          
+
           <div>
             <nav aria-label={translate('legalInfo')}>
-              <Link 
+              <Link
                 to="/privacy"
                 aria-label={translate('privacyPolicy')}
                 title={translate('privacyPolicy')}

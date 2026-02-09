@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
 
 /* Category Page */
@@ -22,7 +21,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.6));
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6));
   z-index: 1;
 }
 
@@ -43,7 +42,7 @@
 /* Breadcrumbs - Top left on desktop */
 .breadcrumbs {
   position: absolute;
-  top: -10px!important;
+  top: -10px !important;
   left: 30px;
   list-style: none;
   display: flex !important;
@@ -116,10 +115,11 @@
   padding: 80px 30px;
 }
 
+/* Products Grid - 2 COLUMNS like AllProducts */
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 35px;
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -142,22 +142,25 @@
 .product-image-wrapper {
   position: relative;
   width: 100%;
-  height: 300px;
+  height: 400px;
+  /* BIGGER - same as AllProducts */
 }
 
 .product-image {
   width: 100%;
   height: 100%;
   background: #26211e;
-  padding: 20px;
+  padding: 50px;
+  /* BIGGER padding - same as AllProducts */
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .product-image img {
-  width: 100%;
-  height: 100%;
+  width: 85%;
+  /* Same as AllProducts */
+  height: 85%;
   object-fit: contain;
   transition: transform 0.3s ease;
 }
@@ -172,7 +175,8 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 20px;
+  padding: 18px 20px;
+  /* Same as AllProducts */
   z-index: 2;
   overflow: hidden;
 }
@@ -195,11 +199,12 @@
 }
 
 .product-name {
-  font-size: 18px;
+  font-size: 17px;
+  /* Same as AllProducts */
   color: #fff;
   font-family: "Montserrat", sans-serif;
   font-weight: 600;
-  margin: 0;
+  margin: 0 0 6px 0;
   line-height: 1.4;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
   position: relative;
@@ -212,7 +217,8 @@
 /* Product Arrow */
 .product-arrow {
   position: absolute;
-  bottom: 20px;
+  bottom: 18px;
+  /* Same as AllProducts */
   right: 20px;
   width: 24px;
   height: 24px;
@@ -240,9 +246,11 @@
     opacity: 0;
     transform: perspective(400px) translateX(30px) rotateY(-180deg);
   }
+
   50% {
     opacity: 1;
   }
+
   100% {
     opacity: 1;
     transform: perspective(400px) translateX(0) rotateY(0deg);
@@ -254,9 +262,11 @@
     opacity: 1;
     transform: perspective(400px) translateX(0) rotateY(0deg);
   }
+
   50% {
     opacity: 1;
   }
+
   100% {
     opacity: 0;
     transform: perspective(400px) translateX(30px) rotateY(180deg);
@@ -353,6 +363,7 @@
   0% {
     background-position: 200% 0;
   }
+
   100% {
     background-position: -200% 0;
   }
@@ -368,11 +379,33 @@
   font-family: "Montserrat", sans-serif;
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
+/* Responsive - Same as AllProducts */
+
+/* Desktop - 2 columns */
+@media (min-width: 901px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 35px;
+  }
+
+  .product-image-wrapper {
+    height: 400px;
+  }
+}
+
+/* Tablets - 2 columns */
+@media (max-width: 900px) and (min-width: 768px) {
   .products-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 25px;
+  }
+
+  .product-image-wrapper {
+    height: 340px;
+  }
+
+  .product-name {
+    font-size: 16px;
   }
 
   .category-hero-content h1 {
@@ -380,7 +413,21 @@
   }
 }
 
-@media (max-width: 768px) {
+/* Mobile - 1 column */
+@media (max-width: 767px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .product-image-wrapper {
+    height: 320px;
+  }
+
+  .product-name {
+    font-size: 16px;
+  }
+
   .category-hero {
     height: 300px;
   }
@@ -393,17 +440,9 @@
   .category-products-section {
     padding: 60px 20px;
   }
-
-  .products-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .product-image-wrapper {
-    height: 250px;
-  }
 }
 
+/* Small Mobile - 1 column */
 @media (max-width: 480px) {
   .category-hero {
     height: 250px;
@@ -418,6 +457,10 @@
   }
 
   .product-image-wrapper {
-    height: 200px;
+    height: 280px;
+  }
+
+  .product-name {
+    font-size: 15px;
   }
 }
