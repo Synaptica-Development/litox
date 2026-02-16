@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import '../styles/Header.css';
 
 const search = process.env.PUBLIC_URL + '/search.svg';
-const logo = process.env.PUBLIC_URL + '/logoru.svg';
+const logo = process.env.PUBLIC_URL + '/logo.svg';
 const API_BASE_URL = 'https://api.litox.ge';
 
 function Header() {
@@ -133,7 +133,7 @@ function Header() {
         ru: 'Главная'
       },
       about: {
-        ka: 'ჩვენს შესახებ',
+        ka: 'ჩვენ შესახებ',
         en: 'About',
         ru: 'О нас'
       },

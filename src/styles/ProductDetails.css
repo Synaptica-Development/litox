@@ -2583,3 +2583,14 @@
     margin-left: 4px;
   }
 }
+
+
+
+.specifications-table table td,
+.specifications-table table th {
+  padding: 15px 20px;
+  border-bottom: 1px solid #4e4845;
+  font-family: "Montserrat", sans-serif;
+  height: 50px;
+  vertical-align: middle;
+}
