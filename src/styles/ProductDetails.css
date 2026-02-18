@@ -1744,9 +1744,10 @@
     ;
   }
 
-  .product-hero{
-    padding-top: 60px;
+  .product-detail-breadcrumbs{
+    display: none !important;
   }
+
 
   .product-hero h1 {
     text-align: center !important;
@@ -1815,6 +1816,10 @@
 
   .tab-list {
     gap: 12px !important;
+  }
+
+  .product-detail-breadcrumbs{
+    display: none !important;
   }
 }
 
