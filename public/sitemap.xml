@@ -1,119 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-<!-- Homepage -->
 <url>
 <loc>https://litox.ge/</loc>
-<lastmod>2026-02-10</lastmod>
+<lastmod>2026-02-18</lastmod>
 <changefreq>weekly</changefreq>
 <priority>1.0</priority>
-<xhtml:link rel="alternate" hreflang="ka" href="https://litox.ge/"/>
-<xhtml:link rel="alternate" hreflang="en" href="https://litox.ge/"/>
-<xhtml:link rel="alternate" hreflang="ru" href="https://litox.ge/"/>
-<xhtml:link rel="alternate" hreflang="x-default" href="https://litox.ge/"/>
 </url>
 
-<!-- About Page -->
 <url>
 <loc>https://litox.ge/about</loc>
-<lastmod>2026-02-10</lastmod>
+<lastmod>2026-02-18</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.8</priority>
-<xhtml:link rel="alternate" hreflang="ka" href="https://litox.ge/about"/>
-<xhtml:link rel="alternate" hreflang="en" href="https://litox.ge/about"/>
-<xhtml:link rel="alternate" hreflang="ru" href="https://litox.ge/about"/>
-<xhtml:link rel="alternate" hreflang="x-default" href="https://litox.ge/about"/>
 </url>
 
-<!-- All Products Page -->
 <url>
 <loc>https://litox.ge/products</loc>
-<lastmod>2026-02-10</lastmod>
+<lastmod>2026-02-18</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.9</priority>
-<xhtml:link rel="alternate" hreflang="ka" href="https://litox.ge/products"/>
-<xhtml:link rel="alternate" hreflang="en" href="https://litox.ge/products"/>
-<xhtml:link rel="alternate" hreflang="ru" href="https://litox.ge/products"/>
-<xhtml:link rel="alternate" hreflang="x-default" href="https://litox.ge/products"/>
 </url>
 
-<!-- Products2 Categories Page -->
 <url>
 <loc>https://litox.ge/products2</loc>
-<lastmod>2026-02-10</lastmod>
+<lastmod>2026-02-18</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.9</priority>
-<xhtml:link rel="alternate" hreflang="ka" href="https://litox.ge/products2"/>
-<xhtml:link rel="alternate" hreflang="en" href="https://litox.ge/products2"/>
-<xhtml:link rel="alternate" hreflang="ru" href="https://litox.ge/products2"/>
-<xhtml:link rel="alternate" hreflang="x-default" href="https://litox.ge/products2"/>
 </url>
 
-<!-- Contacts Page -->
 <url>
 <loc>https://litox.ge/contacts</loc>
-<lastmod>2026-02-10</lastmod>
+<lastmod>2026-02-18</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
-<xhtml:link rel="alternate" hreflang="ka" href="https://litox.ge/contacts"/>
-<xhtml:link rel="alternate" hreflang="en" href="https://litox.ge/contacts"/>
-<xhtml:link rel="alternate" hreflang="ru" href="https://litox.ge/contacts"/>
-<xhtml:link rel="alternate" hreflang="x-default" href="https://litox.ge/contacts"/>
 </url>
-
-<!-- 
-=====================================================================
-DYNAMIC PAGES - ADD THESE PROGRAMMATICALLY
-=====================================================================
-
-Based on your App.js routes, you need to add:
-
-1. CATEGORY PAGES (from /category/:categoryId route):
-   Example: https://litox.ge/category/cement
-   Example: https://litox.ge/category/adhesives
-
-2. PRODUCTS2 CATEGORY PAGES (from /products2/category/:categoryId route):
-   Example: https://litox.ge/products2/category/1
-   Example: https://litox.ge/products2/category/2
-
-3. PRODUCT DETAILS PAGES (from /products/:categoryId/:productId route):
-   Example: https://litox.ge/products/1/123
-   Example: https://litox.ge/products/2/456
-
-4. STANDALONE PRODUCT PAGES (from /product/:productId route):
-   Example: https://litox.ge/product/789
-   Example: https://litox.ge/product/012
-
-TEMPLATE FOR CATEGORY PAGES:
-<url>
-  <loc>https://litox.ge/category/{categoryId}</loc>
-  <lastmod>2026-02-10</lastmod>
-  <changefreq>weekly</changefreq>
-  <priority>0.7</priority>
-</url>
-
-TEMPLATE FOR PRODUCTS2 CATEGORY PAGES:
-<url>
-  <loc>https://litox.ge/products2/category/{categoryId}</loc>
-  <lastmod>2026-02-10</lastmod>
-  <changefreq>weekly</changefreq>
-  <priority>0.8</priority>
-</url>
-
-TEMPLATE FOR PRODUCT PAGES:
-<url>
-  <loc>https://litox.ge/products/{categoryId}/{productId}</loc>
-  <lastmod>2026-02-10</lastmod>
-  <changefreq>monthly</changefreq>
-  <priority>0.6</priority>
-</url>
-
-RECOMMENDED: Create a Node.js script to generate this automatically:
-- Fetch categories from: https://api.litox.ge/api/Category/categories
-- Fetch products from: https://api.litox.ge/api/Products/products
-- Generate all URLs dynamically
-- Update sitemap.xml automatically
--->
 
 </urlset>
