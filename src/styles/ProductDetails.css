@@ -1689,6 +1689,8 @@
   gap: 10px;
   align-items: center;
   flex-wrap: wrap;
+  width: 98%;
+  text-align: center;
 }
 
 .product-detail-breadcrumbs li {
@@ -1739,6 +1741,11 @@
     align-items: center !important;
     text-align: center !important;
     width: 100%;
+    ;
+  }
+
+  .product-hero{
+    padding-top: 60px;
   }
 
   .product-hero h1 {
