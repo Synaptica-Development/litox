@@ -78,7 +78,7 @@ function CategoryPage() {
     updateMetaTag('meta[property="og:description"]', 'property', 'og:description', meta.description);
     
     // Update canonical URL
-    const canonicalUrl = `https://litoxgeorgia.ge/products2/category/${categoryId}`;
+    const canonicalUrl = `https://litox.ge/products2/category/${categoryId}`;
     updateMetaTag('link[rel="canonical"]', 'rel', 'canonical', canonicalUrl);
 
     // Cleanup function - restore original title when leaving page

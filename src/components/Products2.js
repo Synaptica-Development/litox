@@ -65,7 +65,7 @@ function Products2() {
     updateMetaTag('meta[name="keywords"]', null, 'keywords', meta.keywords);
     updateMetaTag('meta[property="og:title"]', 'property', 'og:title', meta.title);
     updateMetaTag('meta[property="og:description"]', 'property', 'og:description', meta.description);
-    updateMetaTag('link[rel="canonical"]', 'rel', 'canonical', 'https://litoxgeorgia.ge/products2');
+    updateMetaTag('link[rel="canonical"]', 'rel', 'canonical', 'https://litox.ge/products2');
 
     // Cleanup function - restore original title when leaving page
     return () => {

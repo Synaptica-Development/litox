@@ -363,7 +363,7 @@ function Category() {
               "@type": "ListItem",
               "position": index + 1,
               "name": getCategoryName(category),
-              "url": `https://litoxgeorgia.ge/category/${category.id}`,
+              "url": `https://litox.ge/category/${category.id}`,
               "image": getCategoryIcon(category) || undefined
             }))
           })}
@@ -431,7 +431,7 @@ function Category() {
             "@type": "ListItem",
             "position": index + 1,
             "name": getCategoryName(category),
-            "url": `https://litoxgeorgia.ge/category/${category.id}`,
+            "url": `https://litox.ge/category/${category.id}`,
             "image": getCategoryIcon(category) || undefined
           }))
         })}

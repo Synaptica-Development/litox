@@ -111,7 +111,7 @@ function About() {
 
   // Get the proper URL based on language
   const getLocalizedUrl = useCallback((path) => {
-    const baseUrl = 'https://litoxgeorgia.ge';
+    const baseUrl = 'https://litox.ge';
     if (language === 'ka') {
       return `${baseUrl}${path}`;
     }
@@ -171,10 +171,10 @@ function About() {
       element.href = url;
     };
 
-    updateHreflangTag('ka', 'https://litoxgeorgia.ge/about');
-    updateHreflangTag('en', 'https://litoxgeorgia.ge/en/about');
-    updateHreflangTag('ru', 'https://litoxgeorgia.ge/ru/about');
-    updateHreflangTag('x-default', 'https://litoxgeorgia.ge/about');
+    updateHreflangTag('ka', 'https://litox.ge/about');
+    updateHreflangTag('en', 'https://litox.ge/en/about');
+    updateHreflangTag('ru', 'https://litox.ge/ru/about');
+    updateHreflangTag('x-default', 'https://litox.ge/about');
 
     // Add JSON-LD structured data with BreadcrumbList
     const structuredData = {
@@ -182,13 +182,13 @@ function About() {
       "@graph": [
         {
           "@type": "Organization",
-          "@id": "https://litoxgeorgia.ge/#organization",
+          "@id": "https://litox.ge/#organization",
           "name": "Litox Georgia",
           "alternateName": "Free Way LLC",
-          "url": "https://litoxgeorgia.ge",
+          "url": "https://litox.ge",
           "logo": {
             "@type": "ImageObject",
-            "url": "https://litoxgeorgia.ge/logo.png"
+            "url": "https://litox.ge/logo.png"
           },
           "description": meta.description,
           "address": {
@@ -205,10 +205,10 @@ function About() {
           "description": meta.description,
           "inLanguage": language,
           "isPartOf": {
-            "@id": "https://litoxgeorgia.ge/#website"
+            "@id": "https://litox.ge/#website"
           },
           "about": {
-            "@id": "https://litoxgeorgia.ge/#organization"
+            "@id": "https://litox.ge/#organization"
           },
           "breadcrumb": {
             "@id": getLocalizedUrl('/about#breadcrumb')

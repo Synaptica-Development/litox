@@ -208,8 +208,8 @@ function ProductDetails() {
 
     const pageTitle = generatePageTitle(product.title, category?.title, language);
     const metaDescription = generateMetaDescription(product, language);
-    const productImage = product.iconImageLink || product.bannerImageLink || 'https://litoxgeorgia.ge/prod.webp';
-    const productUrl = `https://litoxgeorgia.ge/products/${categoryId}/${productId}`;
+    const productImage = product.iconImageLink || product.bannerImageLink || 'https://litox.ge/prod.webp';
+    const productUrl = `https://litox.ge/products/${categoryId}/${productId}`;
 
     const originalLang = document.documentElement.lang;
 
@@ -255,7 +255,7 @@ function ProductDetails() {
       "manufacturer": {
         "@type": "Organization",
         "name": "Litox Georgia",
-        "url": "https://litoxgeorgia.ge"
+        "url": "https://litox.ge"
       },
       "category": category?.title || "Construction Materials",
       "url": productUrl
@@ -266,13 +266,13 @@ function ProductDetails() {
         "@type": "ListItem",
         "position": 1,
         "name": translate('home'),
-        "item": "https://litoxgeorgia.ge"
+        "item": "https://litox.ge"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": translate('products'),
-        "item": "https://litoxgeorgia.ge/products"
+        "item": "https://litox.ge/products"
       }
     ];
 
@@ -281,7 +281,7 @@ function ProductDetails() {
         "@type": "ListItem",
         "position": 3,
         "name": category.title,
-        "item": `https://litoxgeorgia.ge/category/${categoryId}`
+        "item": `https://litox.ge/category/${categoryId}`
       });
       breadcrumbItems.push({
         "@type": "ListItem",

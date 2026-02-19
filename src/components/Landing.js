@@ -85,7 +85,7 @@ function Landing() {
     updateMetaTag('meta[property="og:title"]', 'property', 'og:title', meta.title);
     updateMetaTag('meta[property="og:description"]', 'property', 'og:description', meta.description);
     updateMetaTag('meta[property="og:type"]', 'property', 'og:type', 'website');
-    updateMetaTag('meta[property="og:url"]', 'property', 'og:url', 'https://litoxgeorgia.ge');
+    updateMetaTag('meta[property="og:url"]', 'property', 'og:url', 'https://litox.ge');
     updateMetaTag('meta[property="og:image"]', 'property', 'og:image', meta.ogImage);
     updateMetaTag('meta[property="og:locale"]', 'property', 'og:locale', language === 'ka' ? 'ka_GE' : language === 'ru' ? 'ru_RU' : 'en_US');
     updateMetaTag('meta[property="og:site_name"]', 'property', 'og:site_name', 'Litox Georgia');
@@ -97,10 +97,10 @@ function Landing() {
     updateMetaTag('meta[name="twitter:image"]', null, 'twitter:image', meta.ogImage);
     
     // Canonical URL
-    updateMetaTag('link[rel="canonical"]', 'rel', 'canonical', 'https://litoxgeorgia.ge');
+    updateMetaTag('link[rel="canonical"]', 'rel', 'canonical', 'https://litox.ge');
 
     // Hreflang tags for multilingual SEO
-    const baseUrl = 'https://litoxgeorgia.ge';
+    const baseUrl = 'https://litox.ge';
     const languages = [
       { lang: 'ka', url: `${baseUrl}` },
       { lang: 'en', url: `${baseUrl}/en` },
@@ -130,8 +130,8 @@ function Landing() {
       "@type": "Organization",
       "name": "Litox Georgia",
       "alternateName": "Free Way LLC",
-      "url": "https://litoxgeorgia.ge",
-      "logo": "https://litoxgeorgia.ge/logo.png",
+      "url": "https://litox.ge",
+      "logo": "https://litox.ge/logo.png",
       "description": meta.description,
       "address": {
         "@type": "PostalAddress",
@@ -145,9 +145,9 @@ function Landing() {
         "availableLanguage": ["Georgian", "English", "Russian"]
       },
       "sameAs": [
-        // Add social media links here when available
-        // "https://www.facebook.com/litoxgeorgia",
-        // "https://www.instagram.com/litoxgeorgia"
+       "https://www.facebook.com/LitoxGeorgia",
+       'https://www.instagram.com/litox_georgia/',
+       'https://www.tiktok.com/@litox_georgia'
       ]
     };
 
@@ -156,10 +156,10 @@ function Landing() {
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "Litox Georgia",
-      "url": "https://litoxgeorgia.ge",
+      "url": "https://litox.ge",
       "potentialAction": {
         "@type": "SearchAction",
-        "target": "https://litoxgeorgia.ge/search?q={search_term_string}",
+        "target": "https://litox.ge/search?q={search_term_string}",
         "query-input": "required name=search_term_string"
       }
     };

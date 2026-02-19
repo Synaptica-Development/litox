@@ -298,8 +298,8 @@ function Footer() {
             "@type": "Organization",
             "name": "Litox Georgia",
             "alternateName": "Free Way LLC",
-            "url": "https://litoxgeorgia.ge",
-            "logo": "https://litoxgeorgia.ge/logo.png",
+            "url": "https://litox.ge",
+            "logo": "https://litox.ge/logo.png",
             "contactPoint": {
               "@type": "ContactPoint",
               "telephone": "+995-598-347-784",

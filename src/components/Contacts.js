@@ -59,7 +59,7 @@ function Contacts() {
     updateMetaTag('meta[name="keywords"]', null, 'keywords', meta.keywords);
     updateMetaTag('meta[property="og:title"]', 'property', 'og:title', meta.title);
     updateMetaTag('meta[property="og:description"]', 'property', 'og:description', meta.description);
-    updateMetaTag('link[rel="canonical"]', 'rel', 'canonical', 'https://litoxgeorgia.ge/contacts');
+    updateMetaTag('link[rel="canonical"]', 'rel', 'canonical', 'https://litox.ge/contacts');
 
     // Cleanup function - restore original title when leaving page
     return () => {

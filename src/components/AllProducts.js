@@ -125,8 +125,8 @@ function AllProducts() {
     
     // Update canonical URL
     const canonicalUrl = selectedCategory === 'all' 
-      ? 'https://litoxgeorgia.ge/products' 
-      : `https://litoxgeorgia.ge/products?category=${selectedCategory}`;
+      ? 'https://litox.ge/products' 
+      : `https://litox.ge/products?category=${selectedCategory}`;
     updateMetaTag('link[rel="canonical"]', 'rel', 'canonical', canonicalUrl);
 
     // Cleanup function - restore original title when leaving page
@@ -672,8 +672,8 @@ function AllProducts() {
             "name": getPageTitle(),
             "description": SEO_META_DATA[language][selectedCategory === 'all' ? 'allProducts' : 'category'].description,
             "url": selectedCategory === 'all' 
-              ? 'https://litoxgeorgia.ge/products' 
-              : `https://litoxgeorgia.ge/products?category=${selectedCategory}`,
+              ? 'https://litox.ge/products' 
+              : `https://litox.ge/products?category=${selectedCategory}`,
             "mainEntity": {
               "@type": "ItemList",
               "numberOfItems": filteredProducts.length,
@@ -684,7 +684,7 @@ function AllProducts() {
                   "@type": "Product",
                   "name": getProductName(product),
                   "image": getProductImage(product),
-                  "url": `https://litoxgeorgia.ge/products/${product.categoryId}/${product.id}`,
+                  "url": `https://litox.ge/products/${product.categoryId}/${product.id}`,
                   "category": product.categoryName || undefined,
                   "brand": {
                     "@type": "Brand",
